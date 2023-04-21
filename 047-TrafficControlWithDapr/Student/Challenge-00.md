@@ -61,31 +61,31 @@ You'll create the Azure resources for the subsequent challenges using [Azure Bic
     ```shell
     az account set --subscription "xxxx-xxxx-xxxx-xxxx"
     ```
-1.  Install the aks-preview extension.
+1.  Install the `aks-preview` extension.
 
     ```shell
     az extension add --name aks-preview
     ```
 
-    > **Note**: If you have previously installed the aks-preview, please update it.
+    > **Note**: If you have previously installed the `aks-preview` extension, please update it.
 
     ```shell
     az extension update --name aks-preview
     ```
 
-1.  Install the k8s-extension.
+1.  Install the `k8s-extension`.
 
     ```shell
     az extension add --name k8s-extension
     ```
 
-    > **Note**: If you have previously installed the k8s-extension, please update it.
+    > **Note**: If you have previously installed the `k8s-extension`, please update it.
 
     ```shell
     az extension update --name k8s-extension
     ```
 
-1.  Enable the Workload Identity Preview feature.
+1.  Enable the `Workload Identity Preview` feature.
 
     Register the feature:
     ```shell
@@ -102,7 +102,7 @@ You'll create the Azure resources for the subsequent challenges using [Azure Bic
     az provider register --namespace Microsoft.ContainerService
     ```
 
-1.  Enabled the AKS Extension Manager feature.
+1.  Enabled the `AKS Extension Manager` feature.
 
     ```shell
     az feature register --namespace "Microsoft.ContainerService" --name "AKS-ExtensionManager"
@@ -118,7 +118,7 @@ You'll create the Azure resources for the subsequent challenges using [Azure Bic
     az provider register --namespace Microsoft.ContainerService
     ```
 
-1.  Enable the DAPR Feature.
+1.  Enable the `Dapr` Feature.
     
     ```shell
     az feature register --namespace "Microsoft.ContainerService" --name "AKS-Dapr"
