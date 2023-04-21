@@ -48,8 +48,7 @@ Make sure the following minimum software versions are installed by executing the
 
 You'll create the Azure resources for the subsequent challenges using [Azure Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/overview) and the [Azure CLI](https://docs.microsoft.com/cli/azure/what-is-azure-cli).
 
-1. Login to Azure Portal and create a Resource Group.  Create the Resource Group in Central US.  
-    >**Note**: If not creating in Central US, ensure the region you use supports the AKS Version 1.24.6 and VM Size of Standard_DS2_V2.
+1. Login to Azure Portal and create a Resource Group.  Create the Resource Group in an Azure region that can support AKS version 1.26.0 & a VM size of `Standard_B4ms` (such as South Central US or Central US).
 
 1.  If you're using [Azure Cloud Shell](https://shell.azure.com), skip this step and proceed to step 2. Open the [terminal window](https://code.visualstudio.com/docs/editor/integrated-terminal) in VS Code and make sure you're logged in to Azure
 
@@ -136,8 +135,7 @@ You'll create the Azure resources for the subsequent challenges using [Azure Bic
 
     az provider register --namespace Microsoft.KubernetesConfiguration
     ```
-
-<<
+    
 1.  _Optional_: The following steps assume you already have a resource group created. If not, run the following command to create one. Replace the resource group name and location with your own values.
 
     ```shell
