@@ -56,25 +56,25 @@ If any part of this script fails (missing dependencies, network issues, etc), yo
 
 1.  Modify the `infra/main.parameters.json` file with unique values for your deployment. Replace the `${VALUE}` placeholders with your own values.
 
-    - AZURE_ENV_NAME - a unique name for your deployment (i.e. use your name or initials)
-    - AZURE_LOCATION - the Azure region to deploy to (i.e. SouthCentralUS)
-    - AZURE_PRINCIPAL_NAME - the name of the SQL admin account (your User Principal Name)
-    - AZURE_PRINCIPAL_ID - the object ID of the SQL admin account (your User Principal Name Object Id)
-    - MY_IP - the public IP address of your workstation
+    - **AZURE_ENV_NAME** - a unique name for your deployment (i.e. use your name or initials)
+    - **AZURE_LOCATION** - the Azure region to deploy to (i.e. SouthCentralUS)
+    - **AZURE_PRINCIPAL_NAME** - the name of the SQL admin account (your User Principal Name)
+    - **AZURE_PRINCIPAL_ID** - the object ID of the SQL admin account (your User Principal Name Object Id)
+    - **MY_IP** - the public IP address of your workstation
 
-    You can run the following command to find out your UPN.
+    You can run the following command to find out your `UPN`.
 
     ```shell
     az ad signed-in-user show --query userPrincipalName -o tsv
     ```
 
-    You can run the following command to find out your object ID.
+    You can run the following command to find out your `object ID`.
 
     ```shell
     az ad signed-in-user show --query id -o tsv
     ```
 
-    You can run the following command to find out your IP address (or search for "what is my ip" in your favorite search engine)
+    You can run the following command to find out your `IP address` (or search for "what is my ip" in your favorite search engine)
 
     ```shell
     $(Invoke-WebRequest -Uri "https://api.ipify.org").Content
@@ -101,3 +101,4 @@ To complete this challenge successfully, you should be able to:
   - Azure Key Vault
   - Azure Application Insights
   - Azure Log Analytics Workspace
+  - Azure Managed Identity

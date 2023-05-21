@@ -1,4 +1,4 @@
-# Challenge 01 - Initial Workflow - Coach's Guide 
+# Challenge 01 - Process JSON input data & write to Storage - Coach's Guide 
 
 [< Previous Solution](./Solution-00.md) - **[Home](./README.md)** - [Next Solution >](./Solution-02.md)
 

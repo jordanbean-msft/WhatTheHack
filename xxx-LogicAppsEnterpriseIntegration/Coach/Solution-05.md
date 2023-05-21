@@ -52,7 +52,7 @@
 
 1.  Add another `Response` action after the `Send message` action
 
-1.  Set the `Status Code` to `201`
+1.  Set the `Status Code` to `202`
 
 1.  Set the `Body` to `Order created`
 
@@ -68,7 +68,7 @@
 
 ## Testing
 
-1.  In Postman, call the HTTP endpoint and verify that you get the new `Order accepted` response message & a `201` status code.
+1.  In Postman, call the HTTP endpoint and verify that you get the new `Order accepted` response message & a `202` status code.
 
     ![postman-succeeded](./Solutions/Solution-05/.img/postman-succeeded.png)
 

@@ -1,4 +1,4 @@
-# Challenge 01 - Initial Workflow
+# Challenge 01 - Process JSON input data & write to Storage
 
 [< Previous Challenge](./Challenge-00.md) - **[Home](../README.md)** - [Next Challenge >](./Challenge-02.md)
 

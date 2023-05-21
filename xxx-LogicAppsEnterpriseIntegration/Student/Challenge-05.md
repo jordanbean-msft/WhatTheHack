@@ -12,7 +12,7 @@ In this challenge, you will add validation to the `json` workflow to ensure that
 
 - Add a `required` field to the `json` workflow `Parse JSON` action schema to validate that the required JSON body values are specified
 - Add a parallel branch after the `Parse JSON` action to handle valid & invalid input data
-  - Valid input data should put a message on the Service Bus as before, but with an additional `Response` action afterwards indicated to the caller that the message was accepted.
+  - Valid input data should put a message on the Service Bus as before, but with an additional `Response` action afterwards indicated to the caller that the message was accepted (HTTP 202).
     - Ensure the `Run After` tab on the `Send message` action is set to `Parse JSON is successful`
   - Invalid input data should return a `Response` action with a `400` status code & a `body` message indicating the error
     - Ensure the `Run After` tab on the `Response` action is set to `Parse JSON has failed`
