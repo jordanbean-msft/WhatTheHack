@@ -4,9 +4,11 @@
 
 ## Introduction
 
-In this challenge, you will add validation to the `json` workflow to ensure that the required JSON body values are specified. You will also add a custom response to the caller indicating whether the message was accepted or rejected.
+Validation of input data is an important part of any application. As the saying goes, "garbage in, garbage out".
 
 ## Description
+
+In this challenge, you will add validation to the `json` workflow to ensure that the required JSON body values are specified. You will also add a custom response to the caller indicating whether the message was accepted or rejected.
 
 - Add a `required` field to the `json` workflow `Parse JSON` action schema to validate that the required JSON body values are specified
 - Add a parallel branch after the `Parse JSON` action to handle valid & invalid input data

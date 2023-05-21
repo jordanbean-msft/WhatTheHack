@@ -1,28 +1,32 @@
-# Challenge 06 - <Title of Challenge>
+# Challenge 06 - Parameterize with app settings
 
 [< Previous Challenge](./Challenge-05.md) - **[Home](../README.md)** - [Next Challenge >](./Challenge-07.md)
 
 ## Introduction
 
-When setting up an IoT device, it is important to understand how 'thingamajigs' work. Thingamajigs are a key part of every IoT device and ensure they are able to communicate properly with edge servers. Thingamajigs require IP addresses to be assigned to them by a server and thus must have unique MAC addresses. In this challenge, you will get hands on with a thingamajig and learn how one is configured.
+An important part a well architected solution is the ability to parameterize values that will change between environments/deployments/etc. Logic Apps supports similar app settings to what you may be familiar with in Azure Functions, Web Apps, etc. 
 
 ## Description
 
-- Look at the `Configuration->Application Settings` section of your Logic App and note the app setting names & values for the following parameters:
+In this challenge, you will parameterize the storage account container name in the `storage` workflow using an app setting.
+
+- Look at the `Configuration->Application Settings` section of your Logic App and note the app setting names & values for the following parameter:
   - STORAGE_ACCOUNT_CONTAINER_NAME
 - Add a parameter to the `storage` workflow and pull the name of the storage account container from App Settings
   - `@appsetting('STORAGE_ACCOUNT_CONTAINER_NAME')`
+- Modify the `Upload blob to storage container` action to use the new parameter
 - Save & test your workflow to ensure it still works
 
 ## Success Criteria
 
 To complete this challenge successfully, you should be able to:
-- Verify that the IoT device boots properly after its thingamajig is configured.
-- Verify that the thingamajig can connect to the mothership.
-- Demonstrate that the thingamajic will not connect to the IoTProxyShip
+- Verify that the storage account container name is being pulled from app settings instead of being hard-coded.
 
 ## Learning Resources
 
-- [IoT & Thingamajigs: Together Forever](https://www.youtube.com/watch?v=yPYZpwSpKmA)
+- [Create cross-environment parameters for workflow inputs in Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/create-parameters-workflows?tabs=standard)
 
 ## Tips
+- You will need to remove the double quotes surrounding the parameter definition value if the Logic App designer adds them. You may have to play with this a bit get it to save without them (let it add them, save the workflow, then remove them & save again).
+
+  ![parameter-container-name](./Content/Challenge-06/.img/parameter-container-name.png)
