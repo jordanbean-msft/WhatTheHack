@@ -1,8 +1,8 @@
-# What The Hack - LogicApps - Coach Guide
+# What The Hack - Logic Apps Enterprise Integration - Coach Guide
 
 ## Introduction
 
-Welcome to the coach's guide for the LogicApps What The Hack. Here you will find links to specific guidance for coaches for each of the challenges.
+Welcome to the coach's guide for the Logic Apps Enterprise Integration What The Hack. Here you will find links to specific guidance for coaches for each of the challenges.
 
 This hack includes an optional [lecture presentation](Lectures.pptx) that features short presentations to introduce key topics associated with each challenge. It is recommended that the host present each short presentation before attendees kick off that challenge.
 
@@ -13,35 +13,21 @@ This hack includes an optional [lecture presentation](Lectures.pptx) that featur
 - Challenge 00: **[Prerequisites - Ready, Set, GO!](./Solution-00.md)**
 	 - Prepare your workstation to work with Azure.
 - Challenge 01: **[Process JSON input data & write to Storage](./Solution-01.md)**
-	 - Description of challenge
+	 - Create a Logic App workflow to proces JSON input data & write it to Blob Storage
 - Challenge 02: **[Write to SQL](./Solution-02.md)**
-	 - Description of challenge
+	 - Add the ability to write data to SQL
 - Challenge 03: **[Modularize & integrate with Service Bus](./Solution-03.md)**
-	 - Description of challenge
+	 - Break up the Logic App into smaller pieces & integrate with Service Bus
 - Challenge 04: **[Monitor end-to-end workflow](./Solution-04.md)**
-	 - Description of challenge
+	 - Use correlation ID & Application Insights to monitor the end-to-end workflow
 - Challenge 05: **[Validation & custom response](./Solution-05.md)**
-	 - Description of challenge
+	 - Add validation & custom responses to the Logic App
 - Challenge 06: **[Parameterize with app settings](./Solution-06.md)**
-	 - Description of challenge
+	 - Parameterize the Logic App with app settings instead of hard-coding values
 - Challenge 07: **[Authenticate with AzureAD when calling custom API](./Solution-07.md)**
-	 - Description of challenge
+	 - Call a custom API protected via OAuth2 & AzureAD
 - Challenge 08: **[Visual Studio Code authoring](./Solution-08.md)**
-	 - Description of challenge
-- Challenge 09: **[Title of Challenge](./Solution-09.md)**
-	 - Description of challenge
-- Challenge 10: **[Title of Challenge](./Solution-10.md)**
-	 - Description of challenge
-- Challenge 11: **[Title of Challenge](./Solution-11.md)**
-	 - Description of challenge
-- Challenge 12: **[Title of Challenge](./Solution-12.md)**
-	 - Description of challenge
-- Challenge 13: **[Title of Challenge](./Solution-13.md)**
-	 - Description of challenge
-- Challenge 14: **[Title of Challenge](./Solution-14.md)**
-	 - Description of challenge
-- Challenge 15: **[Title of Challenge](./Solution-15.md)**
-	 - Description of challenge
+	 - Author Logic Apps in Visual Studio Code
 
 ## Coach Prerequisites
 
@@ -57,33 +43,21 @@ Always refer students to the [What The Hack website](https://aka.ms/wth) for the
 
 **NOTE:** Students should **not** be given a link to the What The Hack repo before or during a hack. The student guide does **NOT** have any links to the Coach's guide or the What The Hack repo on GitHub.
 
-### Additional Coach Prerequisites (Optional)
-
-_Please list any additional pre-event setup steps a coach would be required to set up such as, creating or hosting a shared dataset, or deploying a lab environment._
-
 ## Azure Requirements
 
 This hack requires students to have access to an Azure subscription where they can create and consume Azure resources. These Azure requirements should be shared with a stakeholder in the organization that will be providing the Azure subscription(s) that will be used by the students.
 
-_Please list Azure subscription requirements._
+## Suggested Hack Agenda
 
-_For example:_
-
-- Azure resources that will be consumed by a student implementing the hack's challenges
-- Azure permissions required by a student to complete the hack's challenges.
-
-## Suggested Hack Agenda (Optional)
-
-_This section is optional. You may wish to provide an estimate of how long each challenge should take for an average squad of students to complete and/or a proposal of how many challenges a coach should structure each session for a multi-session hack event. For example:_
-
-- Sample Day 1
+- Day 1
   - Challenge 1 (1 hour)
   - Challenge 2 (30 mins)
-  - Challenge 3 (2 hours)
-- Sample Day 2
-  - Challenge 4 (45 mins)
-  - Challenge 5 (1 hour)
-  - Challenge 6 (45 mins)
+  - Challenge 3 (1 hour)
+  - Challenge 4 (1 hour)
+	- Challenge 5 (30 min)
+	- Challenge 6 (30 min)
+	- Challenge 7 (1 hour)
+	- Challenge 8 (30 min)
 
 ## Repository Contents
 
@@ -95,5 +69,7 @@ _The default files & folders are listed below. You may add to this if you want t
   - Solution files with completed example answers to a challenge
 - `./Student`
   - Student's Challenge Guide
+- `./Student/Content`
+	- Student's Challenge Guide source files
 - `./Student/Resources`
   - Resource files, sample code, scripts, etc meant to be provided to students. (Must be packaged up by the coach and provided to students at start of event)
