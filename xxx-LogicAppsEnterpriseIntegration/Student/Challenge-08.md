@@ -26,3 +26,6 @@ To complete this challenge successfully, you should be able to:
 - [Logic Apps in Azure DevOps](https://learn.microsoft.com/en-us/azure/logic-apps/set-up-devops-deployment-single-tenant-azure-logic-apps?tabs=azure-devops)
 
 ## Tips
+- You may have to open a new VS Code instance and just open the `src/logic` directory for the Logic App extension to work correctly.
+- Select the `Content and Visual Studio project` and `Include app settings in the download`.
+- Note that connectors that use `Managed Identity` may not work correctly in VS Code.

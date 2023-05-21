@@ -88,6 +88,14 @@ If any part of this script fails (missing dependencies, network issues, etc), yo
     az deployment sub create --location SouthCentralUS --template-file ./main.bicep --parameters ./main.parameters.json
     ```
 
+1.  Deploy the Function App code.
+
+    ```shell
+    cd ../src/api
+
+    func azure functionapp publish <function-app-name> --nozip
+    ```
+
 ## Success Criteria
 
 To complete this challenge successfully, you should be able to:
