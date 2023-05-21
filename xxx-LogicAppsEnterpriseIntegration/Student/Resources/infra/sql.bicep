@@ -6,17 +6,13 @@ param sqlAdminLoginName string
 param sqlAdminLoginObjectId string
 param sqlClientIpAddress string
 param managedIdentityName string
-// param logicAppIdentityPrincipalId string
 param logAnalyticsWorkspaceName string
-param keyVaultName string
 
 resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   name: sqlServerName
   location: location
   tags: tags
   properties: {
-    //administratorLogin: 'admin'
-    //administratorLoginPassword: sqlServerName
     administrators: {
       azureADOnlyAuthentication: true
       administratorType: 'ActiveDirectory'

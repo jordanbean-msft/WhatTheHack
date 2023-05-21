@@ -14,13 +14,13 @@ Thank you for participating in the LogicApps What The Hack. Before you can hack,
   - [Azure Portal](../../000-HowToHack/WTH-Common-Prerequisites.md#azure-portal)
   - [Azure CLI](../../000-HowToHack/WTH-Common-Prerequisites.md#azure-cli)
     - [Note for Windows Users](../../000-HowToHack/WTH-Common-Prerequisites.md#note-for-windows-users)
-    - [Azure PowerShell CmdLets](../../000-HowToHack/WTH-Common-Prerequisites.md#azure-powershell-cmdlets)
+  - [Azure Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#azure-cli)
   - [Azure Cloud Shell](../../000-HowToHack/WTH-Common-Prerequisites.md#azure-cloud-shell)
-- [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 - [PowerShell Core](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3)
 - [Visual Studio Code](../../000-HowToHack/WTH-Common-Prerequisites.md#visual-studio-code)
   - [Logic Apps Standard extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurelogicapps)
 - [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows)
+- [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 - [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Cwindows%2Ccsharp%2Cportal%2Cbash)
 - [Azure Storage Emulator](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite?tabs=visual-studio-code)
 
@@ -30,52 +30,63 @@ Your coach will provide you with a Resources.zip file that contains resources yo
 
 Choose 1 of the options below to deploy the resources to your Azure subscription.
 
-### Option1: Deploying using Azure Developer CLI
+### Option 1: Deploying using Azure Developer CLI
+
+1.  Login to Azure with the ID you wish to use for the workshop by running the following Azure Developer CLI command:
+
+    ```shell
+    azd auth login
+    ```
 
 1.  Deploy the Azure infrastructure & code by running the following Azure Developer CLI command:
 
-```shell
-azd up
-```
+      ```shell
+      azd up
+      ```
 
-If any part of this script fails, you can use _Option 2_ below instead.
+If any part of this script fails (missing dependencies, network issues, etc), you can use _Option 2_ below instead.
 
-### Option2: Deploying using Azure CLI
+### Option 2: Deploying using Azure CLI
 
-1.  Modify the `infra/main.parameters.json` file with unique values for your deployment.
+1.  Login to Azure with the ID you wish to use for the workshop by running the following Azure CLI command:
 
-- environmentName - a unique name for your deployment (i.e. use your name or initials)
-- location - the Azure region to deploy to (i.e. SouthCentralUS)
-- sqlAdminLoginName - the name of the SQL admin account (your User Principal Name)
+    ```shell
+    az login
+    ```
 
-  You can run the following command to find out your UPN.
+1.  Modify the `infra/main.parameters.json` file with unique values for your deployment. Replace the `${VALUE}` placeholders with your own values.
 
-  ```shell
-  az ad signed-in-user show --query userPrincipalName -o tsv
-  ```
+    - AZURE_ENV_NAME - a unique name for your deployment (i.e. use your name or initials)
+    - AZURE_LOCATION - the Azure region to deploy to (i.e. SouthCentralUS)
+    - AZURE_PRINCIPAL_NAME - the name of the SQL admin account (your User Principal Name)
+    - AZURE_PRINCIPAL_ID - the object ID of the SQL admin account (your User Principal Name Object Id)
+    - MY_IP - the public IP address of your workstation
 
-- sqlAdminLoginObjectId - the object ID of the SQL admin account (your User Principal Name)
+    You can run the following command to find out your UPN.
 
-  You can run the following command to find out your object ID.
+    ```shell
+    az ad signed-in-user show --query userPrincipalName -o tsv
+    ```
 
-  ```shell
-  az ad signed-in-user show --query id -o tsv
-  ```
+    You can run the following command to find out your object ID.
 
-- sqlClientIpAddress - the IP address of your workstation
+    ```shell
+    az ad signed-in-user show --query id -o tsv
+    ```
 
-  You can run the following command to find out your IP address.
+    You can run the following command to find out your IP address (or search for "what is my ip" in your favorite search engine)
 
-  ```shell
-  $(Invoke-WebRequest -Uri "https://api.ipify.org").Content
-  ```
+    ```shell
+    $(Invoke-WebRequest -Uri "https://api.ipify.org").Content
+    ```
 
 1.  Deploy the Bicep files by running the following Azure CLI commands (you can change the `location` parameter if needed)
 
-```shell
-cd infra
-az deployment sub create --location SouthCentralUS --template-file ./main.bicep --parameters ./main.parameters.json
-```
+    ```shell
+    cd infra    
+
+    az deployment sub create --location SouthCentralUS --template-file ./main.bicep --parameters ./main.parameters.json
+    ```
 
 ## Success Criteria
 

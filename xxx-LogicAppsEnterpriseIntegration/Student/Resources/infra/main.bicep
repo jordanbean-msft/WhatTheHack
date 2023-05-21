@@ -132,7 +132,6 @@ module sql 'sql.bicep' = {
     tags: tags
     sqlClientIpAddress: sqlClientIpAddress
     logAnalyticsWorkspaceName: loggingDeployment.outputs.logAnalyticsWorkspaceName
-    keyVaultName: keyVaultDeployment.outputs.keyVaultName
     managedIdentityName: managedIdentityDeployment.outputs.managedIdentityName
   }
 }

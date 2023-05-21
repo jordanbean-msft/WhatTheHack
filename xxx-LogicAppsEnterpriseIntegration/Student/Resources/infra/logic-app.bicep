@@ -79,9 +79,12 @@ resource logicApp 'Microsoft.Web/sites@2018-11-01' = {
   }
   properties: {
     serverFarmId: appServicePlan.id
+    #disable-next-line BCP037
     keyVaultReferenceIdentity: managedIdentity.id
     clientAffinityEnabled: false
+    #disable-next-line BCP037
     publicNetworkAccess: 'Enabled'
+    #disable-next-line BCP037
     virtualNetworkSubnetId: null
     httpsOnly: true
     siteConfig: {
@@ -90,6 +93,7 @@ resource logicApp 'Microsoft.Web/sites@2018-11-01' = {
       ftpsState: 'FtpsOnly'
       cors: {}
       appSettings: []
+      #disable-next-line BCP037
       functionsRuntimeScaleMonitoringEnabled: false
     }
   }
