@@ -126,6 +126,6 @@
 
 ### Testing
 
-1.  Test the `json` workflow by sending a message to the `json-topic` topic and ensure that the message is received by the `storage` and `sql` workflows. Ensure that the message is saved to the `files` Blob container and the `Orders` table in the SQL database.
+1.  Test the `json` workflow by sending a `HTTP POST` to the endpoint and ensure that the message is received by the `storage` and `sql` workflows. Ensure that the message is saved to the `files` Blob container and the `Orders` table in the SQL database.
 
 ## Troubleshooting
