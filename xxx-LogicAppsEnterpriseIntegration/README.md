@@ -25,7 +25,7 @@ In this hack you will learn how to:
 	 - Description of challenge
 - Challenge 02: **[Write to SQL](Student/Challenge-02.md)**
 	 - Description of challenge
-- Challenge 03: **[Modularlize & integrate with Service Bus](Student/Challenge-03.md)**
+- Challenge 03: **[Modularize & integrate with Service Bus](Student/Challenge-03.md)**
 	 - Description of challenge
 - Challenge 04: **[Monitor end-to-end workflow](Student/Challenge-04.md)**
 	 - Description of challenge

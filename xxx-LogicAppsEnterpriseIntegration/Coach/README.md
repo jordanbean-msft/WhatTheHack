@@ -16,7 +16,7 @@ This hack includes an optional [lecture presentation](Lectures.pptx) that featur
 	 - Description of challenge
 - Challenge 02: **[Write to SQL](./Solution-02.md)**
 	 - Description of challenge
-- Challenge 03: **[Modularlize & integrate with Service Bus](./Solution-03.md)**
+- Challenge 03: **[Modularize & integrate with Service Bus](./Solution-03.md)**
 	 - Description of challenge
 - Challenge 04: **[Monitor end-to-end workflow](./Solution-04.md)**
 	 - Description of challenge
