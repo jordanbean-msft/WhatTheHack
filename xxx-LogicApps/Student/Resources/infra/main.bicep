@@ -68,6 +68,7 @@ module keyVaultDeployment 'key-vault.bicep' = {
     location: location
     managedIdentityName: managedIdentityDeployment.outputs.managedIdentityName
     tags: tags
+    userObjectId: sqlAdminLoginObjectId
   }
 }
 
@@ -94,6 +95,7 @@ module functionAppDeployment 'function.bicep' = {
     managedIdentityName: managedIdentityDeployment.outputs.managedIdentityName
     tags: tags
     functionAppName: names.outputs.functionAppName
+    keyVaultName: keyVaultDeployment.outputs.keyVaultName
   }
 }
 
@@ -131,7 +133,6 @@ module sql 'sql.bicep' = {
     logAnalyticsWorkspaceName: loggingDeployment.outputs.logAnalyticsWorkspaceName
     keyVaultName: keyVaultDeployment.outputs.keyVaultName
     managedIdentityName: managedIdentityDeployment.outputs.managedIdentityName
-    //logicAppIdentityPrincipalId: logicApp.outputs.logicAppIdentityPrincipalId
   }
 }
 

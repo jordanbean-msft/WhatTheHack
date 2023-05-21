@@ -58,18 +58,6 @@ resource clientFirewallRules 'Microsoft.Sql/servers/firewallRules@2022-08-01-pre
   }
 }
 
-// resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
-//   name: keyVaultName
-// }
-
-// resource sqlDbConnectionString 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
-//   name: 'sql-db-connection-string'
-//   parent: keyVault
-//   properties: {
-//     value: 'Server=tcp:${sqlServerName}${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${sqlDbName};Persist Security Info=False;User ID=${sqlServerName};Password=${sqlServerName};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
-//   }
-// }
-
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
   name: managedIdentityName
 }
@@ -78,16 +66,6 @@ resource sqlDbContributorRoleDefinition 'Microsoft.Authorization/roleDefinitions
   scope: subscription()
   name: '9b7fa17d-e63e-47b0-bb0a-15c516ac86ec'
 }
-
-// resource sqlDbContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-//   scope: sqlServer
-//   name: guid(sqlServer.id, logicAppIdentityPrincipalId, sqlDbContributorRoleDefinition.name)
-//   properties: {
-//     roleDefinitionId: sqlDbContributorRoleDefinition.id
-//     principalId: logicAppIdentityPrincipalId
-//     principalType: 'ServicePrincipal'
-//   }
-// }
 
 resource sqlDbContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
   scope: sqlServer
@@ -103,16 +81,6 @@ resource contributorRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018
   scope: subscription()
   name: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 }
-
-// resource resourceGroupContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-//   scope: resourceGroup()
-//   name: guid(resourceGroup().id, logicAppIdentityPrincipalId, contributorRoleDefinition.name)
-//   properties: {
-//     roleDefinitionId: contributorRoleDefinition.id
-//     principalId: logicAppIdentityPrincipalId
-//     principalType: 'ServicePrincipal'
-//   }
-// }
 
 resource resourceGroupContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
   scope: resourceGroup()

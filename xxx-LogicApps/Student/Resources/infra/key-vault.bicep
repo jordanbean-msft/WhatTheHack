@@ -3,6 +3,7 @@ param location string
 param logAnalyticsWorkspaceName string
 param managedIdentityName string
 param tags object
+param userObjectId string
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' existing = {
   name: managedIdentityName
@@ -28,6 +29,15 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
           secrets: [
             'get'
             'list'
+          ]
+        }
+      }
+      {
+        objectId: userObjectId
+        tenantId: subscription().tenantId
+        permissions: {
+          secrets: [
+            'all'
           ]
         }
       }

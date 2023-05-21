@@ -99,20 +99,20 @@ resource logicAppAppConfigSettings 'Microsoft.Web/sites/config@2022-03-01' = {
   parent: logicApp
   name: 'appsettings'
   properties: {
-    APP_KIND: 'workflowApp'
     APPINSIGHTS_INSTRUMENTATIONKEY: appInsights.properties.InstrumentationKey
     APPLICATIONINSIGHTS_CONNECTION_STRING: appInsights.properties.ConnectionString
-    FUNCTIONS_EXTENSION_VERSION: '~4'
-    AzureWebJobsStorage: storageAccountConnectionString
-    FUNCTIONS_WORKER_RUNTIME: 'node'
-    WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: storageAccountConnectionString
-    WEBSITE_NODE_DEFAULT_VERSION: '~16'
-    WEBSITE_CONTENTSHARE: logicAppName
+    APP_KIND: 'workflowApp'
     AzureFunctionsJobHost__extensionBundle__id: 'Microsoft.Azure.Functions.ExtensionBundle.Workflows'
     AzureFunctionsJobHost__extensionBundle__version: '[1.*, 2.0.0)'
-    STORAGE_ACCOUNT_CONTAINER_NAME: containerName
-    SQL_SERVER_NAME: '${sqlServerName}${environment().suffixes.sqlServerHostname}'
+    AzureWebJobsStorage: '@Microsoft.KeyVault(VaultName=${keyVault.name};SecretName=${logicAppStorageAccountConnectionStringSecretName})'
+    FUNCTIONS_EXTENSION_VERSION: '~4'
+    FUNCTIONS_WORKER_RUNTIME: 'node'
     SQL_DATABASE_NAME: sqlDbName
+    SQL_SERVER_FQDN: '${sqlServerName}${environment().suffixes.sqlServerHostname}'
+    STORAGE_ACCOUNT_CONTAINER_NAME: containerName
+    WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: '@Microsoft.KeyVault(VaultName=${keyVault.name};SecretName=${logicAppStorageAccountConnectionStringSecretName})'
+    WEBSITE_CONTENTSHARE: logicAppName
+    WEBSITE_NODE_DEFAULT_VERSION: '~16'
   }
 }
 
