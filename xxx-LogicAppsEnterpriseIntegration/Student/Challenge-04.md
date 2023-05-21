@@ -15,12 +15,13 @@ You will be modifying the Logic App workflows to enable the following architectu
 - Add a correlation ID to the incoming HTTP request & propagate it through the application
   - `json` workflow
     - Modify the `Tracking Id` section of the `HTTP` trigger (in the `Settings` tab)
-    - Modify the `Send message` action of the `json` workflow (add the `Correlation` parameter)
+    - Modify the `Send message` action of the `json` workflow (add the `Correlation Id` parameter)
   - `storage` workflow
     - Modify the `Split-On Tracking Id` section of the `When messages are available in a topic` Service Bus trigger (in the Settings tab), 
-    - Parse the JSON document from the Service Bus, compose a new JSON document with the correlation ID & upload the blob to the container
+    - _Parse_ the JSON document from the Service Bus, _compose_ a new JSON document with the `correlation ID` & upload the newly composed JSON to the blob container
   - `sql` workflow
-    - Modify the `Split-On Tracking Id` section of the `When a blob is added or modified` blob trigger (in the Settings tab) & insert the row into the table (include the correlation ID)
+    - Modify the `Split-On Tracking Id` section of the `When a blob is added or modified` blob trigger (in the Settings tab) 
+    - Modify the `Insert row (V2)` task to include the `correlation ID` in the `ClientTrackingId` column
 - View the `Application map` in Application Insights to get an overview of the application calls
 - View the `Logs` & the `requests` table in Application Insights to see the raw data
 - View the correlation ID propagating through the logs in the Application Insights `Tracking search` blade
@@ -42,8 +43,10 @@ To complete this challenge successfully, you should be able to:
 ## Tips
 - Use the following code to either use the correlation ID passed in by the caller or generate a new one.
   - `@{coalesce(triggerOutputs().headers?['x-my-custom-correlation-id'], guid())}`
+- Make sure you click the `Done` button at the bottom of the screen after modifying the `Settings` tab on a trigger to persist the change.
 - Use the following code to set the correlation ID on the outgoing message to Service Bus.
   - `trigger().clientTrackingId`
+  - This is an `Expression`, not just text you paste in the box.
 - Use the following code to set the correlation ID on the incoming message from Service Bus.
   - `@{coalesce(triggerOutputs()?['body']?['correlationId'], guid())}`
 - Use the `Compose` action to build a new `JSON` document to insert into Blob Storage

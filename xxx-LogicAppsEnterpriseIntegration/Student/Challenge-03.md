@@ -24,7 +24,7 @@ You will need to have 3 Logic App workflows:
   - Set the `Label` to the `orderName` field from the JSON input
   - Remove the old steps to upload to Blob Storage & insert into `SQL`
 - `storage` - This will receive the message from the Service Bus topic & upload to Blob Storage via the `storage-subscription` Service Bus subscription.
-- `sql` - This will receive the message from the Service Bus topic, decode/parse the JSON content from the `json` workflow & insert into `SQL` via the `sql-subscription` Service Bus subscription.
+- `sql` - This will receive the message from the Service Bus topic, _decode/parse_ the JSON content from the `json` workflow & insert into `SQL` via the `sql-subscription` Service Bus subscription.
 
 - Test and see if the blob is uploaded to the storage account & the `SQL` database has a new row
 
