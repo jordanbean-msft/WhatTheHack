@@ -1,42 +1,50 @@
-# Challenge 02 - <Title of Challenge>
+# Challenge 02 - Write to SQL
 
 [< Previous Challenge](./Challenge-01.md) - **[Home](../README.md)** - [Next Challenge >](./Challenge-03.md)
 
 ## Introduction
 
-When setting up an IoT device, it is important to understand how 'thingamajigs' work. Thingamajigs are a key part of every IoT device and ensure they are able to communicate properly with edge servers. Thingamajigs require IP addresses to be assigned to them by a server and thus must have unique MAC addresses. In this challenge, you will get hands on with a thingamajig and learn how one is configured.
+In this challenge, you will add a new action to the workflow to write the data from the JSON input into a table in `SQL`.
 
 ## Description
 
-- Login to the SQL database & create a table similar to below
-```sql
-CREATE TABLE [dbo].[Thingamajigs](
-  [Id] [int] IDENTITY(1,1) NOT NULL,
-  [Name] [nvarchar](50) NOT NULL,
-  [Value] [nvarchar](50) NOT NULL,
-  [ClientTrackingId] [nvarchar](50),
-  [SAPOrderId] [nvarchar](50)
-GO;
-```
-- Add a new `Sql Server` action to the workflow to write the data from the JSON input into a table in SQL (`name` & `value`)
-  - Use the `Insert row (V2)` Logic Apps action (under `Azure`) & `Logic Apps Managed Identity` connection type to do the insert
-  - Note that the `Server name` is the _FQDN_ of the SQL Server (not just its name)
-  - Similar to the blob storage action, prepend a unique identifier to the `Name` column (such as the `Enqueue Time UTC` so you get a unique name each time)
-- Add a new `HTTP response` action to the workflow to return a `200` status code to the caller
+You will be setting up a new Logic App workflow to enable the following architecture.
+
+![Architecture](./Content/Challenge-02/.img/architecture.png)
+
+- Login to the `SQL` database in the Azure portal & create a table similar to below
+    ```sql
+    CREATE TABLE [dbo].[Orders] (
+      [Id]               [int]          IDENTITY(1,1) NOT NULL,
+      [OrderName]        [nvarchar](50)               NOT NULL,
+      [PartNumber]       [nvarchar](50)               NOT NULL,
+      [ClientTrackingId] [nvarchar](50),
+      [SAPOrderId]       [nvarchar](50)
+    );
+    GO;
+    ```
+- Create a `SQL ID` for the the managed identity of the Logic App to login to the `SQL` database and grant it access to the tables in the database.
+- Add a new `Sql Server` action to the `json` workflow to insert the data from the JSON input into a table in `SQL` (`OrderName` & `PartNumber` columns)
+- Save & test your updated workflow to ensure it writes to both the Blob Storage account & `SQL` database
 
 ## Success Criteria
 
 To complete this challenge successfully, you should be able to:
-- Verify that the IoT device boots properly after its thingamajig is configured.
-- Verify that the thingamajig can connect to the mothership.
-- Demonstrate that the thingamajic will not connect to the IoTProxyShip
+- Verify that the `Orders` table was created in the `SQL` database
+- Verify that the managed identity of the Logic App has a `SQL ID` & access to the `Orders` table
+- Verify that the `json` workflow writes to both the Blob Storage account & `SQL` database
 
 ## Learning Resources
 
-- [What is a Thingamajig?](https://www.bing.com/search?q=what+is+a+thingamajig)
-- [10 Tips for Never Forgetting Your Thingamajic](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
-- [IoT & Thingamajigs: Together Forever](https://www.youtube.com/watch?v=yPYZpwSpKmA)
+- [Connect to an SQL database from workflows in Azure Logic Apps](https://learn.microsoft.com/en-us/azure/connectors/connectors-create-api-sqlazure?tabs=standard)
+- [Create SQL ID for managed identity](https://learn.microsoft.com/en-us/azure/app-service/tutorial-connect-msi-sql-database?tabs=windowsclient%2Cef%2Cdotnet#grant-permissions-to-managed-identity)
 
 ## Tips
 
-- It is likely that you will see an error when trying to use the drop-down to select a DB after entering the SQL Server FQDN in the Logic Apps designer. This is because you didn't assign a role the managed identity at the _server_ level (not the _DB_ level). This prevents the managed identity from being able to list all the DBs on the server. You can work around this by manually entering the DB name in the drop-down field.
+- Use the `Insert row (V2)` Logic Apps action (under `Azure`) & `Logic Apps Managed Identity` connection type to do the insert into the database.
+- Note that the `Server name` is the _FQDN_ of the `SQL Server` (not just its name)
+- Note that the `Database name` is the just name of the DB (not a FQDN and not including the server name)
+- It is likely that you will see an error when trying to use the Logic Apps drop-down to select a DB after entering the `SQL Server FQDN` in the Logic Apps designer. This is because you didn't assign a role the managed identity at the _server_ level (not the _DB_ level). This prevents the managed identity from being able to list all the DBs on the server. You can work around this by manually entering the DB name in the drop-down field.
+- You should be able to login to the `SQL` database using Azure AD authentication to execute the `SQL` commands.
+- You should be able to use the `Query editor` in the Azure portal to interact with the database (but you could use `SQL Server Management Studio` if you prefer) 
+- It is easiest to grant the managed identity `db_owner` role on the DB (for testing purposes). In production, you should grant it the least privileges required to do its job.
