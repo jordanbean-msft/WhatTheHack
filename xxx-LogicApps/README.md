@@ -1,36 +1,41 @@
-# What The Hack - LogicApps
+# What The Hack - Logic Apps Enterprise Integration
 
 ## Introduction
 
-The IoT Hack of the Century will take you on a whirlwind tour in the world of IoT and how it is being used in the modern world of mineral extraction in exotic locations like the Arctic and the wilds of South Africa.
+This hack will help you understand how to use Logic Apps to integrate your enterprise systems with other systems and services.  You will learn how to use Logic Apps to connect to other Azure services.  You will also learn how to use Logic Apps to orchestrate complex workflows and business processes.
 
 ## Learning Objectives
 
-In this hack you will be solving the common business problem that companies in the mineral extraction industry face and how IoT solutions from Azure are brought to bare
+In this hack you will learn how to:
 
-1. Provision an IoT Hub
-2. Set up an IoT Edge device
-3. Bring Azure Sphere to your solution for scale and resiliency
+- Expose a REST API endpoint for users to call
+- Injest data from a JSON file into Azure Storage
+- Write data to Azure SQL
+- Modularize & add validation to your Logic App
+- Integrate with Service Bus
+- Monitor end-to-end workflows
+- Authenticate with AzureAD when calling a custom API
+- Author Logic Apps in Visual Studio Code
 
 ## Challenges
 
 - Challenge 00: **[Prerequisites - Ready, Set, GO!](Student/Challenge-00.md)**
 	 - Prepare your workstation to work with Azure.
-- Challenge 01: **[Title of Challenge](Student/Challenge-01.md)**
+- Challenge 01: **[Process JSON input data & write to Storage](Student/Challenge-01.md)**
 	 - Description of challenge
-- Challenge 02: **[Title of Challenge](Student/Challenge-02.md)**
+- Challenge 02: **[Write to SQL](Student/Challenge-02.md)**
 	 - Description of challenge
-- Challenge 03: **[Title of Challenge](Student/Challenge-03.md)**
+- Challenge 03: **[Modularlize & integrate with Service Bus](Student/Challenge-03.md)**
 	 - Description of challenge
-- Challenge 04: **[Title of Challenge](Student/Challenge-04.md)**
+- Challenge 04: **[Monitor end-to-end workflow](Student/Challenge-04.md)**
 	 - Description of challenge
-- Challenge 05: **[Title of Challenge](Student/Challenge-05.md)**
+- Challenge 05: **[Validation & custom response](Student/Challenge-05.md)**
 	 - Description of challenge
-- Challenge 06: **[Title of Challenge](Student/Challenge-06.md)**
+- Challenge 06: **[Parameterize with app settings](Student/Challenge-06.md)**
 	 - Description of challenge
-- Challenge 07: **[Title of Challenge](Student/Challenge-07.md)**
+- Challenge 07: **[Authenticate with AzureAD when calling custom API](Student/Challenge-07.md)**
 	 - Description of challenge
-- Challenge 08: **[Title of Challenge](Student/Challenge-08.md)**
+- Challenge 08: **[Visual Studio Code authoring](Student/Challenge-08.md)**
 	 - Description of challenge
 - Challenge 09: **[Title of Challenge](Student/Challenge-09.md)**
 	 - Description of challenge
@@ -52,9 +57,7 @@ In this hack you will be solving the common business problem that companies in t
 - Your own Azure subscription with Owner access
 - Visual Studio Code
 - Azure CLI
-- An AVNET X231 device
 
 ## Contributors
 
-- Jane Q. Public
-- Joe T. Muppet
+- Jordan Bean

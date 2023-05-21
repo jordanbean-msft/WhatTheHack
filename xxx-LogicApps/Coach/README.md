@@ -12,21 +12,21 @@ This hack includes an optional [lecture presentation](Lectures.pptx) that featur
 
 - Challenge 00: **[Prerequisites - Ready, Set, GO!](./Solution-00.md)**
 	 - Prepare your workstation to work with Azure.
-- Challenge 01: **[Title of Challenge](./Solution-01.md)**
+- Challenge 01: **[Process JSON input data & write to Storage](./Solution-01.md)**
 	 - Description of challenge
-- Challenge 02: **[Title of Challenge](./Solution-02.md)**
+- Challenge 02: **[Write to SQL](./Solution-02.md)**
 	 - Description of challenge
-- Challenge 03: **[Title of Challenge](./Solution-03.md)**
+- Challenge 03: **[Modularlize & integrate with Service Bus](./Solution-03.md)**
 	 - Description of challenge
-- Challenge 04: **[Title of Challenge](./Solution-04.md)**
+- Challenge 04: **[Monitor end-to-end workflow](./Solution-04.md)**
 	 - Description of challenge
-- Challenge 05: **[Title of Challenge](./Solution-05.md)**
+- Challenge 05: **[Validation & custom response](./Solution-05.md)**
 	 - Description of challenge
-- Challenge 06: **[Title of Challenge](./Solution-06.md)**
+- Challenge 06: **[Parameterize with app settings](./Solution-06.md)**
 	 - Description of challenge
-- Challenge 07: **[Title of Challenge](./Solution-07.md)**
+- Challenge 07: **[Authenticate with AzureAD when calling custom API](./Solution-07.md)**
 	 - Description of challenge
-- Challenge 08: **[Title of Challenge](./Solution-08.md)**
+- Challenge 08: **[Visual Studio Code authoring](./Solution-08.md)**
 	 - Description of challenge
 - Challenge 09: **[Title of Challenge](./Solution-09.md)**
 	 - Description of challenge
