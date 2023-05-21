@@ -83,6 +83,10 @@
 
     ![Run History](./Solutions/Solution-01/.img/json-run-history.png)
 
+1.  You should also verify the JSON file was written to Blob Storage.
+
+    ![Blob Storage](./Solutions/Solution-01/.img/storage-account.png)
+
 ## Troubleshooting
 
 Check the Application Settings for the Logic App to ensure a new App Setting for the Storage Account has been created. It will look something like this:
@@ -95,4 +99,4 @@ Check the Application Settings for the Logic App to ensure a new App Setting for
 }
 ```
 
->NOTE: If the students create any connections in the Azure portal, but then re-deploy the Bicep templates, they will wipe out any Application Settings that were created. These will have to be recreated or the Logic App will not work.
+>NOTE: If the students create any connections in the Azure portal, but then re-deploy the Bicep templates, they will wipe out any Application Settings that were created. These will have to be re-created or the Logic App will not work.
