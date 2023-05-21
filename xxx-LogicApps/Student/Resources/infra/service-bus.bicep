@@ -2,6 +2,7 @@ param serviceBusNamespaceName string
 param location string
 param tags object
 param keyVaultName string
+param managedIdentityName string
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   name: serviceBusNamespaceName
@@ -39,6 +40,25 @@ resource serviceBusNamespaceConnectionString 'Microsoft.KeyVault/vaults/secrets@
   parent: keyVault
   properties: {
     value: 'Endpoint=sb://${serviceBusNamespace.name}.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=${listKeys(endpoint, serviceBusNamespace.apiVersion).primaryKey}'
+  }
+}
+
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
+  name: managedIdentityName
+}
+
+resource serviceBusDataOwnerRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
+  scope: subscription()
+  name: '090c5cfd-751d-490a-894a-3ce6f1109419'
+}
+
+resource serviceBusDataOwnerRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  scope: serviceBusNamespace
+  name: guid(serviceBusNamespace.id, managedIdentity.name, serviceBusDataOwnerRoleDefinition.name)
+  properties: {
+    roleDefinitionId: serviceBusDataOwnerRoleDefinition.id
+    principalId: managedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
   }
 }
 

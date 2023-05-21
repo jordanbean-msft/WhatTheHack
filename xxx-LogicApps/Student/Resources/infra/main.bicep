@@ -80,6 +80,7 @@ module serviceBusDeployment 'service-bus.bicep' = {
     location: location
     tags: tags
     keyVaultName: keyVaultDeployment.outputs.keyVaultName
+    managedIdentityName: managedIdentityDeployment.outputs.managedIdentityName
   }
 }
 

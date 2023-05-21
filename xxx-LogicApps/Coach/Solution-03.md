@@ -1,20 +1,131 @@
-# Challenge 03 - <Title of Challenge> - Coach's Guide 
+# Challenge 03 - Modularize & use Service Bus for integration - Coach's Guide 
 
 [< Previous Solution](./Solution-02.md) - **[Home](./README.md)** - [Next Solution >](./Solution-04.md)
 
 ## Notes & Guidance
 
-This is the only section you need to include.
+### `json` workflow
 
-Use general non-bulleted text for the beginning of a solution area for this challenge
+1.  Modify the `json` workflow and remove the `Upload blob` & `Insert row` steps. 
 
-- Then move into bullets
-  - And sub-bullets and even
-    - sub-sub-bullets
+1.  Add a `Service Bus->Send Message` (under the `Azure` tab) step to put message on Service Bus topic `json-topic`.
 
-Break things apart with more than one bullet list
+1.  Set the `Authentication Type` to `Logic Apps Managed Identity`.
 
-- Like this
-- One
-- Right
-- Here
+1.  Set the `Namespace Endpoint` to the Service Bus namespace endpoint (e.g. `sb://<namespace>.servicebus.windows.net/`).
+
+1.  Set the `Queue/Topic name` to `json-topic (topic)`.
+
+1.  Under the `Add new parameter`, check the boxes for `Content` and `Label`.
+
+1.  Set the `Content` to the `body` field from the JSON input.
+
+1.  Set the `Label` to the `name` field from the JSON input.
+
+    The `Send message` action should look like this:
+
+    ![Send message](./Solutions/Solution-03/.img/send-message-completed.png)
+
+1.  Save the workflow.
+
+    The overall workflow should look similar to this:
+
+    ![json workflow](./Solutions/Solution-03/.img/json-workflow-completed.png)
+
+### `storage` workflow
+
+1.  Create a new Logic App workflow called `storage`.
+
+1.  Add a `Service Bus->When a message is received in a topic (auto-complete)` (under the `Azure` tab) trigger.
+
+1.  Set the `Topic name` to `json-topic`.
+
+1.  Set the `Subscription name` to `storage-subscription`.
+
+    The `When a message is recieved in a topic (auto-complete)` trigger should look like this:
+
+    ![When a message is recieved in a topic (auto-complete)](./Solutions/Solution-03/.img/when-a-message-is-received-in-a-topic-storage-completed.png)
+
+1.  Add a `Blob Storage->Create blob` (under the `Azure` tab) step.
+
+1.  Set the `Blob container` to `files`.
+
+1.  Set the `Blob name` to `utcNow()/order.json`.
+
+1.  Set the `Blob content` to `Content` from the `When a message is recieved in a topic (auto-complete)` trigger.
+
+    The `Upload blob` action should look like this:
+
+    ![Upload blob](./Solutions/Solution-03/.img/upload-blob-to-storage-container-completed.png)
+
+1.  Save the workflow.
+
+    The overall workflow should look similar to this:
+
+    ![storage workflow](./Solutions/Solution-03/.img/storage-workflow-completed.png)    
+
+### `sql` workflow
+
+1.  Add a `Service Bus->When a message is received in a topic (auto-complete)` (under the `Azure` tab) trigger.
+
+1.  Set the `Topic name` to `json-topic`.
+
+1.  Set the `Subscription name` to `sql-subscription`.
+
+    The `When a message is recieved in a topic (auto-complete)` trigger should look like this:
+
+    ![When a message is recieved in a topic (auto-complete)](./Solutions/Solution-03/.img/when-a-message-is-received-in-a-topic-sql-completed.png)
+
+1.  Add a `Parse JSON` action & set the `Schema` similar to the following:
+
+    ```json
+    {
+        "type": "object",
+        "properties": {
+            "orderName": {
+                "type": "string"
+            },
+            "partNumber": {
+                "type": "string"
+            }
+        }
+    }
+    ```
+
+1.  Use the `decodeBase64()` function to decode the `Content` from the `When a message is recieved in a topic (auto-complete)` trigger. 
+
+    ```decodeBase64(triggerBody()?['ContentData'])```
+
+    The `Parse JSON` action should look like this:
+
+    ![Parse JSON](./Solutions/Solution-03/.img/parse-json-completed.png)
+
+1.  Add a `SQL->Insert row (V2)` (under the `Azure` tab) action after the `Parse JSON` action.
+
+1.  Set the `Authentication Type` to `Logic Apps Managed Identity`.
+
+1.  Set the `Server name` to the SQL server name.
+
+1.  Set the `Database name` to the SQL database name.
+
+1.  Set the `Table name` to `Orders`.
+
+1.  Set the `OrderName` to `orderName` from the `Parse JSON` action.
+
+1.  Set the `PartNumber` to `partNumber` from the `Parse JSON` action.
+
+    The `Insert row (V2)` action should look like this:
+
+    ![Insert row (V2)](./Solutions/Solution-03/.img/insert-row-v2-completed.png)
+
+1.  Save the workflow.
+
+    The overall workflow should look similar to this:
+
+    ![sql workflow](./Solutions/Solution-03/.img/sql-workflow-completed.png)
+
+### Testing
+
+1.  Test the `json` workflow by sending a message to the `json-topic` topic and ensure that the message is received by the `storage` and `sql` workflows. Ensure that the message is saved to the `files` Blob container and the `Orders` table in the SQL database.
+
+## Troubleshooting
