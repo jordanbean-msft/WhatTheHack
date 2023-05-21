@@ -44,4 +44,4 @@ To complete this challenge successfully, you should be able to:
 ## Tips
 - Use the `Service Bus->Send message` action (under the `Azure` tab) to put a message on the Service Bus topic. Set the `Authentication Type` to `Logic Apps Managed Identity`.
 - The format of the `Namespace Endpoint` is `sb://<namespace>.servicebus.windows.net/`
-- Use the `decodeBase64()` function to decode the JSON content from the Service Bus message in the `sql` workflow
+- Use the `decodeBase64()` function to decode the JSON content from the Service Bus message in the `sql` workflow (use the `Expression` tab in the `Insert row` action & then click on the `Dynamic content` tab to select the `Content`)

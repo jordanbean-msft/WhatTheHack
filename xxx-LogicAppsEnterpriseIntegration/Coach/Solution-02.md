@@ -62,3 +62,7 @@
 ## Troubleshooting
 
 Make sure to create the `SQL ID` & grant it roles before trying to use the Logic Apps GUI to insert the row. If you don't, you will get an error that the `SQL ID` doesn't have permissions to the database.
+
+Don't use the _preview_ version of the workflow editor in the Azure portal.
+
+You may have to create a new SQL connection if you created the connection before you created the `SQL ID`.
