@@ -10,7 +10,7 @@ Editing the Logic App in the Azure portal is fine, but you also need to be able 
 
 In this challenge, you will use Visual Studio Code to edit the Logic App that you created in the previous challenge.
 
-- Download your app content from the Azure portal
+- Download your app content from the Azure portal on the Logic App Overview blade (`Download app content` button)
 - Copy the code into the `src/logic` directory of your repo
 - Open the `workflow.json` files in both `code` & `Designer` view to compare them
 
