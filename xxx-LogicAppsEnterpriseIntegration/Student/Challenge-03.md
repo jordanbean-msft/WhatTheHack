@@ -14,7 +14,7 @@ In this challenge, you will modularize the Logic App from the previous challenge
 
 You will be setting up a new Logic App workflow to enable the following architecture.
 
-![Architecture](../images/Challenge-03/.img/architecture.png)
+![Architecture](../images/Challenge-03/architecture.png)
 
 You will need to have 3 Logic App workflows:
 

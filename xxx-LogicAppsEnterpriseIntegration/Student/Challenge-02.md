@@ -10,7 +10,7 @@ In this challenge, you will add a new action to the workflow to write the data f
 
 You will be setting up a new Logic App workflow to enable the following architecture.
 
-![Architecture](../images/Challenge-02/.img/architecture.png)
+![Architecture](../images/Challenge-02/architecture.png)
 
 - Login to the `SQL` database in the Azure portal & create a table similar to below
     ```sql

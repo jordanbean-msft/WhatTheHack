@@ -12,7 +12,7 @@ In this challenge, you will learn how to call out to a custom API that is protec
 
 The architecture of the solution is as follows:
 
-![architecture](../images/Challenge-07/.img/architecture.png)
+![architecture](../images/Challenge-07/architecture.png)
 
 - Review the code for the pseudo-SAP order system (especially how to call it)
   - Look in the `src/api` directory

@@ -10,7 +10,7 @@ In this challenge, you will be setting up a Logic App as a REST API endpoint for
 
 You will be setting up a new Logic App workflow to enable the following architecture.
 
-![Architecture](../images/Challenge-01/.img/architecture.png)
+![Architecture](../images/Challenge-01/architecture.png)
 
 - Create a new Logic App workflow in the Azure portal named `json` of type `Stateful`.
 - Add a new `When a HTTP request is received` trigger to the workflow to accept a JSON payload from the caller.
