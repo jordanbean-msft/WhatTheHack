@@ -10,7 +10,7 @@ A key consideration when building a distributed system is tracking requests thro
 
 You will be modifying the Logic App workflows to enable the following architecture.
 
-![Architecture](./Content/Challenge-04/.img/architecture.png)
+![Architecture](../images/Challenge-04/.img/architecture.png)
 
 - Add a correlation ID to the incoming HTTP request & propagate it through the application
   - `json` workflow

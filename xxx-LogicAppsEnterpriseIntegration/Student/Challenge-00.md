@@ -40,9 +40,9 @@ Choose 1 of the options below to deploy the resources to your Azure subscription
 
 1.  Deploy the Azure infrastructure & code by running the following Azure Developer CLI command:
 
-      ```shell
-      azd up
-      ```
+    ```shell
+    azd up
+    ```
 
 If any part of this script fails (missing dependencies, network issues, etc), you can use _Option 2_ below instead.
 

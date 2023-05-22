@@ -10,7 +10,7 @@ In this challenge, you will add a new action to the workflow to write the data f
 
 You will be setting up a new Logic App workflow to enable the following architecture.
 
-![Architecture](./Content/Challenge-02/.img/architecture.png)
+![Architecture](../images/Challenge-02/.img/architecture.png)
 
 - Login to the `SQL` database in the Azure portal & create a table similar to below
     ```sql
@@ -23,7 +23,7 @@ You will be setting up a new Logic App workflow to enable the following architec
     );
     GO;
     ```
-- Create a `SQL ID` for the the managed identity of the Logic App to login to the `SQL` database and grant it access to the tables in the database.
+- Create a `SQL ID` for the the `Managed Identity` (user-assigned managed identity) of the Logic App to login to the `SQL` database and grant it access to the tables in the database.
 - Add a new `Sql Server` action to the `json` workflow to insert the data from the JSON input into a table in `SQL` (`OrderName` & `PartNumber` columns)
 - Save & test your updated workflow to ensure it writes to both the Blob Storage account & `SQL` database
 

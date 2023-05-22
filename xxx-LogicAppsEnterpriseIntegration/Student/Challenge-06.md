@@ -29,4 +29,4 @@ To complete this challenge successfully, you should be able to:
 ## Tips
 - You will need to remove the double quotes surrounding the parameter definition value if the Logic App designer adds them. You may have to play with this a bit get it to save without them (let it add them, save the workflow, then remove them & save again).
 
-  ![parameter-container-name](./Content/Challenge-06/.img/parameter-container-name.png)
+  ![parameter-container-name](../images/Challenge-06/.img/parameter-container-name.png)

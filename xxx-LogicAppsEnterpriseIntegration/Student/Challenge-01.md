@@ -10,7 +10,7 @@ In this challenge, you will be setting up a Logic App as a REST API endpoint for
 
 You will be setting up a new Logic App workflow to enable the following architecture.
 
-![Architecture](./Content/Challenge-01/.img/architecture.png)
+![Architecture](../images/Challenge-01/.img/architecture.png)
 
 - Create a new Logic App workflow in the Azure portal named `json` of type `Stateful`.
 - Add a new `When a HTTP request is received` trigger to the workflow to accept a JSON payload from the caller.
@@ -39,6 +39,7 @@ To complete this challenge successfully, you should be able to:
 ## Tips
 
 - Recommendation is to use the `Built-in` connector for `Azure Blob Storage`
+- Use the `Use sample payload to generate schema` in `Parse JSON` to generate the schema from the JSON payload.
 - You will have to create a `Connection` to the Blob Storage account the first time you use this connector. Use the `Storage account connection string` as the `authentication type` for this challenge. You can get the Storage Account connection string from the Azure portal (under `Access keys`).
 - Use `utcNow()/order.json` as the filename so you get unique filenames (note the use of the `utcNow()` function, use the `Expression` tab to add the function, then the suffix as text).
 - Store the `Body` of the `Parse JSON` action as the `Content`.
