@@ -11,12 +11,13 @@
 1.  Create the `Orders` table by running the following `SQL`.
 
     ```sql
-    CREATE TABLE [dbo].[Orders] (
-      [Id]               [int]          IDENTITY(1,1) NOT NULL,
-      [OrderName]        [nvarchar](50)               NOT NULL,
-      [PartNumber]       [nvarchar](50)               NOT NULL,
-      [ClientTrackingId] [nvarchar](50),
-      [SAPOrderId]       [nvarchar](50)
+    CREATE TABLE [dbo].[ORDERS] (
+      [ID]                 [int]           IDENTITY(1,1) NOT NULL,
+      [ORDER_NAME]         [nvarchar](50)                NOT NULL,
+      [PART_NAME]          [nvarchar](50)                NOT NULL,
+      [CLIENT_TRACKING_ID] [nvarchar](50),
+      [SAP_ORDER_ID]       [nvarchar](50),
+      [CREATE_DATE]        [datetime]      DEFAULT(getdate())
     );
     GO;
     ```
@@ -25,7 +26,7 @@
 
     ```sql
     CREATE USER [id-ike3s2mwedmk4] FROM EXTERNAL PROVIDER;
-    ALTER ROLE db_owner ADD MEMBER [id-ike3s2mwedmk4];
+    ALTER ROLE [db_owner] ADD MEMBER [id-ike3s2mwedmk4];
     GO;
     ```
 
@@ -37,7 +38,7 @@
 
 1.  Set the `Database name` to the name of the SQL Database
 
-1.  Click the drop-down & select the `Orders` table
+1.  Click the drop-down & select the `ORDERS` table
 
 1.  Set the `OrderName` column to the `orderName` field from the `Parse JSON` action
 
@@ -45,19 +46,19 @@
 
 1.  Your `Insert row (V2)` action should look like this:
 
-    ![Add SQL Server action](./Solutions/Solution-02/.img/insert-row-v2-completed.png)
+    ![Add SQL Server action](./Solutions/Solution-02/insert-row-v2-completed.png)
 
 1.  Your final worklow should look like this:
 
-    ![Final workflow](./Solutions/Solution-02/.img/json-workflow-completed.png)
+    ![Final workflow](./Solutions/Solution-02/json-workflow-completed.png)
 
 1.  Run the `HTTP POST` command in Postman and confirm that data is written to both the Blob Storage account & the new SQL table.
 
     ```sql
-    SELECT * FROM [dbo].[Orders];
+    SELECT * FROM [dbo].[ORDERS];
     ```
 
-    ![SQL query results](./Solutions/Solution-02/.img/sql.png)
+    ![SQL query results](./Solutions/Solution-02/sql.png)
 
 ## Troubleshooting
 
@@ -66,3 +67,5 @@ Make sure to create the `SQL ID` & grant it roles before trying to use the Logic
 Don't use the _preview_ version of the workflow editor in the Azure portal.
 
 You may have to create a new SQL connection if you created the connection before you created the `SQL ID`.
+
+Make sure the `Managed identity` field of the connector is set to use the `user assigned managed identity` in the SQL connector (similar to `id-bnkuvsd2aqks4`, not `System assigned managed identity`)

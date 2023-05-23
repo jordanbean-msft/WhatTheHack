@@ -23,7 +23,7 @@
 
     It should look something like this when complete.
 
-    ![Parse JSON](./Solutions/Solution-01/.img/parse-json-completed.png)
+    ![Parse JSON](./Solutions/Solution-01/parse-json-completed.png)
 
 1.  Add a `Upload blob to storage container` action to the workflow to write a JSON file to the Blob Storage account that ends in `files` and has a container named `files`.
 
@@ -52,11 +52,11 @@
 
     It should look something like this when complete.
 
-    ![Upload blob to storage container](./Solutions/Solution-01/.img/upload-blob-to-storage-container-completed.png)
+    ![Upload blob to storage container](./Solutions/Solution-01/upload-blob-to-storage-container-completed.png)
 
 1.  The completed workflow should be similar to the following.
 
-    ![Completed Workflow](./Solutions/Solution-01/.img/json-completed-workflow.png)
+    ![Completed Workflow](./Solutions/Solution-01/json-completed-workflow.png)
 
 1.  Click `Save`.
 
@@ -77,15 +77,15 @@
 
 1.  Click `Send` and you should get a `202 Accepted` response.
 
-    ![Postman Response](./Solutions/Solution-01/.img/postman.png)
+    ![Postman Response](./Solutions/Solution-01/postman.png)
 
 1.  You should also verify the run succeeded by looking at the `Run history` on the `json` workflow in the Azure portal.
 
-    ![Run History](./Solutions/Solution-01/.img/json-run-history.png)
+    ![Run History](./Solutions/Solution-01/json-run-history.png)
 
 1.  You should also verify the JSON file was written to Blob Storage.
 
-    ![Blob Storage](./Solutions/Solution-01/.img/storage-account.png)
+    ![Blob Storage](./Solutions/Solution-01/storage-account.png)
 
 ## Troubleshooting
 

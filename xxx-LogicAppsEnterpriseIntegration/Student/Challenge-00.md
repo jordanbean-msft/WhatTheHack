@@ -10,6 +10,7 @@ Thank you for participating in the LogicApps What The Hack. Before you can hack,
 
 - [Azure Subscription](../../000-HowToHack/WTH-Common-Prerequisites.md#azure-subscription)
   - You will need _Owner_ permissions on the subscription to complete the hack (due to needing to grant RBAC access to the managed identity of the Logic App)
+  - This hack can be run in a [Visual Studio subscription with Azure credits](https://azure.microsoft.com/en-us/pricing/member-offers/credit-for-visual-studio-subscribers/)
 - [Managing Cloud Resources](../../000-HowToHack/WTH-Common-Prerequisites.md#managing-cloud-resources)
   - [Azure Portal](../../000-HowToHack/WTH-Common-Prerequisites.md#azure-portal)
   - [Azure CLI](../../000-HowToHack/WTH-Common-Prerequisites.md#azure-cli)
@@ -17,11 +18,12 @@ Thank you for participating in the LogicApps What The Hack. Before you can hack,
   - [Azure Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#azure-cli)
   - [Azure Cloud Shell](../../000-HowToHack/WTH-Common-Prerequisites.md#azure-cloud-shell)
 - [PowerShell Core](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3)
+  - This is needed to run the Azure Developer CLI correctly. If you don't have PowerShell Core, you can use [Option 2](./Challenge-00.md#option-2-deploying-using-azure-cli) below.
 - [Visual Studio Code](../../000-HowToHack/WTH-Common-Prerequisites.md#visual-studio-code)
   - [Logic Apps Standard extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurelogicapps)
-- [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows)
 - [.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 - [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Cwindows%2Ccsharp%2Cportal%2Cbash)
+- [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows)
 - [Azure Storage Emulator](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite?tabs=visual-studio-code)
 
 ## Description
@@ -44,7 +46,7 @@ Choose 1 of the options below to deploy the resources to your Azure subscription
     azd up
     ```
 
-If any part of this script fails (missing dependencies, network issues, etc), you can use _Option 2_ below instead.
+If any part of this script fails (missing dependencies, network issues, etc), you can use [Option 2](./Challenge-00.md#option-2-deploying-using-azure-cli) below instead.
 
 ### Option 2: Deploying using Azure CLI
 
@@ -58,8 +60,8 @@ If any part of this script fails (missing dependencies, network issues, etc), yo
 
     - **AZURE_ENV_NAME** - a unique name for your deployment (i.e. use your name or initials)
     - **AZURE_LOCATION** - the Azure region to deploy to (i.e. SouthCentralUS)
-    - **AZURE_PRINCIPAL_NAME** - the name of the SQL admin account (your User Principal Name)
-    - **AZURE_PRINCIPAL_ID** - the object ID of the SQL admin account (your User Principal Name Object Id)
+    - **AZURE_PRINCIPAL_NAME** - the name of the Azure AD SQL admin account (your User Principal Name _in this tenant_)
+    - **AZURE_PRINCIPAL_ID** - the object ID of the Azure AD SQL admin account (your User Principal Name Object Id _in this tenant_)
     - **MY_IP** - the public IP address of your workstation
 
     You can run the following command to find out your `UPN`.
@@ -80,12 +82,12 @@ If any part of this script fails (missing dependencies, network issues, etc), yo
     $(Invoke-WebRequest -Uri "https://api.ipify.org").Content
     ```
 
-1.  Deploy the Bicep files by running the following Azure CLI commands (you can change the `location` parameter if needed)
+1.  Deploy the Bicep files by running the following Azure CLI commands
 
     ```shell
     cd infra    
 
-    az deployment sub create --location SouthCentralUS --template-file ./main.bicep --parameters ./main.parameters.json
+    az deployment sub create --location <azure-region-name> --template-file ./main.bicep --parameters ./main.parameters.json
     ```
 
 1.  Deploy the Function App code.

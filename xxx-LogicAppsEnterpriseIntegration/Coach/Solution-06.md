@@ -20,7 +20,7 @@
 
     The `storage` workflow should look like the following.
 
-    ![parameter-container-name](./Solutions/Solution-06/.img/parameter-container-name.png)
+    ![parameter-container-name](./Solutions/Solution-06/parameter-container-name.png)
 
     >NOTE: You will need to remove the double quotes surrounding this value if the Logic App designer adds them. You may have to play with this a bit get it to save without them (let it add them, save the workflow, then remove them & save again).
 
@@ -30,6 +30,6 @@
 
     The `Upload blob to storage container` action should look like the following.
 
-    ![upload-blob-to-storage-container-completed](./Solutions/Solution-06/.img/upload-blob-to-storage-container-completed.png)
+    ![upload-blob-to-storage-container-completed](./Solutions/Solution-06/upload-blob-to-storage-container-completed.png)
 
 1.  Save & test your workflow to ensure it still works

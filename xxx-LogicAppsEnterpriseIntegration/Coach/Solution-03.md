@@ -24,13 +24,13 @@
 
     The `Send message` action should look like this:
 
-    ![Send message](./Solutions/Solution-03/.img/send-message-completed.png)
+    ![Send message](./Solutions/Solution-03/send-message-completed.png)
 
 1.  Save the workflow.
 
     The overall workflow should look similar to this:
 
-    ![json workflow](./Solutions/Solution-03/.img/json-workflow-completed.png)
+    ![json workflow](./Solutions/Solution-03/json-workflow-completed.png)
 
 ### `storage` workflow
 
@@ -44,7 +44,7 @@
 
     The `When a message is recieved in a topic (auto-complete)` trigger should look like this:
 
-    ![When a message is recieved in a topic (auto-complete)](./Solutions/Solution-03/.img/when-a-message-is-received-in-a-topic-storage-completed.png)
+    ![When a message is recieved in a topic (auto-complete)](./Solutions/Solution-03/when-a-message-is-received-in-a-topic-storage-completed.png)
 
 1.  Add a `Blob Storage->Create blob` (under the `Azure` tab) step.
 
@@ -56,13 +56,13 @@
 
     The `Upload blob` action should look like this:
 
-    ![Upload blob](./Solutions/Solution-03/.img/upload-blob-to-storage-container-completed.png)
+    ![Upload blob](./Solutions/Solution-03/upload-blob-to-storage-container-completed.png)
 
 1.  Save the workflow.
 
     The overall workflow should look similar to this:
 
-    ![storage workflow](./Solutions/Solution-03/.img/storage-workflow-completed.png)    
+    ![storage workflow](./Solutions/Solution-03/storage-workflow-completed.png)    
 
 ### `sql` workflow
 
@@ -74,7 +74,7 @@
 
     The `When a message is recieved in a topic (auto-complete)` trigger should look like this:
 
-    ![When a message is recieved in a topic (auto-complete)](./Solutions/Solution-03/.img/when-a-message-is-received-in-a-topic-sql-completed.png)
+    ![When a message is recieved in a topic (auto-complete)](./Solutions/Solution-03/when-a-message-is-received-in-a-topic-sql-completed.png)
 
 1.  Add a `Parse JSON` action & set the `Schema` similar to the following:
 
@@ -98,7 +98,7 @@
 
     The `Parse JSON` action should look like this:
 
-    ![Parse JSON](./Solutions/Solution-03/.img/parse-json-completed.png)
+    ![Parse JSON](./Solutions/Solution-03/parse-json-completed.png)
 
 1.  Add a `SQL->Insert row (V2)` (under the `Azure` tab) action after the `Parse JSON` action.
 
@@ -108,24 +108,24 @@
 
 1.  Set the `Database name` to the SQL database name.
 
-1.  Set the `Table name` to `Orders`.
+1.  Set the `Table name` to `ORDERS`.
 
-1.  Set the `OrderName` to `orderName` from the `Parse JSON` action.
+1.  Set the `ORDER_NAME` to `orderName` from the `Parse JSON` action.
 
-1.  Set the `PartNumber` to `partNumber` from the `Parse JSON` action.
+1.  Set the `PART_NUMBER` to `partNumber` from the `Parse JSON` action.
 
     The `Insert row (V2)` action should look like this:
 
-    ![Insert row (V2)](./Solutions/Solution-03/.img/insert-row-v2-completed.png)
+    ![Insert row (V2)](./Solutions/Solution-03/insert-row-v2-completed.png)
 
 1.  Save the workflow.
 
     The overall workflow should look similar to this:
 
-    ![sql workflow](./Solutions/Solution-03/.img/sql-workflow-completed.png)
+    ![sql workflow](./Solutions/Solution-03/sql-workflow-completed.png)
 
 ### Testing
 
-1.  Test the `json` workflow by sending a `HTTP POST` to the endpoint and ensure that the message is received by the `storage` and `sql` workflows. Ensure that the message is saved to the `files` Blob container and the `Orders` table in the SQL database.
+1.  Test the `json` workflow by sending a `HTTP POST` to the endpoint and ensure that the message is received by the `storage` and `sql` workflows. Ensure that the message is saved to the `files` Blob container and the `ORDERS` table in the SQL database.
 
 ## Troubleshooting

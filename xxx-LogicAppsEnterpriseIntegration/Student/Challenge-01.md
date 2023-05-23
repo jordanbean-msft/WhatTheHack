@@ -39,8 +39,7 @@ To complete this challenge successfully, you should be able to:
 ## Tips
 
 - Recommendation is to use the `Built-in` connector for `Azure Blob Storage`
-- Use the `Use sample payload to generate schema` in `Parse JSON` to generate the schema from the JSON payload.
 - You will have to create a `Connection` to the Blob Storage account the first time you use this connector. Use the `Storage account connection string` as the `authentication type` for this challenge. You can get the Storage Account connection string from the Azure portal (under `Access keys`).
 - Use `utcNow()/order.json` as the filename so you get unique filenames (note the use of the `utcNow()` function, use the `Expression` tab to add the function, then the suffix as text).
-- Store the `Body` of the `Parse JSON` action as the `Content`.
+- Use the `Body` of the `Parse JSON` action as the `Content` in the `Upload blob to storage container` action.
 - Look at the `When a HTTP request is received` trigger after saving the workflow to get the URL to call from Postman.

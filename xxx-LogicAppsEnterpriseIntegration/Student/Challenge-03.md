@@ -12,11 +12,11 @@ It is very common to instead _chain_ multiple small Logic Apps together. This ma
 
 In this challenge, you will modularize the Logic App from the previous challenge & use a Service Bus topic to decouple the Logic Apps.
 
-You will be setting up a new Logic App workflow to enable the following architecture.
+You will be _creating_ 3 Logic App workflows to enable the following architecture.
 
 ![Architecture](../images/Challenge-03/architecture.png)
 
-You will need to have 3 Logic App workflows:
+You will need to have 3 Logic App workflows named as follows:
 
 - `json` - This will receive the `HTTP POST` from the caller & put a message on the Service Bus topic
   - Add a step to send a message on a Service Bus topic `json-topic`
@@ -44,4 +44,4 @@ To complete this challenge successfully, you should be able to:
 ## Tips
 - Use the `Service Bus->Send message` action (under the `Azure` tab) to put a message on the Service Bus topic. Set the `Authentication Type` to `Logic Apps Managed Identity`.
 - The format of the `Namespace Endpoint` is `sb://<namespace>.servicebus.windows.net/`
-- Use the `decodeBase64()` function to decode the JSON content from the Service Bus message in the `sql` workflow (use the `Expression` tab in the `Insert row` action & then click on the `Dynamic content` tab to select the `Content`)
+- Use the `decodeBase64()` function to decode the JSON content from the Service Bus message in the `storage` and `sql` workflows (use the `Expression` tab in the `Insert row` action & then click on the `Dynamic content` tab to select the `Content`)

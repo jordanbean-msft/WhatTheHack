@@ -18,7 +18,7 @@
 
     The `When a HTTP request is received` trigger should look like the following.
 
-    ![when-a-http-request-is-received-completed](./Solutions/Solution-04/.img/json-when-a-http-request-is-received-completed.png)
+    ![when-a-http-request-is-received-completed](./Solutions/Solution-04/json-when-a-http-request-is-received-completed.png)
 
 1.  Select the `Send message` action.
 
@@ -32,7 +32,7 @@
 
     The `Send message` action should look like the following.
 
-    ![send-message-completed](./Solutions/Solution-04/.img/json-send-message-completed.png)
+    ![send-message-completed](./Solutions/Solution-04/json-send-message-completed.png)
 
 1.  Save the workflow.
 
@@ -50,7 +50,7 @@
 
     The `When messages are available in a topic` trigger should look like the following.
 
-    ![when-messages-are-available-in-a-topic-completed](./Solutions/Solution-04/.img/storage-when-messages-are-available-in-a-topic-completed.png)
+    ![when-messages-are-available-in-a-topic-completed](./Solutions/Solution-04/storage-when-messages-are-available-in-a-topic-completed.png)
 
 1.  Add a `Parse JSON` action & set the `Schema` similar to the following:
 
@@ -74,7 +74,7 @@
 
     The `Parse JSON` action should look like this:
 
-    ![Parse JSON](./Solutions/Solution-03/.img/parse-json-completed.png)
+    ![Parse JSON](./Solutions/Solution-03/parse-json-completed.png)
 
 1.  Add a `Compose` action to the workflow to create a new JSON document to insert into Blob Storage. The `Inputs` field should be similar to the following (in the read-only Code View after adding the fields):
 
@@ -88,19 +88,19 @@
 
     The `Compose` action should look like this:
 
-    ![Compose](./Solutions/Solution-04/.img/storage-compose-completed.png)
+    ![Compose](./Solutions/Solution-04/storage-compose-completed.png)
 
 1.  Modify the `Upload blob` action to use the `Compose->Outputs` action as the `Content` input.
 
     The `Upload blob` action should look like this:
 
-    ![Upload blob](./Solutions/Solution-04/.img/storage-upload-blob-to-storage-container-completed.png)
+    ![Upload blob](./Solutions/Solution-04/storage-upload-blob-to-storage-container-completed.png)
 
 1.  Save the workflow.
 
     The overall workflow should look like this:
 
-    ![storage-overall-workflow](./Solutions/Solution-04/.img/storage-workflow-completed.png)
+    ![storage-overall-workflow](./Solutions/Solution-04/storage-workflow-completed.png)
 
 ### `sql` workflow
 
@@ -116,28 +116,28 @@
 
     The `When messages are available in a topic` trigger should look like the following.
 
-    ![when-messages-are-available-in-a-topic-completed](./Solutions/Solution-04/.img/sql-when-messages-are-available-in-a-topic-completed.png)
+    ![when-messages-are-available-in-a-topic-completed](./Solutions/Solution-04/sql-when-messages-are-available-in-a-topic-completed.png)
 
-1.  Modify the `Insert row (V2)` action to populate the `ClientTrackingId` with the `Correlation Id` from the `When a message is recieved in a topic (auto-complete)` trigger.
+1.  Modify the `Insert row (V2)` action to populate the `CLIENT_TRACKING_ID` with the `Correlation Id` from the `When a message is recieved in a topic (auto-complete)` trigger.
 
     The `Insert row (V2)` action should look like this:
 
-    ![Insert row (V2)](./Solutions/Solution-04/.img/sql-insert-row-v2-completed.png)
+    ![Insert row (V2)](./Solutions/Solution-04/sql-insert-row-v2-completed.png)
 
 1.  Save the workflow.
 
 ## Testing
 
-1.  Test the `json` workflow by sending a `HTTP POST` to the endpoint and ensure that the message is received by the `storage` and `sql` workflows. Ensure that the message is saved to the `files` Blob container and the `Orders` table in the SQL database. Ensure the new `ClientTrackingId` is populated both places.
+1.  Test the `json` workflow by sending a `HTTP POST` to the endpoint and ensure that the message is received by the `storage` and `sql` workflows. Ensure that the message is saved to the `files` Blob container and the `ORDERS` table in the SQL database. Ensure the new `ClientTrackingId` is populated both places.
 
 ## Transaction Search
 
 1.  Copy the `ClientTrackingId` from the most recent run of the `json` workflow.
 
-    ![copy-client-tracking-id](./Solutions/Solution-04/.img/copy-client-tracking-id.png)
+    ![copy-client-tracking-id](./Solutions/Solution-04/copy-client-tracking-id.png)
 
 1.  Open the `Transaction Search` blade of Application Insights in the `Azure Portal`.
 
 1. Filter based upon a `prop__clientTrackingId`.
 
-    ![Transaction Search](./Solutions/Solution-04/.img/transaction-search.png)
+    ![Transaction Search](./Solutions/Solution-04/transaction-search.png)

@@ -17,11 +17,11 @@ You will be modifying the Logic App workflows to enable the following architectu
     - Modify the `Tracking Id` section of the `HTTP` trigger (in the `Settings` tab)
     - Modify the `Send message` action of the `json` workflow (add the `Correlation Id` parameter)
   - `storage` workflow
-    - Modify the `Split-On Tracking Id` section of the `When messages are available in a topic` Service Bus trigger (in the Settings tab), 
+    - Modify the `Split-On Tracking Id` section of the `When messages are available in a topic` Service Bus trigger (in the `Settings` tab), 
     - _Parse_ the JSON document from the Service Bus, _compose_ a new JSON document with the `correlation ID` & upload the newly composed JSON to the blob container
   - `sql` workflow
     - Modify the `Split-On Tracking Id` section of the `When a blob is added or modified` blob trigger (in the Settings tab) 
-    - Modify the `Insert row (V2)` task to include the `correlation ID` in the `ClientTrackingId` column
+    - Modify the `Insert row (V2)` task to include the `correlation ID` in the `CLIENT_TRACKING_ID` column
 - View the `Application map` in Application Insights to get an overview of the application calls
 - View the `Logs` & the `requests` table in Application Insights to see the raw data
 - View the correlation ID propagating through the logs in the Application Insights `Tracking search` blade

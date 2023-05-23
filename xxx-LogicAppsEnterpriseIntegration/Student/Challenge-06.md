@@ -12,7 +12,7 @@ In this challenge, you will parameterize the storage account container name in t
 
 - Look at the `Configuration->Application Settings` section of your Logic App and note the app setting names & values for the following parameter:
   - STORAGE_ACCOUNT_CONTAINER_NAME
-- Add a parameter to the `storage` workflow and pull the name of the storage account container from App Settings
+- Add a `parameter` to the `storage` workflow and pull the name of the storage account container from App Settings
   - `@appsetting('STORAGE_ACCOUNT_CONTAINER_NAME')`
 - Modify the `Upload blob to storage container` action to use the new parameter
 - Save & test your workflow to ensure it still works

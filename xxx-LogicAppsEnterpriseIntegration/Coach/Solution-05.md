@@ -38,7 +38,7 @@
 
     The `Response` action should look like the following.
 
-    ![response-completed](./Solutions/Solution-05/.img/response-failed-parameters.png)
+    ![response-completed](./Solutions/Solution-05/response-failed-parameters.png)
 
 1.  Click on the `Run After` tab.
 
@@ -48,7 +48,7 @@
 
     The `Response` action should look like the following.
 
-    ![response-completed](./Solutions/Solution-05/.img/response-failed-run-after.png)
+    ![response-completed](./Solutions/Solution-05/response-failed-run-after.png)
 
 1.  Add another `Response` action after the `Send message` action
 
@@ -58,11 +58,11 @@
 
     The `Response` action should look like the following.
 
-    ![response-completed](./Solutions/Solution-05/.img/response-succeeded.png)
+    ![response-completed](./Solutions/Solution-05/response-succeeded.png)
 
     The overall workflow should look like something the following.
 
-    ![workflow-completed](./Solutions/Solution-05/.img/json-completed-workflow.png)
+    ![workflow-completed](./Solutions/Solution-05/json-completed-workflow.png)
 
 1.  Save the workflow.
 
@@ -70,8 +70,8 @@
 
 1.  In Postman, call the HTTP endpoint and verify that you get the new `Order accepted` response message & a `202` status code.
 
-    ![postman-succeeded](./Solutions/Solution-05/.img/postman-succeeded.png)
+    ![postman-succeeded](./Solutions/Solution-05/postman-succeeded.png)
 
 1.  In Postman, call the HTTP endpoint with an invalid JSON payload and verify that you get the new `Invalid request` response message & a `400` status code.
 
-    ![postman-failed](./Solutions/Solution-05/.img/postman-failed.png)
+    ![postman-failed](./Solutions/Solution-05/postman-failed.png)

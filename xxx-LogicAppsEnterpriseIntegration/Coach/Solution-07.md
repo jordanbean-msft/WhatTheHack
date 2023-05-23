@@ -32,15 +32,15 @@
 
 1.  Click on the `func-<suffix>` link under the `Identity provider` section for a shortcut to the App Registration.
 
-    ![link-to-app-registration](./Solutions/Solution-07/.img/link-to-app-registration.png)
+    ![link-to-app-registration](./Solutions/Solution-07/link-to-app-registration.png)
 
 1.  Click on the `func-<suffix>` link under the `Managed application in...` section for a shortcut to the Enterprise App.
 
-    ![link-to-enterprise-application](./Solutions/Solution-07/.img/link-to-enterprise-application.png)
+    ![link-to-enterprise-application](./Solutions/Solution-07/link-to-enterprise-application.png)
 
 1.  Copy the `Object ID` of the `Enterprise App` (service principal).
 
-    ![enterprise-application-object-id](./Solutions/Solution-07/.img/enterprise-application-object-id.png)
+    ![enterprise-application-object-id](./Solutions/Solution-07/enterprise-application-object-id.png)
 
 ### Managed Identity
 
@@ -48,7 +48,7 @@
 
 1.  Copy the `Object ID` of the Managed Identity.
 
-    ![managed-identity-object-id](./Solutions/Solution-07/.img/managed-identity-object-id.png)
+    ![managed-identity-object-id](./Solutions/Solution-07/managed-identity-object-id.png)
 
 ### Grant the Managed Identity access to the Function App
 
@@ -90,7 +90,7 @@
 
     The completed `HTTP` action should look like the following.
 
-    ![http-completed](./Solutions/Solution-07/.img/http-completed.png)
+    ![http-completed](./Solutions/Solution-07/http-completed.png)
 
 1.  Add another `Parse JSON` task after the `HTTP` action.
 
@@ -109,7 +109,7 @@
 
     The completed `Insert row (V2)` action should look like the following.
 
-    ![insert-row-completed](./Solutions/Solution-07/.img/insert-row-completed.png)
+    ![insert-row-completed](./Solutions/Solution-07/insert-row-completed.png)
 
 1.  Save the Logic App.
 

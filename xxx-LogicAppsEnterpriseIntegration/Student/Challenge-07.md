@@ -18,7 +18,7 @@ The architecture of the solution is as follows:
   - Look in the `src/api` directory
   - Try to call the endpoint that is deployed to Azure using Postman to get a feel for how to call it
     - `POST https://<function-app-name>.azurewebsites.net/api/SAPOrderSystem?orderName=order1`
-- Enable `EasyAuth` on the Azure Function to simulate having to authenticate against an OAuth2 endpoint to get an SAP order number
+- Enable `EasyAuth` on the Azure Function to simulate having to authenticate against an `OAuth2` endpoint to get an SAP order number
   - Use the `Microsoft` identity provider (which will automatically create an app registration in your tenant)
   - Enable the `HTTP 401 Unauthorized: recommended for APIs` option
   - Copy the `App (client) ID` for use later.
@@ -29,9 +29,7 @@ The architecture of the solution is as follows:
 - Modify the `sql` Logic App workflow to call out to the Azure Function to get the SAP order number
   - Add a `HTTP` action to the workflow & call the Azure Function (using `Managed identity` authentication)
   - Add a `Parse JSON` action to parse the `body` results of the call to the SAP order number function
-  - Add the results of the call to the SAP order number system to the row that is being inserted into the database (the `SAPOrderId` column)
-
-You can view an architectural diagram of an IoT thingamajig here: [Thingamajig.PDF](/Student/Resources/Architecture.PDF?raw=true).
+  - Add the results of the call to the SAP order number system to the row that is being inserted into the database (the `SAP_ORDER_ID` column)
 
 ## Success Criteria
 
@@ -50,6 +48,8 @@ To complete this challenge successfully, you should be able to:
 - Go to the `Enterprise Applications` blade in Azure Active Directory to find the `Object ID` of the `Enterprise App` (service principal) that was created when you enabled `EasyAuth` on the Function App (same name as the Function App)
 - Use the following command to grant the Managed Identity access to the Function App service principal (you can run this in the Cloud Shell, substitute your own values)
   ```powershell
+  Connect-AzureAD
+
   New-AzureADServiceAppRoleAssignment -ObjectId {MANAGED-IDENTITY-OBJECT-ID} -Id 00000000-0000-0000-0000-000000000000 -PrincipalId {MANAGED-IDENTITY-OBJECT-ID} -ResourceId {ENTERPRISE-APP-OBJECT-ID}
   ```
 - The `audience` of the Managed Identity authentication will be the `App (client) ID` of the Function App
