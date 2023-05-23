@@ -48,7 +48,7 @@
 
     ![Add SQL Server action](./Solutions/Solution-02/insert-row-v2-completed.png)
 
-1.  Your final worklow should look like this:
+1.  Your final workflow should look like this:
 
     ![Final workflow](./Solutions/Solution-02/json-workflow-completed.png)
 

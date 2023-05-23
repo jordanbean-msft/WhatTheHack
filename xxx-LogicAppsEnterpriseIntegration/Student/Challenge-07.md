@@ -49,7 +49,10 @@ To complete this challenge successfully, you should be able to:
 - Use the following command to grant the Managed Identity access to the Function App service principal (you can run this in the Cloud Shell, substitute your own values)
   ```powershell
   Connect-AzureAD
+  ```
 
+  ```powershell
   New-AzureADServiceAppRoleAssignment -ObjectId {MANAGED-IDENTITY-OBJECT-ID} -Id 00000000-0000-0000-0000-000000000000 -PrincipalId {MANAGED-IDENTITY-OBJECT-ID} -ResourceId {ENTERPRISE-APP-OBJECT-ID}
   ```
+  
 - The `audience` of the Managed Identity authentication will be the `App (client) ID` of the Function App

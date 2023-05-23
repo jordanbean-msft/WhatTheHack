@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Thank you for participating in the LogicApps What The Hack. Before you can hack, you will need to set up some prerequisites.
+Thank you for participating in the Logic Apps What The Hack. Before you can hack, you will need to set up some prerequisites.
 
 ## Prerequisites
 
@@ -59,7 +59,7 @@ If any part of this script fails (missing dependencies, network issues, etc), yo
 1.  Modify the `infra/main.parameters.json` file with unique values for your deployment. Replace the `${VALUE}` placeholders with your own values.
 
     - **AZURE_ENV_NAME** - a unique name for your deployment (i.e. use your name or initials)
-    - **AZURE_LOCATION** - the Azure region to deploy to (i.e. SouthCentralUS)
+    - **AZURE_LOCATION** - the Azure region to deploy to (i.e. `SouthCentralUS`)
     - **AZURE_PRINCIPAL_NAME** - the name of the Azure AD SQL admin account (your User Principal Name _in this tenant_)
     - **AZURE_PRINCIPAL_ID** - the object ID of the Azure AD SQL admin account (your User Principal Name Object Id _in this tenant_)
     - **MY_IP** - the public IP address of your workstation
@@ -85,8 +85,10 @@ If any part of this script fails (missing dependencies, network issues, etc), yo
 1.  Deploy the Bicep files by running the following Azure CLI commands
 
     ```shell
-    cd infra    
+    cd infra
+    ```
 
+    ```shell
     az deployment sub create --location <azure-region-name> --template-file ./main.bicep --parameters ./main.parameters.json
     ```
 
@@ -94,7 +96,9 @@ If any part of this script fails (missing dependencies, network issues, etc), yo
 
     ```shell
     cd ../src/api
+    ```
 
+    ```shell
     func azure functionapp publish <function-app-name> --nozip
     ```
 

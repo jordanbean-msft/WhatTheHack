@@ -4,7 +4,7 @@
 
 ## Introduction
 
-An important part a well architected solution is the ability to parameterize values that will change between environments/deployments/etc. Logic Apps supports similar app settings to what you may be familiar with in Azure Functions, Web Apps, etc. 
+An important part a well-architected solution is the ability to parameterize values that will change between environments/deployments/etc. Logic Apps supports similar app settings to what you may be familiar with in Azure Functions, Web Apps, etc. 
 
 ## Description
 

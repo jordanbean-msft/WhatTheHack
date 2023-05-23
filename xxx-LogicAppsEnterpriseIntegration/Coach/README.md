@@ -13,7 +13,7 @@ This hack includes an optional [lecture presentation](Lectures.pptx) that featur
 - Challenge 00: **[Prerequisites - Ready, Set, GO!](./Solution-00.md)**
 	 - Prepare your workstation to work with Azure.
 - Challenge 01: **[Process JSON input data & write to Storage](./Solution-01.md)**
-	 - Create a Logic App workflow to proces JSON input data & write it to Blob Storage
+	 - Create a Logic App workflow to process JSON input data & write it to Blob Storage
 - Challenge 02: **[Write to SQL](./Solution-02.md)**
 	 - Add the ability to write data to SQL
 - Challenge 03: **[Modularize & integrate with Service Bus](./Solution-03.md)**
