@@ -86,7 +86,6 @@ Here is the current list of What The Hack hackathons available in this repositor
 - [Azure Integration Services - API Management with Function Apps](/050-AIS-APIManagementwithFunctions/README.md)
 - [SAP on Azure: Application Modernization](/052-SAPAppModernization/README.md)
 - [Power Platform Basics](/058-PowerPlatformBasics/README.md)
-- [Logic Apps Enterprise Integration](/xxx-LogicAppsEnterpriseIntegration/README.md)
 
 ## Operations
 - [Azure Monitoring](/007-AzureMonitoring/README.md)
