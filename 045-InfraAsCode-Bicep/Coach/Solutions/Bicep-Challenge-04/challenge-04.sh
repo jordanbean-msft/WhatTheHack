@@ -1,9 +1,6 @@
-# If self-deploying the challenges, recommend adding a prefix to Azure resources.
-# For example, resourceGroupName = "<my initials>-challenge-01-rg"
-
-LOCATION='eastus'
-RESOURCE_GROUP_NAME='<me>-challenge-02-rg'
-DEPLOYMENT_NAME='<me>-challenge-04-deployment'
+LOCATION='australiaeast'
+RESOURCE_GROUP_NAME='challenge-02-rg'
+DEPLOYMENT_NAME='challenge-04-deployment'
 
 az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
 

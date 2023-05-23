@@ -1,6 +1,5 @@
 name: Create new hack
 
- 
 on:
   workflow_dispatch:
     inputs:
@@ -15,8 +14,6 @@ on:
 jobs:
   createNewWhatTheHackTemplate:
     runs-on: ubuntu-latest
-    permissions: 
-     contents: write
     env:
       BRANCH_NAME: xxx-${{ github.event.inputs.hackName }}
     steps:

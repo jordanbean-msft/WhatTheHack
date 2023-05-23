@@ -4,5 +4,4 @@
 
 ## Notes & Guidance
 
-- In their trial browser session they go to https://powerva.microsoft.com/ and click Sign in
-- For suggested topics they may find a good source or they could leverage this example: https://docs.microsoft.com/en-us/powerapps/maker/portals/faq
+Content coming soon!

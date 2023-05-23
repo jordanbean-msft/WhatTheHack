@@ -1,8 +1,3 @@
-// Note: a common pattern is for this file to be named main.bicep.
-// In the interest of consistency, we continue with the prior naming convention
-
-param location string = resourceGroup().location
-
 //Password for the VM
 @secure()
 param adminPassword string
@@ -13,12 +8,14 @@ param adminUsername string
 //Resource Prefix for all VM Resources
 param resourcePrefix string = 'bicepwth'
 
-//The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version.
+//The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values: 12.04.5-LTS, 14.04.2-LTS, 15.10.
 @allowed([
-  '16.04.0-LTS'
-  '18.04-LTS'
+  '12.04.5-LTS'
+  '14.04.2-LTS'
+  '15.10'
+  '16.04-LTS'
 ])
-param ubuntuOSVersion string = '18.04-LTS'
+param ubuntuOSVersion string = '16.04-LTS'
 
 // VNet Address Prefix
 param vnetPrefix string = '10.0.0.0/16'
@@ -36,7 +33,6 @@ module vnet './challenge-06-VNET.bicep' = {
     subnetName: subnetName
     subnetPrefix: subnetPrefix
     vnetPrefix: vnetPrefix
-    location: location
   }
 }
 
@@ -47,7 +43,6 @@ module vm './challenge-06-VM.bicep' = {
     adminUsername: adminUsername
     ubuntuOSVersion: ubuntuOSVersion
     resourcePrefix: resourcePrefix
-    subnetId: vnet.outputs.subnetId
-    location: location
+    subnetName: subnetName
   }
 }
