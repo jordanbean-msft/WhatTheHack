@@ -6,13 +6,17 @@ IFS=$'\n\t'
 declare -r templateDirectoryName="000-HowToHack"
 
 Help() {
-   echo "Syntax: createWthTemplate [-c|d|h|n|p|v]"
+   echo "Syntax: createWthTemplate [-c|r|h|n|p|d|k|e|a|v]"
    echo "options:"
    echo "c     How many challenges to stub out."
-   echo "d     Delete existing directory with same name."
+   echo "r     Remove existing directory with same name."
    echo "h     Print this Help."
    echo "n     Name of the new WhatTheHack. This must be a valid directory name"
    echo "p     Path to where to create new WhatTheHack directory."
+   echo "d     Description of the hack."
+   echo "k     Key words for the hack."
+   echo "e     Endpoint for the OpenAI service."
+   echo "a     OpenAI API key."
    echo "v     Verbose mode."
    echo
 }
@@ -243,16 +247,20 @@ CreateChallengesAndSolutions() {
 
 # Main program
 declare verbosityArg=false
-declare deleteExistingDirectoryArg=false
+declare removeExistingDirectoryArg=false
 
-while getopts ":c:dhn:p:v" option; do
+while getopts ":c:rhn:d:k:e:a:p:v" option; do
   case $option in
     c) numberOfChallengesArg=${OPTARG};;
-    d) deleteExistingDirectoryArg=true;;
+    r) removeExistingDirectoryArg=true;;
     h) Help
        exit;;
     n) nameOfHackArg=${OPTARG};;
     p) pathArg=${OPTARG};;
+    d) descriptionOfTheHackArg=${OPTARG};;
+    k) keywordsArg=${OPTARG};;
+    e) endpointUriArg=${OPTARG};;
+    a) apiKeyArg=${OPTARG};;
     v) verbosityArg=true
   esac
 done
@@ -261,7 +269,10 @@ if $verbosityArg; then
   echo "Number of Challenges: $numberOfChallengesArg"
   echo "Name of Challenge: $nameOfHackArg"
   echo "Path: $pathArg"
-  echo "Delete existing directory: $deleteExistingDirectoryArg"
+  echo "Remove existing directory: $removeExistingDirectoryArg"
+  echo "Description of the hack: $descriptionOfHackArg"
+  echo "Keywords for the hack: $keywordsArg"
+  echo "Endpoint URI: $endpointUriArg"
 fi
 
 declare -r wthDirectoryName="xxx-$nameOfHackArg"
@@ -270,7 +281,7 @@ declare -r rootPath="$pathArg/$wthDirectoryName"
 
 declare -r pathToTemplateDirectory="$pathArg/$templateDirectoryName"
 
-CreateDirectoryStructure $deleteExistingDirectoryArg
+CreateDirectoryStructure $removeExistingDirectoryArg
 
 CreateHackDescription $numberOfChallengesArg
 

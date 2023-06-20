@@ -1,6 +1,5 @@
 name: Create new hack
 
- 
 on:
   workflow_dispatch:
     inputs:
@@ -8,15 +7,23 @@ on:
         description: The name of the hack you want to create
         required: true
         default: YetAnotherHack
+      description:
+        description: A description of the hack
+        required: true
+        default: "Create a WhatTheHack for creating a WhatTheHack."
+      keywords:
+        description: A comma separated list of keywords (these will be used to guide the AI to cover the topics)
+        required: true
+        default: "WhatTheHack, GitHub, Actions, AI"
       numberOfChallenges:
         description: The number of challenges you want (note that it is better to auto-generate more challenges than you think you will need, you can always delete the files later)
         required: true
-        default: '3'
+        default: "3"
 jobs:
   createNewWhatTheHackTemplate:
     runs-on: ubuntu-latest
-    permissions: 
-     contents: write
+    permissions:
+      contents: write
     env:
       BRANCH_NAME: xxx-${{ github.event.inputs.hackName }}
     steps:
@@ -27,10 +34,9 @@ jobs:
           git config user.email "<>"
           git checkout -b ${{ env.BRANCH_NAME }}
       - name: Generate WhatTheHack template stubs
-        run: ${{ github.workspace }}/.github/workflows/create-wth-template.sh -p ${{ github.workspace }} -c ${{ github.event.inputs.numberOfChallenges}} -n ${{ github.event.inputs.hackName }} -v -d
+        run: ${{ github.workspace }}/.github/workflows/create-wth-template.sh -p ${{ github.workspace }} -c "${{ github.event.inputs.numberOfChallenges}}" -n "${{ github.event.inputs.hackName }}" -d "${{ github.event.inputs.description }}" -k "${{ github.event.inputs.keywords }}" -e "${{ secrets.OPENAI_ENDPOINT }}" -a "${{ secrets.OPENAI_API_KEY }}" -v -r
       - name: Push branch
         run: |
           git add *
           git commit -m 'Created WhatTheHack template stub'
           git push -u origin ${{ env.BRANCH_NAME }}
-
