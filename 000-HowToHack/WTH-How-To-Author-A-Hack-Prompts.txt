@@ -12,7 +12,7 @@ Learning Objectives: This is where you describe the outcomes a hack attendee sho
 
 Challenges: Every WTH is made up of a collection of technical challenges. For the one pager, you should list out your challenges by name, with no more than a single sentence description for each unless the challenge title is descriptive enough on its own.
 
-For most this page will act as a "Table of Contents" for your hack. 
+For most this page will act as a Table of Contents for your hack. 
 
 Example response:
 # What The Hack - [TITLE OF HACK]
