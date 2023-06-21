@@ -12,7 +12,7 @@ on:
         required: true
         default: "Create a WhatTheHack for creating a WhatTheHack."
       keywords:
-        description: A comma separated list of keywords (these will be used to guide the AI to cover the topics)
+        description: A comma separated list of keywords (these will be used to guide the AI to generate challenges)
         required: true
         default: "WhatTheHack, GitHub, Actions, AI"
       numberOfChallenges:

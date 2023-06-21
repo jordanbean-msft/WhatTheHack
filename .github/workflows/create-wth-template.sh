@@ -33,10 +33,9 @@ CallOpenAI() {
   local -r systemContent=$1
   local -r promptContent=$2
 
-  curl $endpointUriArg \
-    --request POST \
-    --header 'Content-Type: application/json' \
-    --header 'api-key: $apiKeyArg' \
+  curl $openAIEndpointUri \
+    --header "Content-Type: application/json" \
+    --header "api-key: $openAIApiKey" \
     --data @- << EOF
 { 
   "messages": "
@@ -156,10 +155,10 @@ CreateHackDescription() {
 
   #WriteMarkdownFile "$rootPath/README.md" "WTH-HackDescription-Template.md"
   local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-How-To-Author-A-Hack-Prompts.txt")
-  local -r openAIUserPrompt="Generate a overview page of the hack based upon the following description: $hackDescription. Generate $numberOfChallenges challenges. Use the following keywords to help guide which challenges to generate: $keywords"
-
+  local -r openAIUserPrompt="Generate a overview page of the hack based upon the following description: $descriptionOfHack. Generate $numberOfChallenges challenges. Use the following keywords to help guide which challenges to generate: $keywords"
+  
   local -r openAIResponse=$(CallOpenAI "$openAISystemPrompt" "$openAIUserPrompt")
-
+  
   cat > "$rootPath/README.md" <<< $openAIResponse
 }
 
@@ -302,7 +301,7 @@ while getopts ":c:rhn:d:k:e:a:p:v" option; do
        exit;;
     n) nameOfHackArg=${OPTARG};;
     p) pathArg=${OPTARG};;
-    d) descriptionOfTheHackArg=${OPTARG};;
+    d) descriptionOfHackArg=${OPTARG};;
     k) keywordsArg=${OPTARG};;
     e) openAIEndpointUriArg=${OPTARG};;
     a) openAIApiKeyArg=${OPTARG};;
