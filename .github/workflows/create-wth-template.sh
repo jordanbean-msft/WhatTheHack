@@ -15,10 +15,49 @@ Help() {
    echo "p     Path to where to create new WhatTheHack directory."
    echo "d     Description of the hack."
    echo "k     Key words for the hack."
-   echo "e     Endpoint for the OpenAI service."
+   echo "e     Endpoint for the OpenAI service (including api-version query parameter)."
    echo "a     OpenAI API key."
    echo "v     Verbose mode."
    echo
+}
+
+GetOpenAIPromptContent() {
+  local -r pathToPromptFile=$1
+
+  local -r promptText=$(cat $pathToPromptFile)
+
+  echo "$promptText"
+}
+
+CallOpenAI() {
+  local -r systemContent=$1
+  local -r promptContent=$2
+
+  curl $endpointUriArg \
+    --request POST \
+    --header 'Content-Type: application/json' \
+    --header 'api-key: $apiKeyArg' \
+    --data @- << EOF
+{ 
+  "messages": "
+  [
+    { 
+      "role": "system", 
+      "content": "$systemContent" 
+    }, 
+    { 
+      "role": "user", 
+      "content": "$promptContent" 
+    }
+  ]", 
+  "max_tokens": 800, 
+  "temperature": 0.7, 
+  "top_p": 0.95, 
+  "frequency_penalty": 0, 
+  "presence_penalty": 0, 
+  "stop": null 
+}
+EOF
 }
 
 CreateDirectoryStructure() {
@@ -115,7 +154,13 @@ CreateHackDescription() {
 
   local -r challengesSection=$(GenerateChallengesSection $numberOfChallenges "Student" "Challenge")
 
-  WriteMarkdownFile "$rootPath/README.md" "WTH-HackDescription-Template.md"
+  #WriteMarkdownFile "$rootPath/README.md" "WTH-HackDescription-Template.md"
+  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-How-To-Author-A-Hack-Prompts.txt")
+  local -r openAIUserPrompt="Generate a overview page of the hack based upon the following description: $hackDescription. Generate $numberOfChallenges challenges. Use the following keywords to help guide which challenges to generate: $keywords"
+
+  local -r openAIResponse=$(CallOpenAI "$openAISystemPrompt" "$openAIUserPrompt")
+
+  cat > "$rootPath/README.md" <<< $openAIResponse
 }
 
 GenerateNavigationLink() {
@@ -259,8 +304,8 @@ while getopts ":c:rhn:d:k:e:a:p:v" option; do
     p) pathArg=${OPTARG};;
     d) descriptionOfTheHackArg=${OPTARG};;
     k) keywordsArg=${OPTARG};;
-    e) endpointUriArg=${OPTARG};;
-    a) apiKeyArg=${OPTARG};;
+    e) openAIEndpointUriArg=${OPTARG};;
+    a) openAIApiKeyArg=${OPTARG};;
     v) verbosityArg=true
   esac
 done
@@ -272,7 +317,7 @@ if $verbosityArg; then
   echo "Remove existing directory: $removeExistingDirectoryArg"
   echo "Description of the hack: $descriptionOfHackArg"
   echo "Keywords for the hack: $keywordsArg"
-  echo "Endpoint URI: $endpointUriArg"
+  echo "OpenAI Endpoint URI: $openAIEndpointUriArg"
 fi
 
 declare -r wthDirectoryName="xxx-$nameOfHackArg"
@@ -280,6 +325,14 @@ declare -r wthDirectoryName="xxx-$nameOfHackArg"
 declare -r rootPath="$pathArg/$wthDirectoryName"
 
 declare -r pathToTemplateDirectory="$pathArg/$templateDirectoryName"
+
+declare -r descriptionOfHack="$descriptionOfHackArg"
+
+declare -r keywords="$keywordsArg"
+
+declare -r openAIEndpointUri="$openAIEndpointUriArg"
+
+declare -r openAIApiKey="$openAIApiKeyArg"
 
 CreateDirectoryStructure $removeExistingDirectoryArg
 
