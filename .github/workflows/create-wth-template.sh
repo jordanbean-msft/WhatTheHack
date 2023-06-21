@@ -29,26 +29,37 @@ GetOpenAIPromptContent() {
   echo "$promptText"
 }
 
-CallOpenAI() {
+GenerateOpenAIMessageArray() {
   local -r systemContent=$1
-  local -r promptContent=$2
+  local -r userPromptContent=$2
+  
+  read -r -d '' messageArray << EOF
+[
+  { 
+    "role": "system", 
+    "content": "$systemContent" 
+  }, 
+  { 
+    "role": "user", 
+    "content": "$userPromptContent" 
+  }
+]
+EOF
+
+  echo "$messageArray"
+}
+
+CallOpenAI() {
+  local -r messageArray=$1
 
   local -r openAIResponse=$(curl $openAIEndpointUri \
     --header "Content-Type: application/json" \
     --header "api-key: $openAIApiKey" \
+    --silent \
+    --show-error \
     --data @- << EOF
 { 
-  "messages": 
-  [
-    { 
-      "role": "system", 
-      "content": "$systemContent" 
-    }, 
-    { 
-      "role": "user", 
-      "content": "$promptContent" 
-    }
-  ], 
+  "messages": $messageArray, 
   "max_tokens": 800, 
   "temperature": 0.7, 
   "top_p": 0.95, 
@@ -160,9 +171,11 @@ CreateHackDescription() {
   local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-How-To-Author-A-Hack-Prompts.txt")
 
   local -r openAIUserPrompt="Generate a overview page of the hack based upon the following description: $descriptionOfHack. Generate $numberOfChallenges challenges. Use the following keywords to help guide which challenges to generate: $keywords"
-  
-  local -r openAIResponse=$(CallOpenAI "$openAISystemPrompt" "$openAIUserPrompt")
-  
+
+  local -r messageArray=$(GenerateOpenAIMessageArray "$openAISystemPrompt" "$openAIUserPrompt")
+
+  local -r openAIResponse=$(CallOpenAI "$messageArray")
+
   cat > "$rootPath/README.md" <<< $openAIResponse
 }
 

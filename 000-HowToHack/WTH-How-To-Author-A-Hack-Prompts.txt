@@ -10,9 +10,7 @@ Introduction: This is your chance to sell the casual reader on why they should c
 
 Learning Objectives: This is where you describe the outcomes a hack attendee should have. Provide a short list of key learnings you expect someone to come away with when they complete this hack.
 
-Challenges: Every WTH is made up of a collection of technical challenges. For the one pager, you should list out your challenges by name, with no more than a single sentence description for each unless the challenge title is descriptive enough on its own.
-
-For most this page will act as a Table of Contents for your hack. 
+Challenges: Every WTH is made up of a collection of technical challenges. For the one pager, you should list out your challenges by name, with no more than a single sentence description for each unless the challenge title is descriptive enough on its own. The challenges section should include relative paths to each challenge Markdown file in the Student directory as a link to another document (example: [Challenge Title](Student/Challenge-00.md)). The link shouldn't have the word challenge in the [CHALLENGE TITLE], just the title of the challenge.
 
 Example response:
 # What The Hack - [TITLE OF HACK]
@@ -23,7 +21,7 @@ Example response:
 
 ## Challenges
 
-- Challenge 0: **[CHALLENGE TITLE](Student/Challenge-00.md)**
+- Challenge 0: **[CHALLENGE TITLE]([RELATIVE PATH TO STUDENT CHALLENGE MARKDOWN FILE])**
   - [DESCRIPTION OF CHALLENGE]
 
 ## Contributors
