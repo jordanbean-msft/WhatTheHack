@@ -6,15 +6,71 @@ IFS=$'\n\t'
 declare -r templateDirectoryName="000-HowToHack"
 
 Help() {
-   echo "Syntax: createWthTemplate [-c|d|h|n|p|v]"
+   echo "Syntax: createWthTemplate [-c|r|h|n|p|d|k|e|a|v]"
    echo "options:"
    echo "c     How many challenges to stub out."
-   echo "d     Delete existing directory with same name."
+   echo "r     Remove existing directory with same name."
    echo "h     Print this Help."
    echo "n     Name of the new WhatTheHack. This must be a valid directory name"
    echo "p     Path to where to create new WhatTheHack directory."
+   echo "d     Description of the hack."
+   echo "k     Key words for the hack."
+   echo "e     Endpoint for the OpenAI service (including api-version query parameter)."
+   echo "a     OpenAI API key."
    echo "v     Verbose mode."
    echo
+}
+
+GetOpenAIPromptContent() {
+  local -r pathToPromptFile=$1
+
+  local -r promptText=$(cat $pathToPromptFile)
+
+  echo "$promptText"
+}
+
+GenerateOpenAIMessageArray() {
+  local -r systemContent=$1
+  local -r userPromptContent=$2
+  
+  read -r -d '' messageArray << EOF
+[
+  { 
+    "role": "system", 
+    "content": "$systemContent" 
+  }, 
+  { 
+    "role": "user", 
+    "content": "$userPromptContent" 
+  }
+]
+EOF
+
+  echo "$messageArray"
+}
+
+CallOpenAI() {
+  local -r messageArray=$1
+
+  local -r openAIResponse=$(curl $openAIEndpointUri \
+    --header "Content-Type: application/json" \
+    --header "api-key: $openAIApiKey" \
+    --silent \
+    --show-error \
+    --data @- << EOF
+{ 
+  "messages": $messageArray, 
+  "max_tokens": 800, 
+  "temperature": 0.7, 
+  "top_p": 0.95, 
+  "frequency_penalty": 0, 
+  "presence_penalty": 0, 
+  "stop": null 
+}
+EOF
+)
+
+  echo $openAIResponse | yq '.choices[].message.content'
 }
 
 CreateDirectoryStructure() {
@@ -111,7 +167,18 @@ CreateHackDescription() {
 
   local -r challengesSection=$(GenerateChallengesSection $numberOfChallenges "Student" "Challenge")
 
-  WriteMarkdownFile "$rootPath/README.md" "WTH-HackDescription-Template.md"
+  #WriteMarkdownFile "$rootPath/README.md" "WTH-HackDescription-Template.md"
+  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-How-To-Author-A-Hack-Prompt.txt")
+
+  local -r openAIUserPrompt="Generate a overview page of the hack based upon the following description: $descriptionOfHack. Generate $numberOfChallenges challenges. Use the following keywords to help guide which challenges to generate: $keywords"
+
+  local -r messageArray=$(GenerateOpenAIMessageArray "$openAISystemPrompt" "$openAIUserPrompt")
+
+  local -r openAIResponse=$(CallOpenAI "$messageArray")
+
+  cat > "$rootPath/README.md" <<< $openAIResponse
+
+  echo "$openAIResponse"
 }
 
 GenerateNavigationLink() {
@@ -167,11 +234,18 @@ CreateChallengeMarkdownFile() {
 
   local -r navigationLine=$(GenerateNavigationLink $suffixNumber $numberOfChallenges "Challenge" false)
 
-  if [[ $suffixNumber -eq "00" ]]; then
-    WriteMarkdownFile "$fullPath/$prefix-$suffixNumber.md" "WTH-ChallengeZero-Template.md"
-  else
-    WriteMarkdownFile "$fullPath/$prefix-$suffixNumber.md" "WTH-Challenge-Template.md"
-  fi
+  # if [[ $suffixNumber -eq "00" ]]; then
+  #   WriteMarkdownFile "$fullPath/$prefix-$suffixNumber.md" "WTH-ChallengeZero-Template.md"
+  # else
+  #   WriteMarkdownFile "$fullPath/$prefix-$suffixNumber.md" "WTH-Challenge-Template.md"
+  # fi
+  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-Challenge-Template-Prompt.txt")
+  local -r openAIUserPrompt="Generate a student challenge page of the hack based upon the following description: $openAIHackDescription. This should be for Challenge $suffixNumber."
+
+  local -r messageArray=$(GenerateOpenAIMessageArray "$openAISystemPrompt" "$openAIUserPrompt")
+  local -r openAIResponse=$(CallOpenAI "$messageArray")
+
+  cat > "$fullPath/$prefix-$suffixNumber.md" <<< $openAIResponse
 }
 
 CreateSolutionMarkdownFile() {
@@ -185,7 +259,14 @@ CreateSolutionMarkdownFile() {
 
   local -r navigationLine=$(GenerateNavigationLink $suffixNumber $numberOfChallenges "Solution" true)
 
-  WriteMarkdownFile "$fullPath/$prefix-$suffixNumber.md" "WTH-Challenge-Solution-Template.md"
+  #WriteMarkdownFile "$fullPath/$prefix-$suffixNumber.md" "WTH-Challenge-Solution-Template.md"
+  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-Challenge-Solution-Prompt.txt")
+  local -r openAIUserPrompt="Generate a coach's guide solutiion page of the hack based upon the following description: $openAIHackDescription. This should be for solution $suffixNumber."
+
+  local -r messageArray=$(GenerateOpenAIMessageArray "$openAISystemPrompt" "$openAIUserPrompt")
+  local -r openAIResponse=$(CallOpenAI "$messageArray")
+
+  cat > "$fullPath/$prefix-$suffixNumber.md" <<< $openAIResponse
 }
 
 CreateChallenges() {
@@ -197,7 +278,7 @@ CreateChallenges() {
   fi
 
   for challengeNumber in $(seq -f "%02g" 0 $numberOfChallenges); do
-    CreateChallengeMarkdownFile "$fullPath" "Challenge" $challengeNumber $numberOfChallenges
+    CreateChallengeMarkdownFile "$fullPath" "Challenge" $challengeNumber $numberOfChallenges 
   done
 }
 
@@ -209,9 +290,16 @@ CreateCoachGuideMarkdownFile() {
     echo "Creating $fullPath/README.md..."
   fi
 
-  local -r challengesSection=$(GenerateChallengesSection $numberOfChallenges "." "Solution")
+  #local -r challengesSection=$(GenerateChallengesSection $numberOfChallenges "." "Solution")
 
-  WriteMarkdownFile "$fullPath/README.md" "WTH-CoachGuide-Template.md"
+  #WriteMarkdownFile "$fullPath/README.md" "WTH-CoachGuide-Template.md"
+  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-CoachGuide-Prompt.txt")
+  local -r openAIUserPrompt="Generate a coach's guide overview page of the hack based upon the following description: $openAIHackDescription"
+
+  local -r messageArray=$(GenerateOpenAIMessageArray "$openAISystemPrompt" "$openAIUserPrompt")
+  local -r openAIResponse=$(CallOpenAI "$messageArray")
+
+  cat > "$fullPath/README.md" <<< $openAIResponse
 }
 
 CreateSolutions() {
@@ -243,16 +331,20 @@ CreateChallengesAndSolutions() {
 
 # Main program
 declare verbosityArg=false
-declare deleteExistingDirectoryArg=false
+declare removeExistingDirectoryArg=false
 
-while getopts ":c:dhn:p:v" option; do
+while getopts ":c:rhn:d:k:e:a:p:v" option; do
   case $option in
     c) numberOfChallengesArg=${OPTARG};;
-    d) deleteExistingDirectoryArg=true;;
+    r) removeExistingDirectoryArg=true;;
     h) Help
        exit;;
     n) nameOfHackArg=${OPTARG};;
     p) pathArg=${OPTARG};;
+    d) descriptionOfHackArg=${OPTARG};;
+    k) keywordsArg=${OPTARG};;
+    e) openAIEndpointUriArg=${OPTARG};;
+    a) openAIApiKeyArg=${OPTARG};;
     v) verbosityArg=true
   esac
 done
@@ -261,7 +353,10 @@ if $verbosityArg; then
   echo "Number of Challenges: $numberOfChallengesArg"
   echo "Name of Challenge: $nameOfHackArg"
   echo "Path: $pathArg"
-  echo "Delete existing directory: $deleteExistingDirectoryArg"
+  echo "Remove existing directory: $removeExistingDirectoryArg"
+  echo "Description of the hack: $descriptionOfHackArg"
+  echo "Keywords for the hack: $keywordsArg"
+  echo "OpenAI Endpoint URI: $openAIEndpointUriArg"
 fi
 
 declare -r wthDirectoryName="xxx-$nameOfHackArg"
@@ -270,8 +365,16 @@ declare -r rootPath="$pathArg/$wthDirectoryName"
 
 declare -r pathToTemplateDirectory="$pathArg/$templateDirectoryName"
 
-CreateDirectoryStructure $deleteExistingDirectoryArg
+declare -r descriptionOfHack="$descriptionOfHackArg"
 
-CreateHackDescription $numberOfChallengesArg
+declare -r keywords="$keywordsArg"
+
+declare -r openAIEndpointUri="$openAIEndpointUriArg"
+
+declare -r openAIApiKey="$openAIApiKeyArg"
+
+CreateDirectoryStructure $removeExistingDirectoryArg
+
+declare -r openAIHackDescription=$(CreateHackDescription $numberOfChallengesArg)
 
 CreateChallengesAndSolutions $numberOfChallengesArg
