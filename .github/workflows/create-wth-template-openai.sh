@@ -4,6 +4,7 @@ trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 IFS=$'\n\t'
 
 declare -r templateDirectoryName="000-HowToHack"
+declare -r openAIPromptDirectoryName="openai-prompts"
 
 Help() {
    echo "Syntax: createWthTemplate [-c|r|h|n|p|d|k|e|a|v]"
@@ -111,115 +112,30 @@ CreateDirectoryStructure() {
   touch $rootPath/Student/Resources/.gitkeep
 }
 
-PreprocessTemplateFile() {
-  local -r pathToFile=$1
-
-  local initialText=$(cat $pathToFile)
-
-  #replaces the REMOVE_ME placeholder (singleline), the REPLACE_ME placeholder (multiline) & collapse extra newlines
-  local -r returnText=$(echo "$initialText" | sed -e 's/<!-- REMOVE_ME \(.*\${.*}.*\) (.*) REMOVE_ME -->/\1/g' | perl -0777 -pe "s/<!-- REPLACE_ME .*? -->(?:.*?)<!-- REPLACE_ME .*? -->//gsm" | perl -0777 -pe "s/(\R)(?:\h*\R)+/\$1\$1/g")
-
-  echo "$returnText"
-}
-
 WriteMarkdownFile() {
-  local -r pathToWriteTo=$1
-  local -r markdownTemplateFileName=$2
+  local -r pathToPromptFile=$1
+  local -r openAIUserPrompt=$2
+  local -r pathToMarkdownFile=$3
 
-  local -r pathToTemplate="$pathToTemplateDirectory/$markdownTemplateFileName"
-
-  local templateText=$(PreprocessTemplateFile "$pathToTemplate")
-
-  #read in the template file & replace predefined variables 
-  #(defined in the file as ${varName})
-  local template=$(eval "cat <<EOF
-$templateText
-EOF
-" 2> /dev/null)
-
-  cat > "$pathToWriteTo" <<< $template
-}
-
-GenerateChallengesSection() {
-  local -r numberOfChallenges=$1
-  local -r directoryName=$2
-  local -r typeName=$3
-
-  local challengesSection=""
-
-  for challengeNumber in $(seq -f "%02g" 0 $numberOfChallenges); do
-    if [[ $challengeNumber -eq "00" ]]; then
-      eval challengesSection+=\$\'- Challenge $challengeNumber: **[Prerequisites - Ready, Set, GO!]\($directoryName/$typeName-$challengeNumber.md\)**\\n\\t - Prepare your workstation to work with Azure.\\n\'
-    else
-      eval challengesSection+=\$\'- Challenge $challengeNumber: **[Title of Challenge]\($directoryName/$typeName-$challengeNumber.md\)**\\n\\t - Description of challenge\\n\'
-    fi
-  done
-
-  echo "$challengesSection"
-}
-
-CreateHackDescription() {
-  local -r numberOfChallenges=$1
-
-  if $verbosityArg; then
-    echo "Creating $rootPath/README.md..."
-  fi
-
-  local -r challengesSection=$(GenerateChallengesSection $numberOfChallenges "Student" "Challenge")
-
-  #WriteMarkdownFile "$rootPath/README.md" "WTH-HackDescription-Template.md"
-  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-How-To-Author-A-Hack-Prompt.txt")
-
-  local -r openAIUserPrompt="Generate a overview page of the hack based upon the following description: $descriptionOfHack. Generate $numberOfChallenges challenges. Use the following keywords to help guide which challenges to generate: $keywords"
+  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$pathToPromptFile")
 
   local -r messageArray=$(GenerateOpenAIMessageArray "$openAISystemPrompt" "$openAIUserPrompt")
 
   local -r openAIResponse=$(CallOpenAI "$messageArray")
 
-  cat > "$rootPath/README.md" <<< $openAIResponse
+  cat > "$pathToMarkdownFile" <<< $openAIResponse
 
   echo "$openAIResponse"
 }
 
-GenerateNavigationLink() {
-  local -r suffixNumber=$1
-  local -r numberOfChallenges=$2
-  local -r linkName=$3
-  local -r isCoachGuide=$4
+CreateHackDescription() {
+  local -r numberOfChallenges=$1
 
-  local navigationLine=""
+  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-How-To-Author-A-Hack-Prompt.txt" \
+    "Generate a overview page of the hack based upon the following description: $descriptionOfHack. Generate $numberOfChallenges challenges. Use the following keywords to help guide which challenges to generate: $keywords" \
+    "$rootPath/README.md")
 
-  local previousNavigationLink=""
-
-  #have to account for the fact that there is 0 at the beginning of the challenge number, a 08 is interpreted as octal
-  #therefore, the $((10#$suffixNumber)) syntax
-  if [[ $((10#$suffixNumber)) -gt 0 ]]; then
-    local -r previousChallengeNumber=$(printf %02d $((10#$suffixNumber - 1)))
-    previousNavigationLink="[< Previous $linkName](./$linkName-$previousChallengeNumber.md) - "
-  fi
-
-  local nextNavigationLink=""
-
-  #have to account for the fact that there is 0 at the beginning of the challenge number, a 08 is interpreted as octal
-  #therefore, the $((10#$suffixNumber)) syntax
-  if [[ $((10#$suffixNumber)) -lt $((10#$numberOfChallenges)) ]]; then
-    local -r nextChallengeNumber=$(printf %02d $((10#$suffixNumber + 1)))
-    nextNavigationLink=" - [Next $linkName >](./$linkName-$nextChallengeNumber.md)"
-  fi
-
-  local homeLinkPath=""
-  
-  #if the navigation link is for Coach guides, it should point to the Coach/README, not the root README file
-  if $isCoachGuide
-  then
-    homeLinkPath="."
-  else  
-    homeLinkPath=".."
-  fi
-
-  local -r navigationLine="$previousNavigationLink**[Home]($homeLinkPath/README.md)**$nextNavigationLink"
-
-  echo $navigationLine
+  echo "$openAIResponse"
 }
 
 CreateChallengeMarkdownFile() {
@@ -228,58 +144,44 @@ CreateChallengeMarkdownFile() {
   local -r suffixNumber=$3
   local -r numberOfChallenges=$4
 
-  if $verbosityArg; then
-    echo "Creating $fullPath/$prefix-$suffixNumber.md..."
-  fi
+  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-Challenge-Template-Prompt.txt" \
+    "Generate a student challenge page of the hack based upon the following description: $openAIHackDescription. This should be for Challenge $suffixNumber." \
+    "$fullPath/$prefix-$suffixNumber.md")
 
-  local -r navigationLine=$(GenerateNavigationLink $suffixNumber $numberOfChallenges "Challenge" false)
-
-  # if [[ $suffixNumber -eq "00" ]]; then
-  #   WriteMarkdownFile "$fullPath/$prefix-$suffixNumber.md" "WTH-ChallengeZero-Template.md"
-  # else
-  #   WriteMarkdownFile "$fullPath/$prefix-$suffixNumber.md" "WTH-Challenge-Template.md"
-  # fi
-  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-Challenge-Template-Prompt.txt")
-  local -r openAIUserPrompt="Generate a student challenge page of the hack based upon the following description: $openAIHackDescription. This should be for Challenge $suffixNumber."
-
-  local -r messageArray=$(GenerateOpenAIMessageArray "$openAISystemPrompt" "$openAIUserPrompt")
-  local -r openAIResponse=$(CallOpenAI "$messageArray")
-
-  cat > "$fullPath/$prefix-$suffixNumber.md" <<< $openAIResponse
+  echo "$openAIResponse"
 }
 
 CreateSolutionMarkdownFile() {
   local -r fullPath=$1
   local -r prefix=$2
   local -r suffixNumber=$3
+  local -r challengeResponse=$4
 
-  if $verbosityArg; then
-    echo "Creating $fullPath/$prefix-$suffixNumber.md..."
-  fi
+  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-Challenge-Solution-Prompt.txt" \
+    "Generate a coach's guide solutiion page of the hack based upon the following description: $openAIHackDescription. This should be for solution $suffixNumber. It should be the step-by-step solution to the following challenge description: $challengeResponse" \
+    "$fullPath/$prefix-$suffixNumber.md")
 
-  local -r navigationLine=$(GenerateNavigationLink $suffixNumber $numberOfChallenges "Solution" true)
-
-  #WriteMarkdownFile "$fullPath/$prefix-$suffixNumber.md" "WTH-Challenge-Solution-Template.md"
-  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-Challenge-Solution-Prompt.txt")
-  local -r openAIUserPrompt="Generate a coach's guide solutiion page of the hack based upon the following description: $openAIHackDescription. This should be for solution $suffixNumber."
-
-  local -r messageArray=$(GenerateOpenAIMessageArray "$openAISystemPrompt" "$openAIUserPrompt")
-  local -r openAIResponse=$(CallOpenAI "$messageArray")
-
-  cat > "$fullPath/$prefix-$suffixNumber.md" <<< $openAIResponse
+  #echo "$openAIResponse"
 }
 
-CreateChallenges() {
-  local -r fullPath=$1
-  local -r numberOfChallenges=$2
-
-  if $verbosityArg; then
-    echo "Creating $numberOfChallenges challenge Markdown files in $fullPath..."
-  fi
+CreateChallengesAndSolutions() {
+  local -r numberOfChallenges=$1
 
   for challengeNumber in $(seq -f "%02g" 0 $numberOfChallenges); do
-    CreateChallengeMarkdownFile "$fullPath" "Challenge" $challengeNumber $numberOfChallenges 
+    if $verbosityArg; then
+      echo "Creating $rootPath/Challenge-$challengeNumber.md..."
+    fi
+
+    local challengeResponse=$(CreateChallengeMarkdownFile "$rootPath/Student" "Challenge" $challengeNumber $numberOfChallenges)
+
+    if $verbosityArg; then
+      echo "Creating $rootPath/Solution-$challengeNumber.md..."
+    fi
+
+    CreateSolutionMarkdownFile "$rootPath/Coach" "Solution" $challengeNumber $numberOfChallenges "$challengeResponse"
   done
+
+  CreateCoachGuideMarkdownFile "$rootPath/Coach" $numberOfChallenges
 }
 
 CreateCoachGuideMarkdownFile() {
@@ -290,43 +192,11 @@ CreateCoachGuideMarkdownFile() {
     echo "Creating $fullPath/README.md..."
   fi
 
-  #local -r challengesSection=$(GenerateChallengesSection $numberOfChallenges "." "Solution")
+  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-CoachGuide-Prompt.txt" \
+    "Generate a coach's guide overview page of the hack based upon the following description: $openAIHackDescription" \
+    "$fullPath/README.md")
 
-  #WriteMarkdownFile "$fullPath/README.md" "WTH-CoachGuide-Template.md"
-  local -r openAISystemPrompt=$(GetOpenAIPromptContent "$templateDirectoryName/WTH-CoachGuide-Prompt.txt")
-  local -r openAIUserPrompt="Generate a coach's guide overview page of the hack based upon the following description: $openAIHackDescription"
-
-  local -r messageArray=$(GenerateOpenAIMessageArray "$openAISystemPrompt" "$openAIUserPrompt")
-  local -r openAIResponse=$(CallOpenAI "$messageArray")
-
-  cat > "$fullPath/README.md" <<< $openAIResponse
-}
-
-CreateSolutions() {
-  local -r fullPath=$1
-  local -r numberOfSolutions=$2
-
-  CreateCoachGuideMarkdownFile "$fullPath" $numberOfChallenges
-
-  if $verbosityArg; then
-    echo "Creating $numberOfSolutions solution Markdown files in $fullPath..."
-  fi
-
-  for solutionNumber in $(seq -f "%02g" 0 $numberOfSolutions); do
-    CreateSolutionMarkdownFile "$fullPath" "Solution" $solutionNumber
-  done
-}
-
-CreateChallengesAndSolutions() {
-  local -r numberOfChallenges=$1
-
-  if $verbosityArg; then
-    echo "Creating $numberOfChallenges solution & challenge Markdown files in $rootPath..."
-  fi
-
-  CreateSolutions "$rootPath/Coach" $numberOfChallenges
-
-  CreateChallenges "$rootPath/Student" $numberOfChallenges
+  #echo "$openAIResponse"
 }
 
 # Main program
@@ -364,6 +234,8 @@ declare -r wthDirectoryName="xxx-$nameOfHackArg"
 declare -r rootPath="$pathArg/$wthDirectoryName"
 
 declare -r pathToTemplateDirectory="$pathArg/$templateDirectoryName"
+
+declare -r pathToOpenAIPromptDirectory="$pathToTemplateDirectory/$openAIPromptDirectoryName"
 
 declare -r descriptionOfHack="$descriptionOfHackArg"
 
