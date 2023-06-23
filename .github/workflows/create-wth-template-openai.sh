@@ -164,21 +164,28 @@ CreateSolutionMarkdownFile() {
   #echo "$openAIResponse"
 }
 
+CreateChallengeAndSolution() {
+  local -r challengeNumber=$1
+  local -r numberOfChallenges=$2
+
+  if $verbosityArg; then
+    echo "Creating $rootPath/Challenge-$challengeNumber.md..."
+  fi
+
+  local challengeResponse=$(CreateChallengeMarkdownFile "$rootPath/Student" "Challenge" $challengeNumber $numberOfChallenges)
+
+  if $verbosityArg; then
+    echo "Creating $rootPath/Solution-$challengeNumber.md..."
+  fi
+
+  CreateSolutionMarkdownFile "$rootPath/Coach" "Solution" $challengeNumber "$challengeResponse"
+}
+
 CreateChallengesAndSolutions() {
   local -r numberOfChallenges=$1
 
   for challengeNumber in $(seq -f "%02g" 0 $numberOfChallenges); do
-    if $verbosityArg; then
-      echo "Creating $rootPath/Challenge-$challengeNumber.md..."
-    fi
-
-    local challengeResponse=$(CreateChallengeMarkdownFile "$rootPath/Student" "Challenge" $challengeNumber $numberOfChallenges)
-
-    if $verbosityArg; then
-      echo "Creating $rootPath/Solution-$challengeNumber.md..."
-    fi
-
-    CreateSolutionMarkdownFile "$rootPath/Coach" "Solution" $challengeNumber $numberOfChallenges "$challengeResponse"
+    CreateChallengeAndSolution $challengeNumber $numberOfChallenges
   done
 
   CreateCoachGuideMarkdownFile "$rootPath/Coach" $numberOfChallenges

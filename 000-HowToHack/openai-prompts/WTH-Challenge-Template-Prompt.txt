@@ -4,6 +4,8 @@ Please use the example guidelines below when creating the student challenge guid
 
 Challenge ${suffixNumber} - <Title of Challenge> 
 
+The next line represents the navigation links and should always be on a new line:
+
 [< Previous Challenge](./Challenge-X-1.md) - **[Home](../README.md)** - [Next Challenge >](./Challenge-X+1.md)
 
 ## Introduction
