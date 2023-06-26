@@ -79,7 +79,7 @@ def call_openai(message_array) -> str:
 
 def create_directory_structure(delete_existing_directory):
     if delete_existing_directory:
-        shutil.rmtree(root_path)
+        shutil.rmtree(root_path, ignore_errors=True)
     
     logging.info(f"Creating {root_path} directory...")
         
