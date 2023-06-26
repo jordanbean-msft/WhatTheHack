@@ -33,8 +33,16 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           git checkout -b ${{ env.BRANCH_NAME }}
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ${{ github.workspace }}/.github/workflows/create-wth-template-openai/requirements.txt
       - name: Generate WhatTheHack template stubs
-        run: ${{ github.workspace }}/.github/workflows/create-wth-template-openai.sh -p ${{ github.workspace }} -c "${{ github.event.inputs.numberOfChallenges}}" -n "${{ github.event.inputs.hackName }}" -d "${{ github.event.inputs.description }}" -k "${{ github.event.inputs.keywords }}" -e "${{ secrets.OPENAI_ENDPOINT_URI }}" -a "${{ secrets.OPENAI_API_KEY }}" -v -r
+        run: python ${{ github.workspace }}/.github/workflows/create-wth-template-openai/create-wth-template-openai.py -p ${{ github.workspace }} -c "${{ github.event.inputs.numberOfChallenges}}" -n "${{ github.event.inputs.hackName }}" -d "${{ github.event.inputs.description }}" -k "${{ github.event.inputs.keywords }}" -e "${{ secrets.OPENAI_ENDPOINT_URI }}" -a "${{ secrets.OPENAI_API_KEY }}" -r
       - name: Push branch
         run: |
           git add *
