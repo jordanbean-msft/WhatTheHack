@@ -60,7 +60,10 @@ def call_openai(message_array) -> str:
 
     headers = { "Content-Type": "application/json", "api-key": f"{openai_api_key}" }
 
-    request = requests.Request('POST', openai_endpoint_uri, headers=headers, data=json_data)
+    request = requests.Request('POST', 
+                               openai_endpoint_uri, 
+                               headers=headers, 
+                               data=json_data)
     prepared = request.prepare()
 
     s = requests.Session()
@@ -79,7 +82,8 @@ def call_openai(message_array) -> str:
 
 def create_directory_structure(delete_existing_directory):
     if delete_existing_directory:
-        shutil.rmtree(root_path, ignore_errors=True)
+        shutil.rmtree(root_path, 
+                      ignore_errors=True)
     
     logging.info(f"Creating {root_path} directory...")
         
@@ -95,7 +99,8 @@ def create_directory_structure(delete_existing_directory):
     open(f"{root_path}/Coach/Solutions/.gitkeep", 'w').close()
 
     # copying the Coach Lectures template file in the /Coach directory
-    shutil.copy(f"{template_directory_name}/WTH-Lectures-Template.pptx", f"{root_path}/Coach/Lectures.pptx")
+    shutil.copy(f"{template_directory_name}/WTH-Lectures-Template.pptx", 
+                f"{root_path}/Coach/Lectures.pptx")
 
     logging.info(f"Creating {root_path}/Student/Resources directories...")
         
@@ -109,7 +114,8 @@ def create_directory_structure(delete_existing_directory):
 def write_markdown_file(path_to_prompt_file, openai_user_prompt, path_to_markdown_file) -> str:
     openai_system_prompt = get_openai_prompt_content(f"{path_to_prompt_file}")
 
-    message_array = generate_openai_message_array(f"{openai_system_prompt}", f"{openai_user_prompt}")
+    message_array = generate_openai_message_array(f"{openai_system_prompt}", 
+                                                  f"{openai_user_prompt}")
 
     openai_response = call_openai(message_array)
 
@@ -119,33 +125,46 @@ def write_markdown_file(path_to_prompt_file, openai_user_prompt, path_to_markdow
     return openai_response
 
 def create_hack_description(number_of_challenges) -> str:
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Overview-Prompt.txt", f"Generate a overview page of the hack based upon the following description: {description_of_hack}. Generate {number_of_challenges} challenges. Use the following keywords to help guide which challenges to generate: {keywords}", f"{root_path}/README.md")
+    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Overview-Prompt.txt", 
+                                          f"Generate a overview page of the hack based upon the following description: {description_of_hack}. Generate {number_of_challenges} challenges. Use the following keywords to help guide which challenges to generate: {keywords}", 
+                                          f"{root_path}/README.md")
 
     return openai_response
 
 def create_challenge_markdown_file(full_path, prefix, suffix_number) -> str:
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Challenge-Prompt.txt", f"Generate a student challenge page of the hack based upon challenge {suffix_number} in following description: {openai_hack_description}.", f"{full_path}/{prefix}-{suffix_number:02d}.md")
+    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Challenge-Prompt.txt", 
+                                          f"Generate a student challenge page of the hack based upon challenge {suffix_number} in following description: {openai_hack_description}.", 
+                                          f"{full_path}/{prefix}-{suffix_number:02d}.md")
 
     return openai_response
 
 def create_solution_markdown_file(full_path, prefix, suffix_number, challenge_response) -> str:
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Solution-Prompt.txt", f"Generate a coach's guide solution page. It should be the step-by-step solution guide based upon the following challenge description: {challenge_response}", f"{full_path}/{prefix}-{suffix_number:02d}.md")
+    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Solution-Prompt.txt", 
+                                          f"Generate a coach's guide solution page. It should be the step-by-step solution guide based upon the following challenge description: {challenge_response}", 
+                                          f"{full_path}/{prefix}-{suffix_number:02d}.md")
 
     return openai_response
 
 def create_challenge_and_solution(challenge_number):
     logging.info(f"Creating {root_path}/Challenge-{challenge_number:02d}.md...")
     
-    challenge_response = create_challenge_markdown_file(f"{root_path}/Student", "Challenge", challenge_number)
+    challenge_response = create_challenge_markdown_file(f"{root_path}/Student", 
+                                                        "Challenge", 
+                                                        challenge_number)
 
     logging.info(f"Creating {root_path}/Solution-{challenge_number:02d}.md...")
 
-    create_solution_markdown_file(f"{root_path}/Coach", "Solution", challenge_number, challenge_response)
+    create_solution_markdown_file(f"{root_path}/Coach", 
+                                  "Solution", 
+                                  challenge_number, 
+                                  challenge_response)
 
 def create_coach_guide_markdown_file(full_path, number_of_solutions) -> str:
     logging.info(f"Creating {full_path}/README.md...")
 
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Coach-Overview-Prompt.txt", "Generate a coach's guide overview page of the hack based upon the following description: {openai_hack_description}", f"{full_path}/README.md")
+    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Coach-Overview-Prompt.txt", 
+                                          f"Generate a coach's guide overview page of the hack based upon the following description: {openai_hack_description}", 
+                                          f"{full_path}/README.md")
 
     return openai_response
 
@@ -153,14 +172,18 @@ def create_challenges_and_solutions(number_of_challenges):
     for challenge_number in range(0, number_of_challenges + 1):
         create_challenge_and_solution(challenge_number)
 
-    create_coach_guide_markdown_file(f"{root_path}/Coach", number_of_challenges)
+    create_coach_guide_markdown_file(f"{root_path}/Coach", 
+                                     number_of_challenges)
 
 def main(argv):
     parser = init_argparse()
     args = parser.parse_args(argv)
 
-    if args.verbose:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
+    logging_levels = [logging.WARNING, logging.INFO, logging.DEBUG]
+    level = logging_levels[min(args.verbose, len(logging_levels) - 1)]
+
+    logging.basicConfig(level=level, 
+                        format='%(asctime)s %(levelname)s %(message)s')
 
     wth_directory_name = f"xxx-{args.name_of_hack}"
 

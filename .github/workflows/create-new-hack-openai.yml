@@ -42,7 +42,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r ${{ github.workspace }}/.github/workflows/create-wth-template-openai/requirements.txt
       - name: Generate WhatTheHack template stubs
-        run: python ${{ github.workspace }}/.github/workflows/create-wth-template-openai/create-wth-template-openai.py -p ${{ github.workspace }} -c "${{ github.event.inputs.numberOfChallenges}}" -n "${{ github.event.inputs.hackName }}" -d "${{ github.event.inputs.description }}" -k "${{ github.event.inputs.keywords }}" -e "${{ secrets.OPENAI_ENDPOINT_URI }}" -a "${{ secrets.OPENAI_API_KEY }}" -r
+        run: python ${{ github.workspace }}/.github/workflows/create-wth-template-openai/create-wth-template-openai.py -p ${{ github.workspace }} -c "${{ github.event.inputs.numberOfChallenges}}" -n "${{ github.event.inputs.hackName }}" -d "${{ github.event.inputs.description }}" -k "${{ github.event.inputs.keywords }}" -e "${{ secrets.OPENAI_ENDPOINT_URI }}" -a "${{ secrets.OPENAI_API_KEY }}" -r -v
       - name: Push branch
         run: |
           git add *
