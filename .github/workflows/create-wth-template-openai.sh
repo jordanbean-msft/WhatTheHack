@@ -131,9 +131,7 @@ WriteMarkdownFile() {
 CreateHackDescription() {
   local -r numberOfChallenges=$1
 
-  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-How-To-Author-A-Hack-Prompt.txt" \
-    "Generate a overview page of the hack based upon the following description: $descriptionOfHack. Generate $numberOfChallenges challenges. Use the following keywords to help guide which challenges to generate: $keywords" \
-    "$rootPath/README.md")
+  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-Overview-Prompt.txt" "Generate a overview page of the hack based upon the following description: $descriptionOfHack. Generate $numberOfChallenges challenges. Use the following keywords to help guide which challenges to generate: $keywords" "$rootPath/README.md")
 
   echo "$openAIResponse"
 }
@@ -142,11 +140,8 @@ CreateChallengeMarkdownFile() {
   local -r fullPath=$1
   local -r prefix=$2
   local -r suffixNumber=$3
-  local -r numberOfChallenges=$4
 
-  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-Challenge-Template-Prompt.txt" \
-    "Generate a student challenge page of the hack based upon the following description: $openAIHackDescription. This should be for Challenge $suffixNumber." \
-    "$fullPath/$prefix-$suffixNumber.md")
+  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-Challenge-Prompt.txt" "Generate a student challenge page of the hack based upon challenge $suffixNumber in following description: $openAIHackDescription." "$fullPath/$prefix-$suffixNumber.md")
 
   echo "$openAIResponse"
 }
@@ -157,38 +152,25 @@ CreateSolutionMarkdownFile() {
   local -r suffixNumber=$3
   local -r challengeResponse=$4
 
-  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-Challenge-Solution-Prompt.txt" \
-    "Generate a coach's guide solutiion page of the hack based upon the following description: $openAIHackDescription. This should be for solution $suffixNumber. It should be the step-by-step solution to the following challenge description: $challengeResponse" \
-    "$fullPath/$prefix-$suffixNumber.md")
+  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-Solution-Prompt.txt" "Generate a coach's guide solution page. It should be the step-by-step solution guide based upon the following challenge description: $challengeResponse" "$fullPath/$prefix-$suffixNumber.md")
 
   #echo "$openAIResponse"
 }
 
 CreateChallengeAndSolution() {
   local -r challengeNumber=$1
-  local -r numberOfChallenges=$2
 
   if $verbosityArg; then
     echo "Creating $rootPath/Challenge-$challengeNumber.md..."
   fi
 
-  local challengeResponse=$(CreateChallengeMarkdownFile "$rootPath/Student" "Challenge" $challengeNumber $numberOfChallenges)
+  local -r challengeResponse=$(CreateChallengeMarkdownFile "$rootPath/Student" "Challenge" $challengeNumber)
 
   if $verbosityArg; then
     echo "Creating $rootPath/Solution-$challengeNumber.md..."
   fi
 
   CreateSolutionMarkdownFile "$rootPath/Coach" "Solution" $challengeNumber "$challengeResponse"
-}
-
-CreateChallengesAndSolutions() {
-  local -r numberOfChallenges=$1
-
-  for challengeNumber in $(seq -f "%02g" 0 $numberOfChallenges); do
-    CreateChallengeAndSolution $challengeNumber $numberOfChallenges
-  done
-
-  CreateCoachGuideMarkdownFile "$rootPath/Coach" $numberOfChallenges
 }
 
 CreateCoachGuideMarkdownFile() {
@@ -199,11 +181,19 @@ CreateCoachGuideMarkdownFile() {
     echo "Creating $fullPath/README.md..."
   fi
 
-  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-CoachGuide-Prompt.txt" \
-    "Generate a coach's guide overview page of the hack based upon the following description: $openAIHackDescription" \
-    "$fullPath/README.md")
+  local -r openAIResponse=$(WriteMarkdownFile "$pathToOpenAIPromptDirectory/WTH-Coach-Overview-Prompt.txt" "Generate a coach's guide overview page of the hack based upon the following description: $openAIHackDescription" "$fullPath/README.md")
 
   #echo "$openAIResponse"
+}
+
+CreateChallengesAndSolutions() {
+  local -r numberOfChallenges=$1
+
+  for challengeNumber in $(seq -f "%02g" 0 $numberOfChallenges); do
+    CreateChallengeAndSolution $challengeNumber
+  done
+
+  #CreateCoachGuideMarkdownFile "$rootPath/Coach" $numberOfChallenges
 }
 
 # Main program
