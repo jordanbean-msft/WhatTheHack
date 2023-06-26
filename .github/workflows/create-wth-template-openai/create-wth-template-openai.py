@@ -31,19 +31,17 @@ def get_openai_prompt_content(path_to_prompt_file) -> str:
         promptText = file.read()
     return promptText
 
-def generate_openai_message_array(system_content, user_prompt_content) -> str:
-    data = [
+def generate_openai_message_array(system_content, user_prompt_content) -> list:
+    message_array = [
       { 
         "role": "system", 
-        "content": f"{system_content}" 
+        "content": system_content
       }, 
       { 
         "role": "user", 
-        "content": f"{user_prompt_content}" 
+        "content": user_prompt_content
       }
     ]
-
-    message_array = json.dumps(data)
 
     return message_array
 
@@ -58,15 +56,20 @@ def call_openai(message_array) -> str:
       "stop": "Null" 
     }
 
+    json_data = json.dumps(data)
+
     headers = { "Content-Type": "application/json", "api-key": f"{openai_api_key}" }
 
-    logging.info(f"Calling OpenAI API with the following data: {data}")
+    request = requests.Request('POST', openai_endpoint_uri, headers=headers, data=json_data)
+    prepared = request.prepare()
 
-    openai_response = requests.post(openai_endpoint_uri, headers=headers, data=data)
+    s = requests.Session()
+    openai_response = s.send(prepared)
 
     if(openai_response.status_code != 200):
         logging.error(f"OpenAI API call failed with status code: {openai_response.status_code}")
         logging.error(f"OpenAI API call failed with response: {openai_response.text}")
+        logging.error(f"OpenAI API call failed with data: {openai_response.request.body}")
 
     json_data = json.loads(openai_response.text)
 
@@ -121,21 +124,21 @@ def create_hack_description(number_of_challenges) -> str:
     return openai_response
 
 def create_challenge_markdown_file(full_path, prefix, suffix_number) -> str:
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Challenge-Prompt.txt", f"Generate a student challenge page of the hack based upon challenge {suffix_number} in following description: {openai_hack_description}.", f"{full_path}/{prefix}-{suffix_number}.md")
+    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Challenge-Prompt.txt", f"Generate a student challenge page of the hack based upon challenge {suffix_number} in following description: {openai_hack_description}.", f"{full_path}/{prefix}-{suffix_number:02d}.md")
 
     return openai_response
 
 def create_solution_markdown_file(full_path, prefix, suffix_number, challenge_response) -> str:
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Solution-Prompt.txt", f"Generate a coach's guide solution page. It should be the step-by-step solution guide based upon the following challenge description: {challenge_response}", f"{full_path}/{prefix}-{suffix_number.md}")
+    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Solution-Prompt.txt", f"Generate a coach's guide solution page. It should be the step-by-step solution guide based upon the following challenge description: {challenge_response}", f"{full_path}/{prefix}-{suffix_number:02d}.md")
 
     return openai_response
 
 def create_challenge_and_solution(challenge_number):
-    logging.info(f"Creating {root_path}/Challenge-{challenge_number}.md...")
+    logging.info(f"Creating {root_path}/Challenge-{challenge_number:02d}.md...")
     
     challenge_response = create_challenge_markdown_file(f"{root_path}/Student", "Challenge", challenge_number)
 
-    logging.info(f"Creating {root_path}/Solution-{challenge_number}.md...")
+    logging.info(f"Creating {root_path}/Solution-{challenge_number:02d}.md...")
 
     create_solution_markdown_file(f"{root_path}/Coach", "Solution", challenge_number, challenge_response)
 
@@ -147,7 +150,7 @@ def create_coach_guide_markdown_file(full_path, number_of_solutions) -> str:
     return openai_response
 
 def create_challenges_and_solutions(number_of_challenges):
-    for challenge_number in number_of_challenges:
+    for challenge_number in range(0, number_of_challenges + 1):
         create_challenge_and_solution(challenge_number)
 
     create_coach_guide_markdown_file(f"{root_path}/Coach", number_of_challenges)
@@ -156,7 +159,8 @@ def main(argv):
     parser = init_argparse()
     args = parser.parse_args(argv)
 
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
 
     wth_directory_name = f"xxx-{args.name_of_hack}"
 
