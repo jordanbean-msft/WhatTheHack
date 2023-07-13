@@ -80,4 +80,4 @@
     SELECT * FROM [dbo].[GameRecords]
     ```
 
-    > **Note:** If the application does not start correctly, make sure the database firewall is not restricting access.  To check this, navigate to the database -> Networking page and check the box "Allow Azure services and resources to access this server."
+    > **Note:** If the application does not start correctly, make sure the database firewall is not restricting access.  To check this, in the Azure Portal, navigate to the database -> Networking page and check the box "Allow Azure services and resources to access this server."
