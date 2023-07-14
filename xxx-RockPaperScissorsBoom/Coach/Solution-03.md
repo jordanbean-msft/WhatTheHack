@@ -34,9 +34,9 @@
    >
  
 Launch the following command from the Resource folder to use the 'acr' build' command:
-
+ 
     ```shell
-        az acr build --image <prefix>-rockpaperscissors-server:latest --registry <name of your Azure Container Registry> --file UI/dockerfile .
+    az acr build --image <prefix>-rockpaperscissors-server:latest --registry <name of your Azure Container Registry> --file UI/dockerfile .
     ```
     
 ### Create the Azure App Service for Containers
