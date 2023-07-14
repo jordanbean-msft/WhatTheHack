@@ -30,6 +30,9 @@
     docker push <acr-name>.azurecr.io/rockpaperscissors-server:latest
     ```
 
+    > [!NOTE]
+   > A alternative, streamlined approach to push a container to Azure Container Registry can be performed with the [Azure Container Registry Tasks](https://learn.microsoft.com/azure/container-registry/container-registry-tasks-overview/) feature. Leveraging the 'acr build' command, the above steps 3 and 4 can combined. Consider the following command:  The examples in this chapter require you use Docker containers. Launch this command from the Resource folder: az acr build --image <prefix>-rockpaperscissors-server:latest --registry <name of your Azure Container Registry> --file UI/dockerfile .
+
 ### Create the Azure App Service for Containers
 
 1.  Run the following Azure CLI to create the App Service Plan.
