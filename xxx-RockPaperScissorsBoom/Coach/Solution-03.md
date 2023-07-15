@@ -29,7 +29,10 @@
     ```shell
     docker push <acr-name>.azurecr.io/rockpaperscissors-server:latest
     ```
-   > [!NOTE] A alternative, streamlined approach to build and push a container to Azure Container Registry can be performed with the [Azure Container Registry Tasks](https://learn.microsoft.com/azure/container-registry/container-registry-tasks-overview/) feature. Leveraging the 'acr build' command, the above steps 3 and 4 can combined.
+    
+   > [!TIP]
+   >
+   > A alternative, streamlined approach to build and push a container to Azure Container Registry can be performed with the [Azure Container Registry Tasks](https://learn.microsoft.com/azure/container-registry/container-registry-tasks-overview/) feature. Leveraging the 'acr build' command, the above steps 3 and 4 can combined.
     
 Launch the following command from the Resource folder to use the 'acr' build' command:
  
