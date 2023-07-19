@@ -1,41 +1,31 @@
-using System;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Azure.EventGrid;
-using Microsoft.Azure.EventGrid.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Azure.Messaging.EventGrid;
 
 namespace RockPaperScissorsBoom.Server.Helpers
 {
     public class EventGridMessagingHelper : IMessagingHelper
     {
-        private EventGridConfiguration config;
+        private readonly EventGridConfiguration config;
         public EventGridMessagingHelper(IConfiguration configuration)
         {
             config = new EventGridConfiguration();
-            configuration.Bind("EventGrid", this.config);
+            configuration.Bind("EventGrid", config);
         }
         public async Task PublishMessageAsync(string messageType, string subject, DateTime dateTime, object data)
         {
-            TopicCredentials topicCredentials = new TopicCredentials(config.TopicKey);
-            EventGridClient client = new EventGridClient(topicCredentials);
-
-            await client.PublishEventsAsync(config.TopicHostName, GetEventsList(messageType, subject, dateTime, data));
+            EventGridPublisherClient client = new(new Uri(config.TopicEndPoint), new Azure.AzureKeyCredential(config.TopicKey));
+            await client.SendEventsAsync(GetEventsList(messageType, subject, dateTime, data));
         }
 
         internal IList<EventGridEvent> GetEventsList(string messageType, string subject, DateTime dateTime, object data)
             {
-                List<EventGridEvent> eventsList = new List<EventGridEvent>();
+                List<EventGridEvent> eventsList = new();
                 for (int i = 0; i < 1; i++)
                 {
-                    eventsList.Add(new EventGridEvent()
+                    eventsList.Add(new EventGridEvent(subject, messageType, config.DataVersion, data)
                     {
                         Id = Guid.NewGuid().ToString(),
-                        EventType = messageType,
-                        Data = data,
                         EventTime = dateTime,
-                        Subject = subject,
-                        DataVersion = config.DataVersion
+                        Topic = config.TopicHostName
                     });
                 }
                 return eventsList;
@@ -43,11 +33,10 @@ namespace RockPaperScissorsBoom.Server.Helpers
 
         public class EventGridConfiguration
         {
-            public string TopicEndPoint { get; set; }
-            public string TopicKey { get; set; }
-            public string TopicHostName { get; set; }
-            public string DataVersion { get; set; }
-
+            public string TopicEndPoint { get; set; } = "";
+            public string TopicKey { get; set; } = "";
+            public string TopicHostName { get; set; } = "";
+            public string DataVersion { get; set; } = "";
         }
     }
 }

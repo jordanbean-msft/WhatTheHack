@@ -1,20 +1,27 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using RockPaperScissor.Core.Game;
-using RockPaperScissor.Core.Game.Bots;
-using RockPaperScissor.Core.Game.Results;
+using RockPaperScissorsBoom.Core.Game;
+using RockPaperScissorsBoom.Core.Game.Bots;
+using RockPaperScissorsBoom.Core.Game.Results;
+using RockPaperScissorsBoom.Core.Model;
 
 namespace RockPaperScissorsBoom.Server.Bot
 {
     public class SignalRBot : BaseBot
     {
-        private HubConnection _connection;
+        private HubConnection? _connection;
         private Decision? _decision = null;
 
         public string ApiRootUrl { get; set; }
 
+        public SignalRBot(Competitor competitor): base(competitor)
+        {
+            ApiRootUrl = competitor.Url ?? "";
+        }
+
         private void InitializeConnection()
         {
-            if (_connection != null) return;
+            if (_connection != null) 
+                return;
 
             _connection = new HubConnectionBuilder()
                 .WithUrl(ApiRootUrl)
@@ -32,7 +39,7 @@ namespace RockPaperScissorsBoom.Server.Bot
         {
             if (_connection == null) InitializeConnection();
 
-            _connection.InvokeAsync("RequestMove", previousResult);
+            _connection?.InvokeAsync("RequestMove", previousResult);
 
             while (_decision == null)
             {

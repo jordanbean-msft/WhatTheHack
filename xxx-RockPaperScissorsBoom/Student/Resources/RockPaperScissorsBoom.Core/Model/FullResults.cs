@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using RockPaperScissorsBoom.Core.Game.Results;
+
+namespace RockPaperScissorsBoom.Core.Model
+{
+    public class FullResults
+    {
+        public Competitor? Competitor { get; set; }
+        public List<MatchResult>? MatchResults { get; set; }
+    }
+}
