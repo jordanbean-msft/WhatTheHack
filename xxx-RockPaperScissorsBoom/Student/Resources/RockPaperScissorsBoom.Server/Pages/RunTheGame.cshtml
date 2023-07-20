@@ -41,13 +41,13 @@
                                 @game.GameDate
                             </td>
                             <td>
-                                @(game.BotRecords.Count > 0 ? game.BotRecords.OrderByDescending(b => b.Wins).First().Competitor.Name : "")
+                                @(game.BotRecords.Count > 0 ? game.BotRecords.OrderByDescending(b => b.Wins).First().Competitor?.Name : "")
                             </td>
                             <td>
-                                @(game.BotRecords.Count > 1 ? @game.BotRecords.OrderByDescending(b => b.Wins).Skip(1).First().Competitor.Name : "")
+                                @(game.BotRecords.Count > 1 ? @game.BotRecords.OrderByDescending(b => b.Wins).Skip(1).First().Competitor?.Name : "")
                             </td>
                             <td>
-                                @(game.BotRecords.Count > 2 ? @game.BotRecords.OrderByDescending(b => b.Wins).Skip(2).First().Competitor.Name : "")
+                                @(game.BotRecords.Count > 2 ? @game.BotRecords.OrderByDescending(b => b.Wins).Skip(2).First().Competitor?.Name : "")
                             </td>
                         </tr>
                     }
