@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
+using RockPaperScissorsBoom.Core.Model;
+using RockPaperScissorsBoom.Server;
+using Microsoft.ApplicationInsights;
+using RockPaperScissorsBoom.Server.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +34,9 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToPage("/Competitors/Index");
 }).AddRazorPagesOptions(options => { }).
 AddMicrosoftIdentityUI();
+
+builder.Services.AddSingleton<IMetrics>(s => new AIMetrics(s.GetRequiredService<TelemetryClient>(), "BotDecisionTime"));
+builder.Services.AddSingleton<IMessagingHelper, EventGridMessagingHelper>();
 
 var app = builder.Build();
 

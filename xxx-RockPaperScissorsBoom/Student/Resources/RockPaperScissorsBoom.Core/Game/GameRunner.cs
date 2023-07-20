@@ -40,18 +40,17 @@ namespace RockPaperScissorsBoom.Core.Game
                 int losses = matchResults.Count(x => x.WasLostBy(bot.Id));
                 int ties = matchResults.Count(x => x.WinningPlayer == MatchOutcome.Neither);
 
-                gameRecord?.BotRecords?.Add(new BotRecord
-                {
-                    GameRecord = gameRecord,
-                    Competitor = bot.Competitor,
-                    Wins = wins,
-                    Losses = losses,
-                    Ties = ties
-                });
+                gameRecord.BotRecords.Add(new BotRecord(
+                    gameRecord,
+                    bot.Competitor,
+                    wins,
+                    losses,
+                    ties
+                ));
             }
 
             List<FullResults> allMatchResults = GetFullResultsByPlayer(matchResults);
-            return new GameRunnerResult { GameRecord = gameRecord, AllMatchResults = allMatchResults };
+            return new GameRunnerResult(gameRecord, allMatchResults);
         }
 
         private static List<FullResults> GetFullResultsByPlayer(List<MatchResult> matchResults)
@@ -65,7 +64,7 @@ namespace RockPaperScissorsBoom.Core.Game
             foreach (Competitor? competitor in competitors)
             {
                 var collection = matchResults.Where(x => x.Player1 == competitor || x.Player2 == competitor).ToList();
-                allMatchResults.Add(new FullResults { Competitor = competitor, MatchResults = collection });
+                allMatchResults.Add(new FullResults(competitor, collection));
             }
 
             return allMatchResults;

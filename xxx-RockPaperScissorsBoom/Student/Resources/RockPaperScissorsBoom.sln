@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.33913.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissorsBoom.Server", "RockPaperScissorsBoom.Server\RockPaperScissorsBoom.Server.csproj", "{CA0A2AE6-364F-4A79-AEFC-7A1FC5D4B406}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissorsBoom.Core", "RockPaperScissorsBoom.Core\RockPaperScissorsBoom.Core.csproj", "{F87554EC-9E41-4366-ADAB-B51B1B5D3A75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissorsBoom.Core", "RockPaperScissorsBoom.Core\RockPaperScissorsBoom.Core.csproj", "{F87554EC-9E41-4366-ADAB-B51B1B5D3A75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
