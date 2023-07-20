@@ -1,6 +1,6 @@
 ﻿using RockPaperScissorsBoom.Core.Game;
 
-namespace RockPaperScissorBoom.Core.Extensions
+namespace RockPaperScissorsBoom.Core.Extensions
 {
     public static class DecisionExtensions
     {

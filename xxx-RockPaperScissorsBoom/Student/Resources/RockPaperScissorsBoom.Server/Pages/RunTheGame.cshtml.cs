@@ -83,7 +83,7 @@ namespace RockPaperScissorsBoom.Server.Pages
 
             if (bool.Parse(configuration["EventGridOn"] ?? "false"))
             {
-                await PublishMessage(BotRankings.First().GameRecord.Id.ToString(), BotRankings.First().Competitor.Name);
+                await PublishMessage(BotRankings.First().GameRecord?.Id.ToString() ?? "", BotRankings.First().Competitor?.Name ?? "");
             }
         }
 

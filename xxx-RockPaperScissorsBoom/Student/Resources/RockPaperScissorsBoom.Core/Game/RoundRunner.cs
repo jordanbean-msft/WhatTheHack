@@ -1,4 +1,4 @@
-﻿using RockPaperScissorBoom.Core.Extensions;
+﻿using RockPaperScissorsBoom.Core.Extensions;
 using RockPaperScissorsBoom.Core.Game.Bots;
 using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
