@@ -17,8 +17,15 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddApplicationInsightsTelemetry();
 
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
+    options.HandleSameSiteCookieCompatibility();
+});
+
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureADB2C"));
+    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection(Constants.AzureAdB2C));
 
 builder.Services.AddAuthorization(options =>
 {
@@ -32,8 +39,8 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AllowAnonymousToPage("/Error");
     options.Conventions.AllowAnonymousToPage("/RunTheGame");
     options.Conventions.AllowAnonymousToPage("/Competitors/Index");
-}).AddRazorPagesOptions(options => { }).
-AddMicrosoftIdentityUI();
+}).AddMvcOptions(options => { })
+    .AddMicrosoftIdentityUI();
 
 builder.Services.AddSingleton<IMetrics>(s => new AIMetrics(s.GetRequiredService<TelemetryClient>(), "BotDecisionTime"));
 builder.Services.AddSingleton<IMessagingHelper, EventGridMessagingHelper>();
@@ -65,11 +72,14 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseCookiePolicy();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+//needed to enable sign-in/sign-out with Microsoft Identity Web
+app.MapControllers();
 app.MapRazorPages();
 
 app.Run();
