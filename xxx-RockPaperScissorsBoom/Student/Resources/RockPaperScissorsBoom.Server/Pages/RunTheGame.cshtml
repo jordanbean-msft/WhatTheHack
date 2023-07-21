@@ -79,9 +79,9 @@
                                                 @foreach (var matchResult in fullResults.MatchResults)
                                                 {
                                                     <tr>
-                                                        <td>Player 1: @(matchResult.Player1.Name)</td>
-                                                        <td>Player 2: @matchResult.Player2.Name</td>
-                                                        <td>Result: @matchResult.WinningPlayer</td>
+                                                        <td>@(matchResult.Player1.Name)</td>
+                                                        <td>@matchResult.Player2.Name</td>
+                                                        <td>@matchResult.WinningPlayer</td>
                                                     </tr>
                                                 }
                                             </tbody>

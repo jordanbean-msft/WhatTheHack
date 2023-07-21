@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace RockPaperScissorsBoom.Core.Model
 {
     public interface IMetrics

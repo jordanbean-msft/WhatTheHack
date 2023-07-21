@@ -5,21 +5,20 @@ using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
 using UnitTests.DataBuilders;
 using UnitTests.Fakes;
-using Xunit;
 
 namespace UnitTests.Core.Game.RoundRunnerTests
 {
     public class RunRoundShould
     {
-        private readonly RockOnlyBot _rockOnlyBot 
+        private readonly RockOnlyBot _rockOnlyBot
             = new(new Competitor("", ""));
-        private readonly PaperOnlyBot _paperOnlyBot 
+        private readonly PaperOnlyBot _paperOnlyBot
             = new(new Competitor("", ""));
-        private readonly WaterOnlyBot _waterOnlyBot 
+        private readonly WaterOnlyBot _waterOnlyBot
             = new(new Competitor("", ""));
-        private readonly DynamiteOnlyBot _dynamiteOnlyBot 
+        private readonly DynamiteOnlyBot _dynamiteOnlyBot
             = new(new Competitor("", ""));
-        private readonly ScissorsOnlyBot _scissorsOnlyBot 
+        private readonly ScissorsOnlyBot _scissorsOnlyBot
             = new(new Competitor("", ""));
         private readonly RoundResultBuilder _builder = new();
 

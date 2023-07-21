@@ -3,7 +3,6 @@ using RockPaperScissorsBoom.Core.Game;
 using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
 using UnitTests.DataBuilders;
-using Xunit;
 using DynoBot = RockPaperScissorsBoom.Core.Game.Bots.DynamiteOnlyBot;
 
 namespace UnitTests.Core.Game.Results.RoundResultsTests

@@ -6,7 +6,7 @@ namespace RockPaperScissorsBoom.Core.Extensions
     {
         // selects id compoment of Decision enum
         const int ID_FLAG = 0b11111;
-        
+
         /*  
             Uses the two 5 bit compents of the numeric values of the Decision enum to determine if d1 defeats d2
             left 5 bit component is a map of which values are defeated by the enum entry

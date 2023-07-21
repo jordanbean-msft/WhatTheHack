@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace RockPaperScissorsBoom.Core.Model
+﻿namespace RockPaperScissorsBoom.Core.Model
 {
     public class GameRunnerResult
     {

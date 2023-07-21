@@ -9,7 +9,7 @@ namespace RockPaperScissorsBoom.Core.Game.Bots
         {
         }
 
-        private readonly Dictionary<Guid,int> _usedDynamite = new();
+        private readonly Dictionary<Guid, int> _usedDynamite = new();
 
         public override Decision GetDecision(PreviousDecisionResult previousResult)
         {

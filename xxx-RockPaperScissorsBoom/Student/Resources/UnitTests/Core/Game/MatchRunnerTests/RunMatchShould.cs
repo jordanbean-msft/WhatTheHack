@@ -4,7 +4,6 @@ using RockPaperScissorsBoom.Core.Game.Bots;
 using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
 using UnitTests.Fakes;
-using Xunit;
 
 namespace UnitTests.Core.Game.MatchRunnerTests
 {

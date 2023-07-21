@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RockPaperScissorsBoom.Core.Model
+﻿namespace RockPaperScissorsBoom.Core.Model
 {
     public class Competitor : BaseEntity
     {

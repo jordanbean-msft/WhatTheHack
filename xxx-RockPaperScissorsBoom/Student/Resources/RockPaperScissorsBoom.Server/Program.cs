@@ -1,11 +1,11 @@
-using RockPaperScissorsBoom.Server.Data;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using RockPaperScissorsBoom.Core.Model;
 using RockPaperScissorsBoom.Server;
-using Microsoft.ApplicationInsights;
+using RockPaperScissorsBoom.Server.Data;
 using RockPaperScissorsBoom.Server.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,9 +49,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-  app.UseExceptionHandler("/Error");
-  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-  app.UseHsts();
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 else
 {

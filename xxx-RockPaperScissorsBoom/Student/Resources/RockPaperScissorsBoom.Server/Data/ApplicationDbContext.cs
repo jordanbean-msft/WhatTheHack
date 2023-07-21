@@ -12,6 +12,6 @@ namespace RockPaperScissorsBoom.Server.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-        }        
+        }
     }
 }

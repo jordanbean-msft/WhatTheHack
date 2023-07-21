@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RockPaperScissorsBoom.Core.Game.Results
+﻿namespace RockPaperScissorsBoom.Core.Game.Results
 {
     public class PreviousDecisionResult
     {

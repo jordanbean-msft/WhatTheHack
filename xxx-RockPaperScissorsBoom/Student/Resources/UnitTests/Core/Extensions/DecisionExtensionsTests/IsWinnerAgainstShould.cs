@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using RockPaperScissorsBoom.Core.Extensions;
 using RockPaperScissorsBoom.Core.Game;
-using Xunit;
 
 namespace UnitTests.Core.Extensions.DecisionExtensionsTests
 {

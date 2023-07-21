@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using RockPaperScissorsBoom.Core.Game.Results;
+﻿using RockPaperScissorsBoom.Core.Game.Results;
 
 namespace RockPaperScissorsBoom.Core.Model
 {

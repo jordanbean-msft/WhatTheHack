@@ -13,14 +13,14 @@ namespace RockPaperScissorsBoom.Server.Bot
 
         public string ApiRootUrl { get; set; }
 
-        public SignalRBot(Competitor competitor): base(competitor)
+        public SignalRBot(Competitor competitor) : base(competitor)
         {
             ApiRootUrl = competitor.Url ?? "";
         }
 
         private void InitializeConnection()
         {
-            if (_connection != null) 
+            if (_connection != null)
                 return;
 
             _connection = new HubConnectionBuilder()

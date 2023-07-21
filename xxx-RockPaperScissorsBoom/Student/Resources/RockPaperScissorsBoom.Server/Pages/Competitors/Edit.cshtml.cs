@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RockPaperScissorsBoom.Core.Model;
-using RockPaperScissorsBoom.Server.Data;
 
 namespace RockPaperScissorsBoom.Server.Pages.Competitors
 {
@@ -30,7 +24,7 @@ namespace RockPaperScissorsBoom.Server.Pages.Competitors
                 return NotFound();
             }
 
-            var competitor =  await _context.Competitors.FirstOrDefaultAsync(m => m.Id == id);
+            var competitor = await _context.Competitors.FirstOrDefaultAsync(m => m.Id == id);
             if (competitor == null)
             {
                 return NotFound();
@@ -71,7 +65,7 @@ namespace RockPaperScissorsBoom.Server.Pages.Competitors
 
         private bool CompetitorExists(Guid id)
         {
-          return (_context.Competitors?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Competitors?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

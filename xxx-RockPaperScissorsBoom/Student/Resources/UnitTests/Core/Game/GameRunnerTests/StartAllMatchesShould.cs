@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using RockPaperScissorsBoom.Core.Game;
 using RockPaperScissorsBoom.Core.Game.Bots;
 using RockPaperScissorsBoom.Core.Model;
 using UnitTests.Fakes;
-using Xunit;
 
 namespace UnitTests.Core.Game.GameRunnerTests
 {

@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RockPaperScissorsBoom.Core.Game.Bots;
+using Microsoft.EntityFrameworkCore;
 using RockPaperScissorsBoom.Core.Game;
+using RockPaperScissorsBoom.Core.Game.Bots;
 using RockPaperScissorsBoom.Core.Model;
 using RockPaperScissorsBoom.Server.Bot;
 using RockPaperScissorsBoom.Server.Data;
 using RockPaperScissorsBoom.Server.Helpers;
 using RockPaperScissorsBoom.Server.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace RockPaperScissorsBoom.Server.Pages
 {
@@ -112,7 +112,7 @@ namespace RockPaperScissorsBoom.Server.Pages
         {
             Type type = Type.GetType(competitor.BotType) ?? throw new Exception($"Could not find type {competitor.BotType}");
             var bot = Activator.CreateInstance(type, competitor) as BaseBot ?? throw new Exception($"Could not create instance of type {competitor.BotType}");
-            
+
             if (bot is SignalRBot signalRBot)
             {
                 signalRBot.ApiRootUrl = competitor.Url ?? "";

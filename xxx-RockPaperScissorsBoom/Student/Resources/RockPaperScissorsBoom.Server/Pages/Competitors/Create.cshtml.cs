@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using RockPaperScissorsBoom.Core.Model;
-using RockPaperScissorsBoom.Server.Data;
 
 namespace RockPaperScissorsBoom.Server.Pages.Competitors
 {
@@ -26,12 +20,12 @@ namespace RockPaperScissorsBoom.Server.Pages.Competitors
 
         [BindProperty]
         public Competitor Competitor { get; set; } = default!;
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Competitors == null || Competitor == null)
+            if (!ModelState.IsValid || _context.Competitors == null || Competitor == null)
             {
                 return Page();
             }

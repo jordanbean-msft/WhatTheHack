@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RockPaperScissorsBoom.Core.Model
+﻿namespace RockPaperScissorsBoom.Core.Model
 {
     public abstract class BaseEntity : IEquatable<BaseEntity>
     {
@@ -15,7 +13,7 @@ namespace RockPaperScissorsBoom.Core.Model
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((BaseEntity) obj);
+            return Equals((BaseEntity)obj);
         }
 
         public override int GetHashCode()

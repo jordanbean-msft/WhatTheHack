@@ -17,19 +17,19 @@ namespace RockPaperScissorsBoom.Server.Helpers
         }
 
         internal IList<EventGridEvent> GetEventsList(string messageType, string subject, DateTime dateTime, object data)
+        {
+            List<EventGridEvent> eventsList = new();
+            for (int i = 0; i < 1; i++)
             {
-                List<EventGridEvent> eventsList = new();
-                for (int i = 0; i < 1; i++)
+                eventsList.Add(new EventGridEvent(subject, messageType, config.DataVersion, data)
                 {
-                    eventsList.Add(new EventGridEvent(subject, messageType, config.DataVersion, data)
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        EventTime = dateTime,
-                        Topic = config.TopicHostName
-                    });
-                }
-                return eventsList;
+                    Id = Guid.NewGuid().ToString(),
+                    EventTime = dateTime,
+                    Topic = config.TopicHostName
+                });
             }
+            return eventsList;
+        }
 
         public class EventGridConfiguration
         {
