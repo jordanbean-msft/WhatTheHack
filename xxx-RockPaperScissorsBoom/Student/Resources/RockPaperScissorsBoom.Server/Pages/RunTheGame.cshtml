@@ -16,9 +16,13 @@
                         </li>
                     }
                 </ol>
-                <form method="post" asp-page="RunTheGame">
-                    <button type="submit" class="btn btn-primary">
+                <form method="post" asp-page="RunTheGame" id="runTheGameForm">
+                    <button type="submit" class="btn btn-primary" id="runTheGameButton" onclick="return DisplayProgressMessage();">
                         Run the game again
+                    </button>
+                    <button class="btn btn-primary" type="button" id="runningTheGameButton" disabled hidden>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Running the game...
                     </button>
                 </form>
             </div>
@@ -96,3 +100,10 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function DisplayProgressMessage() {
+        $('#runTheGameButton').hide();
+        $('#runningTheGameButton').removeAttr('hidden');
+        return true;
+    }    
+</script>

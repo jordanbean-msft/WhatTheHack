@@ -15,7 +15,6 @@ namespace RockPaperScissorsBoom.Core.Game
         public MatchResult RunMatch(BaseBot player1, BaseBot player2)
         {
             var roundResults = new List<RoundResult>();
-            var roundRunner = new RoundRunner();
             var matchResult = new MatchResult(player1.Competitor, player2.Competitor);
 
             RoundResult previousResult = new(matchResult);

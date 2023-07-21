@@ -1,7 +1,7 @@
-﻿using RockPaperScissorsBoom.Core.Game.Bots;
+﻿using Microsoft.AspNetCore.SignalR;
+using RockPaperScissorsBoom.Core.Game.Bots;
 using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
-using Microsoft.AspNetCore.SignalR;
 
 namespace RockPaperScissorsBoom.ExampleBot.Hubs
 {
