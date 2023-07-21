@@ -32,15 +32,13 @@ namespace RockPaperScissorsBoom.Server.Pages
 
         public void OnGet()
         {
-            GameRecord gameRecord = db.GameRecords
-                .Include(x => x.BotRecords)
-                .ThenInclude(x => x.Competitor)
-                .OrderByDescending(x => x.GameDate)
-                .FirstOrDefault();
-
             AllFullResults = new List<FullResults>();
 
-            GamesForTable = db.GameRecords.OrderByDescending(g => g.GameDate).Take(10).Include(g => g.BotRecords).ToList();
+            GamesForTable = db.GameRecords
+                .Include(x => x.BotRecords)
+                .ThenInclude(x => x.Competitor)
+                .OrderByDescending(g => g.GameDate).Take(10)
+                .ToList();
         }
 
         public async Task OnPostAsync()
