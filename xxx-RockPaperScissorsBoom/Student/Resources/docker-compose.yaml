@@ -1,0 +1,48 @@
+version: "3"
+services:
+  rockpaperscissors-sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: rockpaperscissors-sql
+    environment:
+      MSSQL_SA_PASSWORD: "yourStrong(1)Password"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "yourStrong(1)Password" -Q "SELECT 1" -b
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+  rockpaperscissors-server:
+    build:
+      context: .
+      dockerfile: RockPaperScissorsBoom.Server/Dockerfile
+    container_name: rockpaperscissors-server
+    environment:
+      "ConnectionStrings__DefaultConnection": "Server=rockpaperscissors-sql,1433;Database=RockPaperScissorsBoom;User Id=SA;Password=yourStrong(1)Password;Encrypt=False;Persist Security Info=False;trusted_connection=False"
+      "ASPNETCORE_URLS": "https://+;http://+"
+      "ASPNETCORE_Kestrel__Certificates__Default__Password": "x800Radeon"
+      "ASPNETCORE_Kestrel__Certificates__Default__Path": "/https/aspnetapp.pfx"
+      "EventGridOn": "true"
+      "EventGrid__TopicEndpoint": "https://rockpaperscissorsboom-winner-notification-topic.southcentralus-1.eventgrid.azure.net/api/events"
+      "EventGrid__TopicKey": "mtoJQp5IXcBOXXj3DQlcp9XAMxPSVDttUw+5N89+Wyk="
+      "EventGrid__TopicHostName": "rockpaperscissorsboom-winner-notification-topic.southcentralus-1.eventgrid.azure.net"
+      "EventGrid__DataVersion": "2.0"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ~/.aspnet/https:/https
+    depends_on:
+      rockpaperscissors-sql:
+        condition: service_healthy
+        restart: true
+  # rockpaperscissors-examplebot:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile-ExampleBot
+  #   container_name: rockpaperscissors-examplebot
+  #   ports:
+  #     - "8080:80"
