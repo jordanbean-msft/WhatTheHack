@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Reflection;
 @model RockPaperScissorsBoom.Server.Pages.Competitors.CreateModel
 
 @{
@@ -20,7 +21,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="Competitor.BotType" class="control-label"></label>
-                <input asp-for="Competitor.BotType" class="form-control" />
+                <select asp-for="Competitor.BotType" class="form-control">
+                    @{
+                        Assembly assemblyServer = typeof(RockPaperScissorsBoom.Server.Bot.SignalRBot).Assembly;
+                        Assembly assemblyCore = typeof(RockPaperScissorsBoom.Core.Game.Bots.BaseBot).Assembly;
+                        var types = new List<Type>();
+                        types.AddRange(assemblyServer.GetTypes());
+                        types.AddRange(assemblyCore.GetTypes());
+                        foreach (Type type in types)
+                        {
+                            if (type.IsSubclassOf(typeof(RockPaperScissorsBoom.Core.Game.Bots.BaseBot)))
+                            {
+                                <option value="@type.AssemblyQualifiedName?.ToString()">@type.Name</option>
+                            }
+                        }
+                    }
+                </select>
                 <span asp-validation-for="Competitor.BotType" class="text-danger"></span>
             </div>
             <div class="form-group">
