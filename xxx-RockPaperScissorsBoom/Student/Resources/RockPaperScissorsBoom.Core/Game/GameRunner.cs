@@ -6,28 +6,40 @@ namespace RockPaperScissorsBoom.Core.Game
 {
     public class GameRunner
     {
+        private readonly List<BaseBot> _competitors = new();
+        private readonly IMetrics metrics;
+
+        public event EventHandler<GameCompletedEventArgs>? GameCompleted;
+        public event EventHandler<GameRoundCompletedEventArgs>? GameRoundCompleted;
+        
         public GameRunner(IMetrics metrics)
         {
             this.metrics = metrics;
         }
-        private readonly List<BaseBot> _competitors = new();
-        private readonly IMetrics metrics;
 
         public async Task<GameRunnerResult> StartAllMatches()
         {
             var matchRunner = new MatchRunner(metrics);
-
             var matchResults = new List<MatchResult>();
+
+            int numberOfGames = (_competitors.Count) * (_competitors.Count - 1) / 2;
+            int gameNumber = 0;
 
             for (int i = 0; i < _competitors.Count; i++)
             {
                 for (int j = i + 1; j < _competitors.Count; j++)
                 {
-                    matchResults.Add(await matchRunner.RunMatch(_competitors[i], _competitors[j]));
+                    var matchResult = await matchRunner.RunMatch(_competitors[i], _competitors[j], gameNumber, numberOfGames);
+                    OnGameRoundCompleted(new GameRoundCompletedEventArgs(matchResult, gameNumber, numberOfGames));
+                    matchResults.Add(matchResult);
+                    gameNumber++;
                 }
             }
 
-            return GetBotRankingsFromMatchResults(matchResults);
+            var gameRunnerResult = GetBotRankingsFromMatchResults(matchResults);
+            OnGameCompleted(new GameCompletedEventArgs(gameRunnerResult));
+
+            return gameRunnerResult;
         }
 
         public GameRunnerResult GetBotRankingsFromMatchResults(List<MatchResult> matchResults)
@@ -73,6 +85,41 @@ namespace RockPaperScissorsBoom.Core.Game
         public void AddBot(BaseBot bot)
         {
             _competitors.Add(bot);
+        }
+
+        protected virtual void OnGameCompleted(GameCompletedEventArgs e)
+        {
+            GameCompleted?.Invoke(this, e);
+        }
+
+        protected virtual void OnGameRoundCompleted(GameRoundCompletedEventArgs e)
+        {
+            GameRoundCompleted?.Invoke(this, e);
+        }
+    }
+
+    public class GameCompletedEventArgs : EventArgs
+    {
+        public GameRunnerResult GameRunnerResult { get; }
+
+        public GameCompletedEventArgs(GameRunnerResult gameRunnerResult)
+        {
+            GameRunnerResult = gameRunnerResult;
+        }
+    }
+
+    public class GameRoundCompletedEventArgs : EventArgs
+    {
+        public MatchResult MatchResult { get; }
+
+        public int GameNumber { get; }
+        public int TotalGames { get; }
+
+        public GameRoundCompletedEventArgs(MatchResult matchResult, int gameNumber, int totalGames)
+        {
+            MatchResult = matchResult;
+            GameNumber = gameNumber;
+            TotalGames = totalGames;
         }
     }
 }

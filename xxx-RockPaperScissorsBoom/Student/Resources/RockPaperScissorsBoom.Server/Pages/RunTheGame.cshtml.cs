@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using RockPaperScissorsBoom.Core.Game;
 using RockPaperScissorsBoom.Core.Game.Bots;
@@ -6,6 +7,7 @@ using RockPaperScissorsBoom.Core.Model;
 using RockPaperScissorsBoom.Server.Bot;
 using RockPaperScissorsBoom.Server.Data;
 using RockPaperScissorsBoom.Server.Helpers;
+using RockPaperScissorsBoom.Server.Hubs;
 using RockPaperScissorsBoom.Server.Models;
 
 namespace RockPaperScissorsBoom.Server.Pages
@@ -17,19 +19,26 @@ namespace RockPaperScissorsBoom.Server.Pages
         private readonly IConfiguration _configuration;
         private readonly IMessagingHelper _messageHelper;
         private readonly ILogger<RunTheGameModel> _logger;
+        private readonly IHubContext<ProgressBarHub> _hubContext;
 
         public List<BotRecord> BotRankings { get; set; } = new List<BotRecord>();
         public List<FullResults> AllFullResults { get; set; } = new List<FullResults>();
 
         public List<GameRecord> GamesForTable { get; set; } = new List<GameRecord>();
 
-        public RunTheGameModel(ApplicationDbContext db, IMetrics metrics, IConfiguration configuration, IMessagingHelper messageHelper, ILogger<RunTheGameModel> logger)
+        public RunTheGameModel(ApplicationDbContext db,
+            IMetrics metrics, 
+            IConfiguration configuration, 
+            IMessagingHelper messageHelper, 
+            ILogger<RunTheGameModel> logger, 
+            IHubContext<ProgressBarHub> hubContext)
         {
             _db = db;
             _metrics = metrics;
             _configuration = configuration;
             _messageHelper = messageHelper;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         public void OnGet()
@@ -54,6 +63,8 @@ namespace RockPaperScissorsBoom.Server.Pages
             }
 
             var gameRunner = new GameRunner(_metrics);
+            gameRunner.GameRoundCompleted += GameRunner_GameRoundCompleted;
+
             foreach (var competitor in competitors)
             {
                 BaseBot bot = CreateBotFromCompetitor(competitor);
@@ -85,6 +96,11 @@ namespace RockPaperScissorsBoom.Server.Pages
             {
                 await PublishMessage(BotRankings.First().GameRecord?.Id.ToString() ?? "", BotRankings.First().Competitor?.Name ?? "");
             }
+        }
+
+        private void GameRunner_GameRoundCompleted(object? sender, GameRoundCompletedEventArgs e)
+        {
+            _hubContext.Clients.All.SendAsync("UpdateProgressBar", e.GameNumber, e.TotalGames);
         }
 
         internal async Task PublishMessage(string GameId, string Winner)

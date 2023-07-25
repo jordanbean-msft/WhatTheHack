@@ -8,26 +8,39 @@ namespace RockPaperScissorsBoom.Core.Game
     public class MatchRunner
     {
         private readonly IMetrics metrics;
-        private const int NUMBER_OF_ROUNDS = 100;
+        public int NumberOfRounds { get; } = 100;
+        public event EventHandler<MatchCompletedEventArgs>? MatchCompleted;
+        public event EventHandler<MatchRoundCompletedEventArgs>? MatchRoundCompleted;
 
         public MatchRunner(IMetrics metrics)
         {
             this.metrics = metrics;
         }
-        public async Task<MatchResult> RunMatch(BaseBot player1, BaseBot player2)
+        public async Task<MatchResult> RunMatch(BaseBot player1, BaseBot player2, int gameNumber, int totalGames)
         {
-            var roundResults = new List<RoundResult>(NUMBER_OF_ROUNDS);
+            var roundResults = new List<RoundResult>(NumberOfRounds);
             var matchResult = new MatchResult(player1.Competitor, player2.Competitor);
+            var roundRunner = new RoundRunner();
+            roundRunner.RoundCompleted += RoundRunner_RoundCompleted;
 
             RoundResult previousResult = new(matchResult);
             
-            for (int i = 0; i < NUMBER_OF_ROUNDS; i++)
+            for (int roundNumber = 0; roundNumber < NumberOfRounds; roundNumber++)
             {
-                previousResult = await RoundRunner.RunRound(player1, player2, previousResult, metrics);
+                previousResult = await roundRunner.RunRound(player1, player2, previousResult, metrics, roundNumber);                
                 roundResults.Add(previousResult);
             }
+            
+            matchResult = GetMatchResultFromRoundResults(matchResult, player1, roundResults);
+            
+            OnMatchCompleted(new MatchCompletedEventArgs(matchResult, gameNumber, totalGames));
 
-            return GetMatchResultFromRoundResults(matchResult, player1, roundResults);
+            return matchResult;
+        }
+
+        private void RoundRunner_RoundCompleted(object? sender, RoundCompletedEventArgs e)
+        {
+            OnMatchRoundCompleted(new MatchRoundCompletedEventArgs(e.RoundResult, e.RoundNumber, NumberOfRounds));
         }
 
         private static MatchResult GetMatchResultFromRoundResults(MatchResult matchResult,
@@ -50,6 +63,44 @@ namespace RockPaperScissorsBoom.Core.Game
             matchResult.RoundResults = roundResults;
 
             return matchResult;
+        }
+
+        protected virtual void OnMatchCompleted(MatchCompletedEventArgs e)
+        {
+            MatchCompleted?.Invoke(this, e);
+        }
+
+        protected virtual void OnMatchRoundCompleted(MatchRoundCompletedEventArgs e)
+        {
+            MatchRoundCompleted?.Invoke(this, e);
+        }
+    }
+
+    public class MatchCompletedEventArgs : EventArgs
+    {
+        public MatchResult MatchResult { get; set; }
+        public int GameNumber { get; set; }
+        public int TotalGames { get; set; }
+
+        public MatchCompletedEventArgs(MatchResult matchResult, int gameNumber, int totalGames)
+        {
+            MatchResult = matchResult;
+            GameNumber = gameNumber;
+            TotalGames = totalGames;
+        }
+    }
+
+    public class MatchRoundCompletedEventArgs : EventArgs
+    {
+        public RoundResult RoundResult { get; set; }
+        public int RoundNumber { get; set; }
+        public int TotalRounds { get; set; }
+
+        public MatchRoundCompletedEventArgs(RoundResult roundResult, int roundNumber, int totalRounds)
+        {
+            RoundResult = roundResult;
+            RoundNumber = roundNumber;
+            TotalRounds = totalRounds;
         }
     }
 }

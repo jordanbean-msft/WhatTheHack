@@ -7,18 +7,9 @@ namespace RockPaperScissorsBoom.Core.Game
 {
     public class RoundRunner
     {
-        internal async static Task<Decision> GetDecision(BaseBot player, RoundResult previousResult, IMetrics metrics)
-        {
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            var decision = await player.GetDecisionAsync(previousResult.ToPlayerSpecific(player));
-            stopwatch.Stop();
-            var metric = new Dictionary<string, double> { { "DecisionTime", stopwatch.Elapsed.TotalMilliseconds } };
-            var properties = new Dictionary<string, string?> { { "Bot", player?.Name } };
-            metrics.TrackEventDuration("BotDecisionTime", properties, metric);
-            return decision;
-        }
+        public event EventHandler<RoundCompletedEventArgs>? RoundCompleted;
 
-        public async static Task<RoundResult> RunRound(BaseBot player1, BaseBot player2, RoundResult previousResult, IMetrics metrics)
+        public async Task<RoundResult> RunRound(BaseBot player1, BaseBot player2, RoundResult previousResult, IMetrics metrics, int roundNumber)
         {
             var p1Decision = await GetDecision(player1, previousResult, metrics);
             var p2Decision = await GetDecision(player2, previousResult, metrics);
@@ -70,7 +61,23 @@ namespace RockPaperScissorsBoom.Core.Game
 
             ApplyDynamiteUsageToBots(player1, p1Decision, player2, p2Decision);
 
+            OnRoundCompleted(new RoundCompletedEventArgs(roundResult, roundNumber));
+
             return roundResult;
+        }
+        private static async Task<Decision> GetDecision(BaseBot player, RoundResult previousResult, IMetrics metrics)
+        {
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            var decision = await player.GetDecisionAsync(previousResult.ToPlayerSpecific(player));
+            stopwatch.Stop();
+            var metric = new Dictionary<string, double> { { "DecisionTime", stopwatch.Elapsed.TotalMilliseconds } };
+            var properties = new Dictionary<string, string?> { { "Bot", player?.Name } };
+            metrics.TrackEventDuration("BotDecisionTime", properties, metric);
+            return decision;
+        }
+        protected virtual void OnRoundCompleted(RoundCompletedEventArgs e)
+        {
+            RoundCompleted?.Invoke(this, e);
         }
 
         private static void ApplyDynamiteUsageToBots(BaseBot player1, Decision p1Decision,
@@ -95,6 +102,17 @@ namespace RockPaperScissorsBoom.Core.Game
             }
 
             return false;
+        }
+    }
+    public class RoundCompletedEventArgs : EventArgs
+    {
+        public RoundResult RoundResult { get; set; }
+        public int RoundNumber { get; set;}
+
+        public RoundCompletedEventArgs(RoundResult roundResult, int roundNumber)
+        {
+            RoundResult = roundResult;
+            RoundNumber = roundNumber;
         }
     }
 }

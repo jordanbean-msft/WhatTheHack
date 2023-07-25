@@ -17,7 +17,7 @@ namespace UnitTests.Core.Game.MatchRunnerTests
         [Fact]
         public async void ReturnSimpleMatchResult_GivenStaticBots()
         {
-            MatchResult matchResult = await _matchRunner.RunMatch(_rockOnly, _scissorsOnly);
+            MatchResult matchResult = await _matchRunner.RunMatch(_rockOnly, _scissorsOnly, 0, 0);
 
             matchResult.Player1.Should().Be(_rockOnly.Competitor);
             matchResult.Player2.Should().Be(_scissorsOnly.Competitor);
@@ -28,7 +28,7 @@ namespace UnitTests.Core.Game.MatchRunnerTests
         [Fact]
         public async void HandlePlayer2Winning()
         {
-            MatchResult matchResult = await _matchRunner.RunMatch(_scissorsOnly, _rockOnly);
+            MatchResult matchResult = await _matchRunner.RunMatch(_scissorsOnly, _rockOnly, 0, 0);
 
             matchResult.Player2.Should().Be(_rockOnly.Competitor);
             matchResult.Player1.Should().Be(_scissorsOnly.Competitor);
@@ -39,7 +39,7 @@ namespace UnitTests.Core.Game.MatchRunnerTests
         [Fact]
         public async void NotSetWinnerAndLoser_GivenTie()
         {
-            MatchResult matchResult = await _matchRunner.RunMatch(_rockOnly, _rockOnly);
+            MatchResult matchResult = await _matchRunner.RunMatch(_rockOnly, _rockOnly, 0, 0);
 
             matchResult.Player1.Should().Be(_rockOnly.Competitor);
             matchResult.Player2.Should().Be(_rockOnly.Competitor);
