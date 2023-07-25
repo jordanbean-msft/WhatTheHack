@@ -8,14 +8,44 @@
         <div class="card col-md">
             <div class="card-body">
                 <h2 class="card-title">Bot Results</h2>
-                <ol class="list-group list-group-light list-group-numbered">
-                    @foreach (var botRank in Model.BotRankings.OrderByDescending(x => x.Wins))
-                    {
-                        <li class="list-group-item">
-                            @botRank?.Competitor?.Name: @botRank?.Wins-@botRank?.Losses-@botRank?.Ties
-                        </li>
-                    }
-                </ol>
+                <table class="table table-striped w-auto table-sm">
+                    <thead>
+                        @{
+                            if (Model.BotRankings.OrderByDescending(x => x.Wins).Count() > 0)
+                            {
+                                <tr class="table-info">
+                                    <th>Place</th>
+                                    <th>Bot Name</th>
+                                    <th>Win-Loss-Tie</th>
+                                </tr>
+                            }
+                        }
+                    </thead>
+                    <tbody>
+                        @{
+                            var botRankings = Model.BotRankings.OrderByDescending(x => x.Wins).ToList();
+
+                            for (int i = 0; i < botRankings.Count(); i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @(i + 1)
+                                    </td>
+                                    <td>
+                                        @botRankings[i].Competitor?.Name
+                                    </td>
+                                    <td>
+                                        <span class="badge rounded-pill bg-success">@botRankings[i].Wins</span>
+                                        -
+                                        <span class="badge rounded-pill bg-danger">@botRankings[i].Losses</span>
+                                        -
+                                        <span class="badge rounded-pill bg-info">@botRankings[i].Ties</span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
                 <form method="post" asp-page="RunTheGame" id="runTheGameForm" class="text-center">
                     <div class="m-3">
                         <button type="submit" class="btn btn-primary" id="runTheGameButton" onclick="return DisplayProgressMessage();">
@@ -34,74 +64,77 @@
                 </form>
             </div>
         </div>
-        <div class="col-md">
-            <table class="table table-striped w-auto">
-                <thead>
-                    <tr class="table-info">
-                        <th>Last Played</th>
-                        <th>1st Place</th>
-                        <th>2nd Place</th>
-                        <th>3rd Place</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var game in Model.GamesForTable)
-                    {
-                        <tr>
-                            <td>
-                                @game.GameDate
-                            </td>
-                            <td>
-                                @(game.BotRecords.Count > 0 ? game.BotRecords.OrderByDescending(b => b.Wins).First().Competitor?.Name : "")
-                            </td>
-                            <td>
-                                @(game.BotRecords.Count > 1 ? @game.BotRecords.OrderByDescending(b => b.Wins).Skip(1).First().Competitor?.Name : "")
-                            </td>
-                            <td>
-                                @(game.BotRecords.Count > 2 ? @game.BotRecords.OrderByDescending(b => b.Wins).Skip(2).First().Competitor?.Name : "")
-                            </td>
+        <div class="card col-md">
+            <div class="card-body">
+                <h2 class="card-title">Top Game Results</h2>
+                <table class="table table-striped w-auto table-sm">
+                    <thead>
+                        <tr class="table-info">
+                            <th>Last Played</th>
+                            <th>1st Place</th>
+                            <th>2nd Place</th>
+                            <th>3rd Place</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var game in Model.GamesForTable)
+                        {
+                            <tr>
+                                <td>
+                                    @game.GameDate
+                                </td>
+                                <td>
+                                    @(game.BotRecords.Count > 0 ? game.BotRecords.OrderByDescending(b => b.Wins).First().Competitor?.Name : "")
+                                </td>
+                                <td>
+                                    @(game.BotRecords.Count > 1 ? @game.BotRecords.OrderByDescending(b => b.Wins).Skip(1).First().Competitor?.Name : "")
+                                </td>
+                                <td>
+                                    @(game.BotRecords.Count > 2 ? @game.BotRecords.OrderByDescending(b => b.Wins).Skip(2).First().Competitor?.Name : "")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">Full Game Results</h3>
-                <div class="card-columns">
-                    <div class="row">
-                        @foreach (var fullResults in Model.AllFullResults)
-                        {
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title">Results for: @fullResults.Competitor.Name</h4>
-                                        <table class="table table-striped w-auto">
-                                            <thead>
-                                                <tr class="table-info">
-                                                    <th>Player 1</th>
-                                                    <th>Player 2</th>
-                                                    <th>Result</th>
+</div>
+<div class="row">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Full Game Results</h3>
+            <div class="card-columns">
+                <div class="row">
+                    @foreach (var fullResults in Model.AllFullResults)
+                    {
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Results for: @fullResults.Competitor.Name</h4>
+                                    <table class="table table-striped w-auto table-sm">
+                                        <thead>
+                                            <tr class="table-info">
+                                                <th>Player 1</th>
+                                                <th>Player 2</th>
+                                                <th>Result</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var matchResult in fullResults.MatchResults)
+                                            {
+                                                <tr>
+                                                    <td>@(matchResult.Player1.Name)</td>
+                                                    <td>@matchResult.Player2.Name</td>
+                                                    <td>@matchResult.WinningPlayer</td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var matchResult in fullResults.MatchResults)
-                                                {
-                                                    <tr>
-                                                        <td>@(matchResult.Player1.Name)</td>
-                                                        <td>@matchResult.Player2.Name</td>
-                                                        <td>@matchResult.WinningPlayer</td>
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            }
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                        }
-                    </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

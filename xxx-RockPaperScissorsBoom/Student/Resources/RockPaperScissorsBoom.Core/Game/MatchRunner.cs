@@ -17,13 +17,12 @@ namespace RockPaperScissorsBoom.Core.Game
         {
             var roundResults = new List<RoundResult>(NumberOfRounds);
             var matchResult = new MatchResult(player1.Competitor, player2.Competitor);
-            var roundRunner = new RoundRunner();
 
             RoundResult previousResult = new(matchResult);
 
             for (int roundNumber = 0; roundNumber < NumberOfRounds; roundNumber++)
             {
-                previousResult = await roundRunner.RunRound(player1, player2, previousResult, metrics);
+                previousResult = await RoundRunner.RunRound(player1, player2, previousResult, metrics);
                 roundResults.Add(previousResult);
             }
 
@@ -38,7 +37,7 @@ namespace RockPaperScissorsBoom.Core.Game
             var winner = roundResults.GroupBy(x => x.Winner).OrderByDescending(x => x.Count()).Select(x => x.Key).First();
             if (winner == null)
             {
-                matchResult.WinningPlayer = MatchOutcome.Neither;
+                matchResult.WinningPlayer = MatchOutcome.Tie;
             }
             else if (Equals(winner, player1.Competitor))
             {

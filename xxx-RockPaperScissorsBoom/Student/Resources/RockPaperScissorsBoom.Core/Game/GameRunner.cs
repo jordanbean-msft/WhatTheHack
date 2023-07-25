@@ -47,7 +47,7 @@ namespace RockPaperScissorsBoom.Core.Game
             {
                 int wins = matchResults.Count(x => x.WasWonBy(bot.Id));
                 int losses = matchResults.Count(x => x.WasLostBy(bot.Id));
-                int ties = matchResults.Count(x => x.WinningPlayer == MatchOutcome.Neither);
+                int ties = matchResults.Count(x => x.WinningPlayer == MatchOutcome.Tie);
 
                 gameRecord.BotRecords.Add(new BotRecord(
                     gameRecord,

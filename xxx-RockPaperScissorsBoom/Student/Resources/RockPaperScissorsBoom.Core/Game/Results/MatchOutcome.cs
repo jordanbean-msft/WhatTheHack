@@ -4,6 +4,6 @@
     {
         Player1,
         Player2,
-        Neither
+        Tie
     }
 }

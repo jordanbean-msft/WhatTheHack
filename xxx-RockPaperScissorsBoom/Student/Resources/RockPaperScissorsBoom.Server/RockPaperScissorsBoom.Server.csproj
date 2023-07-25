@@ -35,4 +35,8 @@
     <ProjectReference Include="..\RockPaperScissorsBoom.Core\RockPaperScissorsBoom.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\bootstrap\" />
+  </ItemGroup>
+
 </Project>

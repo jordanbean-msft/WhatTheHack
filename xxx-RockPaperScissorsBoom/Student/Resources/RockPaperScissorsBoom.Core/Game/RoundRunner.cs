@@ -7,7 +7,7 @@ namespace RockPaperScissorsBoom.Core.Game
 {
     public class RoundRunner
     {
-        public async Task<RoundResult> RunRound(BaseBot player1, BaseBot player2, RoundResult previousResult, IMetrics metrics)
+        public static async Task<RoundResult> RunRound(BaseBot player1, BaseBot player2, RoundResult previousResult, IMetrics metrics)
         {
             var p1Decision = await GetDecision(player1, previousResult, metrics);
             var p2Decision = await GetDecision(player2, previousResult, metrics);

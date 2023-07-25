@@ -43,7 +43,7 @@ namespace UnitTests.Core.Game.MatchRunnerTests
 
             matchResult.Player1.Should().Be(_rockOnly.Competitor);
             matchResult.Player2.Should().Be(_rockOnly.Competitor);
-            matchResult.WinningPlayer.Should().Be(MatchOutcome.Neither);
+            matchResult.WinningPlayer.Should().Be(MatchOutcome.Tie);
             matchResult.RoundResults?.Count.Should().Be(100);
         }
     }
