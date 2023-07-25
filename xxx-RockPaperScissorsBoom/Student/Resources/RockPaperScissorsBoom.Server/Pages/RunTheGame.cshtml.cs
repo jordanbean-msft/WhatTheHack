@@ -27,10 +27,10 @@ namespace RockPaperScissorsBoom.Server.Pages
         public List<GameRecord> GamesForTable { get; set; } = new List<GameRecord>();
 
         public RunTheGameModel(ApplicationDbContext db,
-            IMetrics metrics, 
-            IConfiguration configuration, 
-            IMessagingHelper messageHelper, 
-            ILogger<RunTheGameModel> logger, 
+            IMetrics metrics,
+            IConfiguration configuration,
+            IMessagingHelper messageHelper,
+            ILogger<RunTheGameModel> logger,
             IHubContext<ProgressBarHub> hubContext)
         {
             _db = db;

@@ -27,7 +27,7 @@ namespace UnitTests.Core.Game.RoundRunnerTests
         [Fact]
         public async void ReturnResultsOfRound_GivenSimpleWinCase()
         {
-            RoundResult roundResult = await _roundRunner.RunRound(_rockOnlyBot, _scissorsOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            RoundResult roundResult = await _roundRunner.RunRound(_rockOnlyBot, _scissorsOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics());
 
             roundResult.Winner.Should().Be(_rockOnlyBot.Competitor);
             roundResult.Player1.Should().Be(_rockOnlyBot.Competitor);
@@ -39,7 +39,7 @@ namespace UnitTests.Core.Game.RoundRunnerTests
         [Fact]
         public async void ReturnNoWinner_GivenSameChoice()
         {
-            RoundResult roundResult = await _roundRunner.RunRound(_rockOnlyBot, _rockOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            RoundResult roundResult = await _roundRunner.RunRound(_rockOnlyBot, _rockOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics());
 
             roundResult.Winner.Should().BeNull();
         }
@@ -47,19 +47,19 @@ namespace UnitTests.Core.Game.RoundRunnerTests
         [Fact]
         public async void ReturnCorrectWinner_GivenSimpleWins()
         {
-            RoundResult rockWin = await _roundRunner.RunRound(_rockOnlyBot, _scissorsOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            RoundResult rockWin = await _roundRunner.RunRound(_rockOnlyBot, _scissorsOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics());
             rockWin.Winner.Should().Be(_rockOnlyBot.Competitor);
 
-            RoundResult paperWin = await _roundRunner.RunRound(_paperOnlyBot, _rockOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            RoundResult paperWin = await _roundRunner.RunRound(_paperOnlyBot, _rockOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics());
             paperWin.Winner.Should().Be(_paperOnlyBot.Competitor);
 
-            RoundResult scissorsWin = await _roundRunner.RunRound(_scissorsOnlyBot, _paperOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            RoundResult scissorsWin = await _roundRunner.RunRound(_scissorsOnlyBot, _paperOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics());
             scissorsWin.Winner.Should().Be(_scissorsOnlyBot.Competitor);
 
-            RoundResult dynamiteWin = await _roundRunner.RunRound(_dynamiteOnlyBot, _rockOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            RoundResult dynamiteWin = await _roundRunner.RunRound(_dynamiteOnlyBot, _rockOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics());
             dynamiteWin.Winner.Should().Be(_dynamiteOnlyBot.Competitor);
 
-            RoundResult waterWin = await _roundRunner.RunRound(_waterOnlyBot, _dynamiteOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            RoundResult waterWin = await _roundRunner.RunRound(_waterOnlyBot, _dynamiteOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics());
             waterWin.Winner.Should().Be(_waterOnlyBot.Competitor);
         }
 
@@ -67,7 +67,7 @@ namespace UnitTests.Core.Game.RoundRunnerTests
         public async void IncrementDyanmite_GivenOneDynamiteUsage()
         {
             int previousUsage = _dynamiteOnlyBot.DynamiteUsed;
-            await _roundRunner.RunRound(_dynamiteOnlyBot, _rockOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            await _roundRunner.RunRound(_dynamiteOnlyBot, _rockOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics());
             _dynamiteOnlyBot.DynamiteUsed.Should().Be(previousUsage + 1);
         }
 
@@ -75,7 +75,7 @@ namespace UnitTests.Core.Game.RoundRunnerTests
         public async void IncrementDyanmite_GivenTwoDynamiteUsage()
         {
             int previousUsage = _dynamiteOnlyBot.DynamiteUsed;
-            await _roundRunner.RunRound(_dynamiteOnlyBot, _dynamiteOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            await _roundRunner.RunRound(_dynamiteOnlyBot, _dynamiteOnlyBot, _builder.WithDefaults().Build(), new FakeMetrics());
             _dynamiteOnlyBot.DynamiteUsed.Should().Be(previousUsage + 2);
         }
 
@@ -87,7 +87,7 @@ namespace UnitTests.Core.Game.RoundRunnerTests
             {
                 Competitor = new Competitor("test", "")
             };
-            await _roundRunner.RunRound(_dynamiteOnlyBot, fakeBot, _builder.WithDefaults().Build(), new FakeMetrics(), 0);
+            await _roundRunner.RunRound(_dynamiteOnlyBot, fakeBot, _builder.WithDefaults().Build(), new FakeMetrics());
             _dynamiteOnlyBot.DynamiteUsed.Should().Be(previousUsage + 1);
             fakeBot.DynamiteUsed.Should().Be(11);
         }

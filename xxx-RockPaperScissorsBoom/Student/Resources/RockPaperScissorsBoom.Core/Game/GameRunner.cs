@@ -9,9 +9,8 @@ namespace RockPaperScissorsBoom.Core.Game
         private readonly List<BaseBot> _competitors = new();
         private readonly IMetrics metrics;
 
-        public event EventHandler<GameCompletedEventArgs>? GameCompleted;
         public event EventHandler<GameRoundCompletedEventArgs>? GameRoundCompleted;
-        
+
         public GameRunner(IMetrics metrics)
         {
             this.metrics = metrics;
@@ -22,23 +21,21 @@ namespace RockPaperScissorsBoom.Core.Game
             var matchRunner = new MatchRunner(metrics);
             var matchResults = new List<MatchResult>();
 
-            int numberOfGames = (_competitors.Count) * (_competitors.Count - 1) / 2;
+            int totalGames = (_competitors.Count) * (_competitors.Count - 1) / 2;
             int gameNumber = 0;
 
             for (int i = 0; i < _competitors.Count; i++)
             {
                 for (int j = i + 1; j < _competitors.Count; j++)
                 {
-                    var matchResult = await matchRunner.RunMatch(_competitors[i], _competitors[j], gameNumber, numberOfGames);
-                    OnGameRoundCompleted(new GameRoundCompletedEventArgs(matchResult, gameNumber, numberOfGames));
+                    var matchResult = await matchRunner.RunMatch(_competitors[i], _competitors[j]);
+                    OnGameRoundCompleted(new GameRoundCompletedEventArgs(matchResult, gameNumber, totalGames));
                     matchResults.Add(matchResult);
                     gameNumber++;
                 }
             }
 
             var gameRunnerResult = GetBotRankingsFromMatchResults(matchResults);
-            OnGameCompleted(new GameCompletedEventArgs(gameRunnerResult));
-
             return gameRunnerResult;
         }
 
@@ -87,24 +84,9 @@ namespace RockPaperScissorsBoom.Core.Game
             _competitors.Add(bot);
         }
 
-        protected virtual void OnGameCompleted(GameCompletedEventArgs e)
-        {
-            GameCompleted?.Invoke(this, e);
-        }
-
         protected virtual void OnGameRoundCompleted(GameRoundCompletedEventArgs e)
         {
             GameRoundCompleted?.Invoke(this, e);
-        }
-    }
-
-    public class GameCompletedEventArgs : EventArgs
-    {
-        public GameRunnerResult GameRunnerResult { get; }
-
-        public GameCompletedEventArgs(GameRunnerResult gameRunnerResult)
-        {
-            GameRunnerResult = gameRunnerResult;
         }
     }
 

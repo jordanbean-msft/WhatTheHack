@@ -13,7 +13,7 @@ namespace RockPaperScissorsBoom.ExampleBot.Hubs
         {
             _logger = logger;
         }
-        
+
         //TODO: Implement your bot here
         public async Task RequestMoveAsync(PreviousDecisionResult previousDecisionResult)
         {

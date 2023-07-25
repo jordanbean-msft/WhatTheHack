@@ -7,9 +7,7 @@ namespace RockPaperScissorsBoom.Core.Game
 {
     public class RoundRunner
     {
-        public event EventHandler<RoundCompletedEventArgs>? RoundCompleted;
-
-        public async Task<RoundResult> RunRound(BaseBot player1, BaseBot player2, RoundResult previousResult, IMetrics metrics, int roundNumber)
+        public async Task<RoundResult> RunRound(BaseBot player1, BaseBot player2, RoundResult previousResult, IMetrics metrics)
         {
             var p1Decision = await GetDecision(player1, previousResult, metrics);
             var p2Decision = await GetDecision(player2, previousResult, metrics);
@@ -61,8 +59,6 @@ namespace RockPaperScissorsBoom.Core.Game
 
             ApplyDynamiteUsageToBots(player1, p1Decision, player2, p2Decision);
 
-            OnRoundCompleted(new RoundCompletedEventArgs(roundResult, roundNumber));
-
             return roundResult;
         }
         private static async Task<Decision> GetDecision(BaseBot player, RoundResult previousResult, IMetrics metrics)
@@ -74,10 +70,6 @@ namespace RockPaperScissorsBoom.Core.Game
             var properties = new Dictionary<string, string?> { { "Bot", player?.Name } };
             metrics.TrackEventDuration("BotDecisionTime", properties, metric);
             return decision;
-        }
-        protected virtual void OnRoundCompleted(RoundCompletedEventArgs e)
-        {
-            RoundCompleted?.Invoke(this, e);
         }
 
         private static void ApplyDynamiteUsageToBots(BaseBot player1, Decision p1Decision,
@@ -102,17 +94,6 @@ namespace RockPaperScissorsBoom.Core.Game
             }
 
             return false;
-        }
-    }
-    public class RoundCompletedEventArgs : EventArgs
-    {
-        public RoundResult RoundResult { get; set; }
-        public int RoundNumber { get; set;}
-
-        public RoundCompletedEventArgs(RoundResult roundResult, int roundNumber)
-        {
-            RoundResult = roundResult;
-            RoundNumber = roundNumber;
         }
     }
 }
