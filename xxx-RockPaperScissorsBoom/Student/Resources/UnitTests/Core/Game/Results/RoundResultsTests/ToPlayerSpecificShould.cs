@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using RockPaperScissorsBoom.Core.Game;
 using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
@@ -9,8 +10,8 @@ namespace UnitTests.Core.Game.Results.RoundResultsTests
 {
     public class ToPlayerSpecificShould
     {
-        private readonly DynoBot _player1 = new(new Competitor("", ""));
-        private readonly DynoBot _player2 = new(new Competitor("", ""));
+        private readonly DynoBot _player1 = new(new Competitor("", ""), new NullLogger<ToPlayerSpecificShould>());
+        private readonly DynoBot _player2 = new(new Competitor("", ""), new NullLogger<ToPlayerSpecificShould>());
 
         [Fact]
         public void AssignWinner_GivenWinnerAsPlayer()

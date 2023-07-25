@@ -1,4 +1,5 @@
-﻿using RockPaperScissorsBoom.Core.Game.Results;
+﻿using Microsoft.Extensions.Logging;
+using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
 
 namespace RockPaperScissorsBoom.Core.Game.Bots
@@ -11,11 +12,13 @@ namespace RockPaperScissorsBoom.Core.Game.Bots
         public string Name => Competitor.Name;
         public int DynamiteUsed { get; protected set; }
         public void UseDynamite() => DynamiteUsed++;
-        public abstract Decision GetDecision(PreviousDecisionResult previousResult);
+        public abstract Task<Decision> GetDecisionAsync(PreviousDecisionResult previousResult);
+        protected readonly ILogger _logger;
 
-        public BaseBot(Competitor competitor)
+        public BaseBot(Competitor competitor, ILogger logger)
         {
             Competitor = competitor;
+            _logger = logger;
         }
 
         protected List<Decision> AllBasics = new()
@@ -39,7 +42,6 @@ namespace RockPaperScissorsBoom.Core.Game.Bots
             var r = new Random(); // TODO: handle this random and the seeding better
             var nextChoice = r.Next(0, decisions.Count);
             return decisions[nextChoice];
-
         }
     }
 }

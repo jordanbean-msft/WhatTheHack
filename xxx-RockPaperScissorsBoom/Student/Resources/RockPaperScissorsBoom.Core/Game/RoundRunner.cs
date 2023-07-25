@@ -7,23 +7,21 @@ namespace RockPaperScissorsBoom.Core.Game
 {
     public class RoundRunner
     {
-        internal static Decision GetDecision(BaseBot player, RoundResult previousResult, IMetrics metrics)
+        internal async static Task<Decision> GetDecision(BaseBot player, RoundResult previousResult, IMetrics metrics)
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            var d = player.GetDecision(previousResult.ToPlayerSpecific(player));
+            var decision = await player.GetDecisionAsync(previousResult.ToPlayerSpecific(player));
             stopwatch.Stop();
             var metric = new Dictionary<string, double> { { "DecisionTime", stopwatch.Elapsed.TotalMilliseconds } };
             var properties = new Dictionary<string, string?> { { "Bot", player?.Name } };
-            metrics.TrackEventDuration("BotDesicionTime", properties, metric);
-            return d;
+            metrics.TrackEventDuration("BotDecisionTime", properties, metric);
+            return decision;
         }
 
-        public static RoundResult RunRound(BaseBot player1, BaseBot player2, RoundResult previousResult, IMetrics metrics)
+        public async static Task<RoundResult> RunRound(BaseBot player1, BaseBot player2, RoundResult previousResult, IMetrics metrics)
         {
-
-            var p1Decision = GetDecision(player1, previousResult, metrics);
-
-            var p2Decision = GetDecision(player2, previousResult, metrics);
+            var p1Decision = await GetDecision(player1, previousResult, metrics);
+            var p2Decision = await GetDecision(player2, previousResult, metrics);
 
             BaseBot? winner = null;
             // confirm each has a valid choice

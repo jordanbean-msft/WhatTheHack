@@ -12,18 +12,18 @@ namespace RockPaperScissorsBoom.Server.Bot
 
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public WebApiBot(string apiRootUrl, IHttpClientFactory httpClientFactory, Competitor competitor) : base(competitor)
+        public WebApiBot(string apiRootUrl, IHttpClientFactory httpClientFactory, Competitor competitor, ILogger logger) : base(competitor, logger)
         {
             _apiRootUrl = apiRootUrl;
             _httpClientFactory = httpClientFactory;
         }
 
-        public override Decision GetDecision(PreviousDecisionResult previousResult)
+        public async override Task<Decision> GetDecisionAsync(PreviousDecisionResult previousResult)
         {
             using HttpClient client = _httpClientFactory.CreateClient();
 
-            HttpResponseMessage result = client.PostAsJsonAsync(_apiRootUrl, previousResult).Result;
-            string rawBotChoice = result.Content.ReadAsStringAsync().Result;
+            HttpResponseMessage result = await client.PostAsJsonAsync(_apiRootUrl, previousResult);
+            string rawBotChoice = await result.Content.ReadAsStringAsync();
             BotChoice? botChoice = JsonSerializer.Deserialize<BotChoice>(rawBotChoice);
             return botChoice?.Decision ?? throw new Exception("Didn't get BotChoice back from web api call.");
         }

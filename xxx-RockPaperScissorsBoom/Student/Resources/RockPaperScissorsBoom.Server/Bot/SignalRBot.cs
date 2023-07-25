@@ -3,22 +3,24 @@ using RockPaperScissorsBoom.Core.Game;
 using RockPaperScissorsBoom.Core.Game.Bots;
 using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
+using RockPaperScissorsBoom.Core.SignalRBot;
 
 namespace RockPaperScissorsBoom.Server.Bot
 {
     public class SignalRBot : BaseBot
     {
         private HubConnection? _connection;
-        private Decision? _decision = null;
+        private const int CANCELLATION_TOKEN_TIMEOUT_IN_SECONDS = 30;
+        private TaskCompletionSource<Decision>? _response;
 
         public string ApiRootUrl { get; set; }
 
-        public SignalRBot(Competitor competitor) : base(competitor)
+        public SignalRBot(Competitor competitor, ILogger logger) : base(competitor, logger)
         {
             ApiRootUrl = competitor.Url ?? "";
         }
 
-        private void InitializeConnection()
+        private async Task InitializeConnection()
         {
             if (_connection != null)
                 return;
@@ -26,28 +28,40 @@ namespace RockPaperScissorsBoom.Server.Bot
             _connection = new HubConnectionBuilder()
                 .WithUrl(ApiRootUrl)
                 .Build();
-            _connection.StartAsync().Wait();
 
-            _connection.On<Decision>("MakeDecision", (decision) =>
+            _logger.LogInformation("Connecting to SignalRBot at {ApiRootUrl}...", ApiRootUrl);
+            await _connection.StartAsync();
+
+            _connection.On<Decision>(nameof(ISignalRBotClient.MakeDecisionAsync), (decision) =>
             {
-                _decision = decision;
+                _response?.SetResult(decision);
             });
-
         }
 
-        public override Decision GetDecision(PreviousDecisionResult previousResult)
+        public override async Task<Decision> GetDecisionAsync(PreviousDecisionResult previousResult)
         {
-            if (_connection == null) InitializeConnection();
-
-            _connection?.InvokeAsync("RequestMove", previousResult);
-
-            while (_decision == null)
+            if (_connection == null || _connection.State != HubConnectionState.Connected) 
             {
+                await InitializeConnection();
             }
 
-            var decisionToReturn = _decision;
-            _decision = null;
-            return decisionToReturn.Value;
+            if (_connection != null && _connection.State == HubConnectionState.Connected)
+            {
+                _response = new TaskCompletionSource<Decision>(TaskCreationOptions.RunContinuationsAsynchronously);
+                
+                try
+                {
+                    await _connection.InvokeAsync(nameof(ISignalRBotServer.RequestMoveAsync), previousResult);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Unable to get a decision from SignalRBot at {ApiRootUrl}.", ex);
+                }
+
+                return await _response.Task;
+            }
+
+            throw new Exception($"Unable to connect to SignalRBot at {ApiRootUrl}.");
         }
     }
 }

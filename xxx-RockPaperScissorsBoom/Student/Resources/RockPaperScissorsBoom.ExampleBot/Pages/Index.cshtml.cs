@@ -8,12 +8,10 @@ namespace RockPaperScissorsBoom.ExampleBot.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
         public string JsonData { get; set; } = "";
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel()
         {
-            _logger = logger;
         }
         public void OnGet()
         {

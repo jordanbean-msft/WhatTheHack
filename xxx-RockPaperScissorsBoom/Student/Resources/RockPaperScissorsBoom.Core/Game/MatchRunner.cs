@@ -12,7 +12,7 @@ namespace RockPaperScissorsBoom.Core.Game
         {
             this.metrics = metrics;
         }
-        public MatchResult RunMatch(BaseBot player1, BaseBot player2)
+        public async Task<MatchResult> RunMatch(BaseBot player1, BaseBot player2)
         {
             var roundResults = new List<RoundResult>();
             var matchResult = new MatchResult(player1.Competitor, player2.Competitor);
@@ -21,7 +21,7 @@ namespace RockPaperScissorsBoom.Core.Game
 
             for (int i = 0; i < 100; i++)
             {
-                previousResult = RoundRunner.RunRound(player1, player2, previousResult, metrics);
+                previousResult = await RoundRunner.RunRound(player1, player2, previousResult, metrics);
                 roundResults.Add(previousResult);
             }
 

@@ -13,7 +13,7 @@ namespace RockPaperScissorsBoom.Core.Game
         private readonly List<BaseBot> _competitors = new();
         private readonly IMetrics metrics;
 
-        public GameRunnerResult StartAllMatches()
+        public async Task<GameRunnerResult> StartAllMatches()
         {
             var matchRunner = new MatchRunner(metrics);
 
@@ -23,7 +23,7 @@ namespace RockPaperScissorsBoom.Core.Game
             {
                 for (int j = i + 1; j < _competitors.Count; j++)
                 {
-                    matchResults.Add(matchRunner.RunMatch(_competitors[i], _competitors[j]));
+                    matchResults.Add(await matchRunner.RunMatch(_competitors[i], _competitors[j]));
                 }
             }
 

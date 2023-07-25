@@ -1,13 +1,17 @@
-﻿using RockPaperScissorsBoom.Core.Game.Results;
+﻿using Microsoft.Extensions.Logging;
+using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
 
 namespace RockPaperScissorsBoom.Core.Game.Bots
 {
     public class RockOnlyBot : BaseBot
     {
-        public RockOnlyBot(Competitor competitor) : base(competitor)
+        public RockOnlyBot(Competitor competitor, ILogger logger) : base(competitor, logger)
         {
         }
-        public override Decision GetDecision(PreviousDecisionResult previousResult) => Decision.Rock;
+        public async override Task<Decision> GetDecisionAsync(PreviousDecisionResult? previousResult)
+        {
+            return await Task.Run(() => Decision.Rock);
+        }
     }
 }

@@ -7,34 +7,37 @@ using RockPaperScissorsBoom.Server.Bot;
 using RockPaperScissorsBoom.Server.Data;
 using RockPaperScissorsBoom.Server.Helpers;
 using RockPaperScissorsBoom.Server.Models;
+using System.Threading.Tasks;
 
 namespace RockPaperScissorsBoom.Server.Pages
 {
     public class RunTheGameModel : PageModel
     {
-        private readonly ApplicationDbContext db;
-        private readonly IMetrics metrics;
-        private readonly IConfiguration configuration;
-        private readonly IMessagingHelper messageHelper;
+        private readonly ApplicationDbContext _db;
+        private readonly IMetrics _metrics;
+        private readonly IConfiguration _configuration;
+        private readonly IMessagingHelper _messageHelper;
+        private readonly ILogger<RunTheGameModel> _logger;
 
         public List<BotRecord> BotRankings { get; set; } = new List<BotRecord>();
         public List<FullResults> AllFullResults { get; set; } = new List<FullResults>();
 
         public List<GameRecord> GamesForTable { get; set; } = new List<GameRecord>();
 
-        public RunTheGameModel(ApplicationDbContext db, IMetrics metrics, IConfiguration configuration, IMessagingHelper messageHelper)
+        public RunTheGameModel(ApplicationDbContext db, IMetrics metrics, IConfiguration configuration, IMessagingHelper messageHelper, ILogger<RunTheGameModel> logger)
         {
-            this.db = db;
-            this.metrics = metrics;
-            this.configuration = configuration;
-            this.messageHelper = messageHelper;
+            _db = db;
+            _metrics = metrics;
+            _configuration = configuration;
+            _messageHelper = messageHelper;
+            _logger = logger;
         }
 
         public void OnGet()
         {
             AllFullResults = new List<FullResults>();
 
-            GamesForTable = db.GameRecords
+            GamesForTable = _db.GameRecords
                 .Include(x => x.BotRecords)
                 .ThenInclude(x => x.Competitor)
                 .OrderByDescending(g => g.GameDate).Take(10)
@@ -43,15 +46,15 @@ namespace RockPaperScissorsBoom.Server.Pages
 
         public async Task OnPostAsync()
         {
-            List<Competitor> competitors = db.Competitors.ToList();
+            List<Competitor> competitors = _db.Competitors.ToList();
             if (!competitors.Any())
             {
                 competitors = GetDefaultCompetitors();
-                db.Competitors.AddRange(competitors);
-                db.SaveChanges();
+                _db.Competitors.AddRange(competitors);
+                await _db.SaveChangesAsync();
             }
 
-            var gameRunner = new GameRunner(metrics);
+            var gameRunner = new GameRunner(_metrics);
             foreach (var competitor in competitors)
             {
                 BaseBot bot = CreateBotFromCompetitor(competitor);
@@ -60,26 +63,26 @@ namespace RockPaperScissorsBoom.Server.Pages
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-            GameRunnerResult gameRunnerResult = gameRunner.StartAllMatches();
+            GameRunnerResult gameRunnerResult = await gameRunner.StartAllMatches();
 
             stopwatch.Stop();
 
             var metric = new Dictionary<string, double> { { "GameLength", stopwatch.Elapsed.TotalMilliseconds } };
 
             // Set up some properties:
-            var properties = new Dictionary<string, string?> { { "Source", configuration["P20HackFestTeamName"] } };
+            var properties = new Dictionary<string, string?> { { "Source", _configuration["HackTeamName"] } };
 
             // Send the event:
-            metrics.TrackEventDuration("GameRun", properties, metric);
+            _metrics.TrackEventDuration("GameRun", properties, metric);
 
-            SaveResults(gameRunnerResult);
+            await SaveResults(gameRunnerResult);
             BotRankings = gameRunnerResult.GameRecord.BotRecords.OrderByDescending(x => x.Wins).ToList();
             AllFullResults = gameRunnerResult.AllMatchResults.OrderBy(x => x.Competitor.Name).ToList();
 
             //Get 10 Last 
-            GamesForTable = db.GameRecords.OrderByDescending(g => g.GameDate).Take(10).Include(g => g.BotRecords).ToList();
+            GamesForTable = _db.GameRecords.OrderByDescending(g => g.GameDate).Take(10).Include(g => g.BotRecords).ToList();
 
-            if (bool.Parse(configuration["EventGridOn"] ?? "false"))
+            if (bool.Parse(_configuration["EventGridOn"] ?? "false"))
             {
                 await PublishMessage(BotRankings.First().GameRecord?.Id.ToString() ?? "", BotRankings.First().Competitor?.Name ?? "");
             }
@@ -92,24 +95,24 @@ namespace RockPaperScissorsBoom.Server.Pages
                 GameId = GameId,
                 Winner = Winner,
                 Hostname = HttpContext.Request.Host.Host,
-                TeamName = configuration["P20HackFestTeamName"]
+                TeamName = _configuration["HackTeamName"]
             };
-            await messageHelper.PublishMessageAsync("RockPaperScissors.GameWinner.RunTheGamePage", "Note", DateTime.UtcNow, msg);
+            await _messageHelper.PublishMessageAsync("RockPaperScissors.GameWinner.RunTheGamePage", "Note", DateTime.UtcNow, msg);
         }
 
-        private void SaveResults(GameRunnerResult gameRunnerResult)
+        private async Task SaveResults(GameRunnerResult gameRunnerResult)
         {
             if (gameRunnerResult.GameRecord.BotRecords.Any())
             {
-                db.GameRecords.Add(gameRunnerResult.GameRecord);
-                db.SaveChanges();
+                _db.GameRecords.Add(gameRunnerResult.GameRecord);
+                await _db.SaveChangesAsync();
             }
         }
 
-        private static BaseBot CreateBotFromCompetitor(Competitor competitor)
+        private BaseBot CreateBotFromCompetitor(Competitor competitor)
         {
             Type type = Type.GetType(competitor.BotType) ?? throw new Exception($"Could not find type {competitor.BotType}");
-            var bot = Activator.CreateInstance(type, competitor) as BaseBot ?? throw new Exception($"Could not create instance of type {competitor.BotType}");
+            var bot = Activator.CreateInstance(type, competitor, _logger) as BaseBot ?? throw new Exception($"Could not create instance of type {competitor.BotType}");
 
             if (bot is SignalRBot signalRBot)
             {

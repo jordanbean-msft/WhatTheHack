@@ -1,4 +1,5 @@
-﻿using RockPaperScissorsBoom.Core.Game;
+﻿using Microsoft.Extensions.Logging;
+using RockPaperScissorsBoom.Core.Game;
 using RockPaperScissorsBoom.Core.Game.Bots;
 using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
@@ -9,15 +10,15 @@ namespace UnitTests.Fakes
     {
         private readonly Decision _decision;
 
-        public FakeBot(Decision decision, int dynamiteUsed = 0) : base(new Competitor("", ""))
+        public FakeBot(Decision decision, ILogger logger, int dynamiteUsed = 0) : base(new Competitor("", ""), logger)
         {
             _decision = decision;
             DynamiteUsed = dynamiteUsed;
         }
 
-        public override Decision GetDecision(PreviousDecisionResult previousResult)
+        public async override Task<Decision> GetDecisionAsync(PreviousDecisionResult previousResult)
         {
-            return _decision;
+            return await Task.Run(() => _decision);
         }
     }
 }

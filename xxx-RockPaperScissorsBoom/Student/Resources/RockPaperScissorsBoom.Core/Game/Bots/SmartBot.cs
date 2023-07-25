@@ -1,30 +1,34 @@
-﻿using RockPaperScissorsBoom.Core.Game.Results;
+﻿using Microsoft.Extensions.Logging;
+using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
 
 namespace RockPaperScissorsBoom.Core.Game.Bots
 {
     public class SmartBot : BaseBot
     {
-        public SmartBot(Competitor competitor) : base(competitor)
+        public SmartBot(Competitor competitor, ILogger logger) : base(competitor, logger)
         {
         }
 
         private readonly Dictionary<Guid, int> _usedDynamite = new();
 
-        public override Decision GetDecision(PreviousDecisionResult previousResult)
+        public async override Task<Decision> GetDecisionAsync(PreviousDecisionResult previousResult)
         {
-            Decision decision = GetDecisionThatBeats(previousResult.OpponentPrevious);
-
-            if (decision == Decision.Dynamite && WeAreOutOfDynamite(previousResult.MatchId))
+            return await Task.Run(() =>
             {
-                decision = GetRandomFromSet(AllBasics);
-            }
+                Decision decision = GetDecisionThatBeats(previousResult.OpponentPrevious);
 
-            if (decision == Decision.Dynamite)
-            {
-                LogDynamiteUsage(previousResult.MatchId);
-            }
-            return decision;
+                if (decision == Decision.Dynamite && WeAreOutOfDynamite(previousResult.MatchId))
+                {
+                    decision = GetRandomFromSet(AllBasics);
+                }
+
+                if (decision == Decision.Dynamite)
+                {
+                    LogDynamiteUsage(previousResult.MatchId);
+                }
+                return decision;
+            });
         }
 
         private void LogDynamiteUsage(Guid matchId)
