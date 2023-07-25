@@ -21,14 +21,20 @@ namespace RockPaperScissorsBoom.Core.Game
             var matchRunner = new MatchRunner(metrics);
             var matchResults = new List<MatchResult>();
 
-            int totalGames = (_competitors.Count) * (_competitors.Count - 1) / 2;
+            int totalGames = (_competitors.Count * _competitors.Count) - _competitors.Count;
             int gameNumber = 0;
 
-            for (int i = 0; i < _competitors.Count; i++)
+            //for (int i = 0; i < _competitors.Count; i++)
+            foreach (var competitor1 in _competitors)
             {
-                for (int j = i + 1; j < _competitors.Count; j++)
+                //  for (int j = i + 1; j < _competitors.Count; j++)
+                foreach (var competitor2 in _competitors)
                 {
-                    var matchResult = await matchRunner.RunMatch(_competitors[i], _competitors[j]);
+                    if (competitor1 == competitor2)
+                    {
+                        continue;
+                    }
+                    var matchResult = await matchRunner.RunMatch(competitor1, competitor2);
                     OnGameRoundCompleted(new GameRoundCompletedEventArgs(matchResult, gameNumber, totalGames));
                     matchResults.Add(matchResult);
                     gameNumber++;

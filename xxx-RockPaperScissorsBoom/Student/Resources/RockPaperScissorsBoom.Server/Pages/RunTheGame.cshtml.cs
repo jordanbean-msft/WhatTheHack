@@ -44,12 +44,16 @@ namespace RockPaperScissorsBoom.Server.Pages
         public void OnGet()
         {
             AllFullResults = new List<FullResults>();
+            GetGamesForTableData();
+        }
 
+        private void GetGamesForTableData()
+        {
             GamesForTable = _db.GameRecords
-                .Include(x => x.BotRecords)
-                .ThenInclude(x => x.Competitor)
-                .OrderByDescending(g => g.GameDate).Take(10)
-                .ToList();
+                            .OrderByDescending(g => g.GameDate).Take(10)
+                            .Include(g => g.BotRecords)
+                            .ThenInclude(b => b.Competitor)
+                            .ToList();
         }
 
         public async Task OnPostAsync()
@@ -89,8 +93,7 @@ namespace RockPaperScissorsBoom.Server.Pages
             BotRankings = gameRunnerResult.GameRecord.BotRecords.OrderByDescending(x => x.Wins).ToList();
             AllFullResults = gameRunnerResult.AllMatchResults.OrderBy(x => x.Competitor.Name).ToList();
 
-            //Get 10 Last 
-            GamesForTable = _db.GameRecords.OrderByDescending(g => g.GameDate).Take(10).Include(g => g.BotRecords).ToList();
+            GetGamesForTableData();
 
             if (bool.Parse(_configuration["EventGridOn"] ?? "false"))
             {

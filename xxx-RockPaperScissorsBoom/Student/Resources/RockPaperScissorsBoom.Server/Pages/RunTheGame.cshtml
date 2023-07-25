@@ -11,7 +11,7 @@
                 <table class="table table-striped w-auto table-sm">
                     <thead>
                         @{
-                            if (Model.BotRankings.OrderByDescending(x => x.Wins).Count() > 0)
+                            if (Model.BotRankings.Count > 0)
                             {
                                 <tr class="table-info">
                                     <th>Place</th>
@@ -23,23 +23,21 @@
                     </thead>
                     <tbody>
                         @{
-                            var botRankings = Model.BotRankings.OrderByDescending(x => x.Wins).ToList();
-
-                            for (int i = 0; i < botRankings.Count(); i++)
+                            for (int i = 0; i < Model.BotRankings.Count; i++)
                             {
                                 <tr>
                                     <td>
                                         @(i + 1)
                                     </td>
                                     <td>
-                                        @botRankings[i].Competitor?.Name
+                                        @Model.BotRankings[i].Competitor?.Name
                                     </td>
                                     <td>
-                                        <span class="badge rounded-pill bg-success">@botRankings[i].Wins</span>
+                                        <span class="badge rounded-pill bg-success">@Model.BotRankings[i].Wins</span>
                                         -
-                                        <span class="badge rounded-pill bg-danger">@botRankings[i].Losses</span>
+                                        <span class="badge rounded-pill bg-danger">@Model.BotRankings[i].Losses</span>
                                         -
-                                        <span class="badge rounded-pill bg-info">@botRankings[i].Ties</span>
+                                        <span class="badge rounded-pill bg-info">@Model.BotRankings[i].Ties</span>
                                     </td>
                                 </tr>
                             }
