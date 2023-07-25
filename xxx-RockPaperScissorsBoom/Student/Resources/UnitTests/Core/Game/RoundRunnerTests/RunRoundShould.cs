@@ -4,7 +4,6 @@ using RockPaperScissorsBoom.Core.Game;
 using RockPaperScissorsBoom.Core.Game.Bots;
 using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
-using UnitTests.Core.Game.Results.RoundResultsTests;
 using UnitTests.DataBuilders;
 using UnitTests.Fakes;
 

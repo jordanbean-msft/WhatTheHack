@@ -7,7 +7,6 @@ using RockPaperScissorsBoom.Server.Bot;
 using RockPaperScissorsBoom.Server.Data;
 using RockPaperScissorsBoom.Server.Helpers;
 using RockPaperScissorsBoom.Server.Models;
-using System.Threading.Tasks;
 
 namespace RockPaperScissorsBoom.Server.Pages
 {

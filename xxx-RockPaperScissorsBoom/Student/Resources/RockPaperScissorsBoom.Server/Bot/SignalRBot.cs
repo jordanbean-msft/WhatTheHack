@@ -40,7 +40,7 @@ namespace RockPaperScissorsBoom.Server.Bot
 
         public override async Task<Decision> GetDecisionAsync(PreviousDecisionResult previousResult)
         {
-            if (_connection == null || _connection.State != HubConnectionState.Connected) 
+            if (_connection == null || _connection.State != HubConnectionState.Connected)
             {
                 await InitializeConnection();
             }
@@ -48,7 +48,7 @@ namespace RockPaperScissorsBoom.Server.Bot
             if (_connection != null && _connection.State == HubConnectionState.Connected)
             {
                 _response = new TaskCompletionSource<Decision>(TaskCreationOptions.RunContinuationsAsynchronously);
-                
+
                 try
                 {
                     await _connection.InvokeAsync(nameof(ISignalRBotServer.RequestMoveAsync), previousResult);
