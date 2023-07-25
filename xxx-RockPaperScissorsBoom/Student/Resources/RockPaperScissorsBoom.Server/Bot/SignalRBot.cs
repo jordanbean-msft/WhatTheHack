@@ -10,7 +10,6 @@ namespace RockPaperScissorsBoom.Server.Bot
     public class SignalRBot : BaseBot
     {
         private HubConnection? _connection;
-        private const int CANCELLATION_TOKEN_TIMEOUT_IN_SECONDS = 30;
         private TaskCompletionSource<Decision>? _response;
 
         public string ApiRootUrl { get; set; }
@@ -30,7 +29,17 @@ namespace RockPaperScissorsBoom.Server.Bot
                 .Build();
 
             _logger.LogInformation("Connecting to SignalRBot at {ApiRootUrl}...", ApiRootUrl);
-            await _connection.StartAsync();
+
+            try
+            {
+                await _connection.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to connect to SignalRBot at {ApiRootUrl}.", ApiRootUrl);
+                _connection = null;
+                throw;
+            }
 
             _connection.On<Decision>(nameof(ISignalRBotClient.MakeDecisionAsync), (decision) =>
             {

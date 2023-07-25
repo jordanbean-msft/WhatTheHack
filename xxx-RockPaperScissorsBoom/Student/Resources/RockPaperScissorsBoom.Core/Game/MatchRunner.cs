@@ -1,12 +1,14 @@
 ﻿using RockPaperScissorsBoom.Core.Game.Bots;
 using RockPaperScissorsBoom.Core.Game.Results;
 using RockPaperScissorsBoom.Core.Model;
+using System.Collections.Concurrent;
 
 namespace RockPaperScissorsBoom.Core.Game
 {
     public class MatchRunner
     {
         private readonly IMetrics metrics;
+        private const int NUMBER_OF_ROUNDS = 100;
 
         public MatchRunner(IMetrics metrics)
         {
@@ -14,12 +16,12 @@ namespace RockPaperScissorsBoom.Core.Game
         }
         public async Task<MatchResult> RunMatch(BaseBot player1, BaseBot player2)
         {
-            var roundResults = new List<RoundResult>();
+            var roundResults = new List<RoundResult>(NUMBER_OF_ROUNDS);
             var matchResult = new MatchResult(player1.Competitor, player2.Competitor);
 
             RoundResult previousResult = new(matchResult);
-
-            for (int i = 0; i < 100; i++)
+            
+            for (int i = 0; i < NUMBER_OF_ROUNDS; i++)
             {
                 previousResult = await RoundRunner.RunRound(player1, player2, previousResult, metrics);
                 roundResults.Add(previousResult);
