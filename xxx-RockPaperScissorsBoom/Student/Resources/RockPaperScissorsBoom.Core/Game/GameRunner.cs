@@ -30,7 +30,7 @@ namespace RockPaperScissorsBoom.Core.Game
                 //  for (int j = i + 1; j < _competitors.Count; j++)
                 foreach (var competitor2 in _competitors)
                 {
-                    if (competitor1 == competitor2)
+                    if (competitor1.Name == competitor2.Name)
                     {
                         continue;
                     }
