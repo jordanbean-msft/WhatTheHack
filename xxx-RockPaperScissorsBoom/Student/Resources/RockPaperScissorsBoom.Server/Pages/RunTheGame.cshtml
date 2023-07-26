@@ -5,10 +5,10 @@
 }
 <div class="container">
     <div class="row">
-        <div class="card col-md">
-            <div class="card-body">
-                <h2 class="card-title">Bot Results</h2>
-                <table class="table table-striped w-auto table-sm">
+        <div class="container col shadow rounded-3 me-3">
+            <div class="container">
+                <table class="table table-striped table-sm caption-top">
+                    <caption class="h3">Bot Results</caption>
                     <thead>
                         @{
                             if (Model.BotRankings.Count > 0)
@@ -16,7 +16,9 @@
                                 <tr class="table-info">
                                     <th>Place</th>
                                     <th>Bot Name</th>
-                                    <th>Win-Loss-Tie</th>
+                                    <th align="center">Win</th>
+                                    <th align="center">Loss</th>
+                                    <th align="center">Tie</th>
                                 </tr>
                             }
                         }
@@ -32,11 +34,13 @@
                                     <td>
                                         @Model.BotRankings[i].Competitor?.Name
                                     </td>
-                                    <td>
+                                    <td align="center">
                                         <span class="badge rounded-pill bg-success">@Model.BotRankings[i].Wins</span>
-                                        -
+                                    </td>
+                                    <td align="center">
                                         <span class="badge rounded-pill bg-danger">@Model.BotRankings[i].Losses</span>
-                                        -
+                                    </td>
+                                    <td align="center">
                                         <span class="badge rounded-pill bg-info">@Model.BotRankings[i].Ties</span>
                                     </td>
                                 </tr>
@@ -62,10 +66,10 @@
                 </form>
             </div>
         </div>
-        <div class="card col-md">
-            <div class="card-body">
-                <h2 class="card-title">Top Game Results</h2>
-                <table class="table table-striped w-auto table-sm">
+        <div class="container col shadow rounded-3 ms-3">
+            <div class="contianer">
+                <table class="table table-striped caption-top table-sm">
+                    <caption class="h3">Top Game Results</caption>
                     <thead>
                         <tr class="table-info">
                             <th>Last Played</th>
@@ -97,42 +101,42 @@
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="card">
-        <div class="card-body">
-            <h3 class="card-title">Full Game Results</h3>
-            <div class="card-columns">
-                <div class="row">
-                    @foreach (var fullResults in Model.AllFullResults)
-                    {
-                        <div class="col-sm-6 col-lg-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Results for: @fullResults.Competitor.Name</h4>
-                                    <table class="table table-striped w-auto table-sm">
-                                        <thead>
-                                            <tr class="table-info">
-                                                <th>Player 1</th>
-                                                <th>Player 2</th>
-                                                <th>Result</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var matchResult in fullResults.MatchResults)
-                                            {
-                                                <tr>
-                                                    <td>@matchResult.Player1.Name</td>
-                                                    <td>@matchResult.Player2.Name</td>
-                                                    <td>@matchResult.WinningPlayer</td>
+    <div class="row mt-3">
+        <div class="container shadow rounded-3">
+            <div class="container">
+                <h3 class="">Full Game Results</h3>
+                <div class="card-columns">
+                    <div class="row">
+                        @foreach (var fullResults in Model.AllFullResults)
+                        {
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="container shadow">
+                                    <div class="container">
+                                        <table class="table table-striped caption-top table-sm">
+                                            <caption class="h4">Results for: @fullResults.Competitor.Name</caption>
+                                            <thead>
+                                                <tr class="table-info">
+                                                    <th>Player 1</th>
+                                                    <th>Player 2</th>
+                                                    <th>Result</th>
                                                 </tr>
-                                            }
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var matchResult in fullResults.MatchResults)
+                                                {
+                                                    <tr>
+                                                        <td>@matchResult.Player1.Name</td>
+                                                        <td>@matchResult.Player2.Name</td>
+                                                        <td>@matchResult.WinningPlayer</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
