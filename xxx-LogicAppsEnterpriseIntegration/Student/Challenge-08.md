@@ -19,6 +19,7 @@ In this challenge, you will use Visual Studio Code to edit the Logic App that yo
 To complete this challenge successfully, you should be able to:
 - Verify that you can download the Logic App from the Azure portal
 - Verify that you can open the Logic App in Visual Studio Code
+- Run, test, and debug locally
 
 ## Learning Resources
 
