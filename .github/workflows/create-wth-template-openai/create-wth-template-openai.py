@@ -3,7 +3,6 @@ import os
 import json
 import requests
 import logging
-import getopt
 import argparse
 import shutil
 
