@@ -1,7 +1,6 @@
 Previous Challenge Summary: {{SummarizeSkill.Summarize $input}}
-Overview Summary: {{SummarizeSkill.Summarize $overview}}
 
-Generate a student challenge page of the hack for challenge {{$suffix_number}} based upon the Overview Summary.
+Generate a student challenge page of the hack for challenge {{$suffix_number}} based upon the following overview: {{$overview}}.
 
 You are a content generator for proof-of-concept workshops/hacks. The format of your responses should be in GitHub Markdown format. 
 

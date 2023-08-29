@@ -5,14 +5,23 @@ import argparse
 import asyncio
 import semantic_kernel as sk
 import semantic_kernel.connectors.ai.open_ai as sk_oai
+from plugins.UtilitiesPlugin.UtilitiesPlugin import UtilitiesPlugin
+from semantic_kernel.core_skills.file_io_skill import FileIOSkill
 
 plugins_directory = "./plugins"
 what_the_hack_plugin_name = "WhatTheHack"
 summarize_plugin_name = "SummarizeSkill"
+utilities_plugin_name = "UtilitiesPlugin"
+fileio_plugin_name = "FileIOSkill"
+
 overview_function_name = "Overview"
 challenge_function_name = "Challenge"
 solution_function_name = "Solution"
 coach_overview_function_name = "CoachOverview"
+increment_suffix_number_function_name = "IncrementSuffixNumber"
+set_overview_function_name = "SetOverview"
+set_write_context_function_name = "SetWriteContext"
+write_async_function_name = "writeAsync"
 
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -45,6 +54,8 @@ def import_plugins(kernel):
     plugins = {}
     plugins[what_the_hack_plugin_name] = kernel.import_semantic_skill_from_directory(os.path.abspath(plugins_directory), what_the_hack_plugin_name)
     plugins[summarize_plugin_name] = kernel.import_semantic_skill_from_directory(os.path.abspath(plugins_directory), summarize_plugin_name)
+    plugins[utilities_plugin_name] = kernel.import_skill(UtilitiesPlugin(), skill_name=utilities_plugin_name)
+    plugins[fileio_plugin_name] = kernel.import_skill(FileIOSkill(), skill_name=fileio_plugin_name)
 
     return plugins
 
@@ -57,6 +68,23 @@ def setup_context(kernel, args):
     context["history"] = ""
 
     return context
+
+async def run_chain(args, kernel, overview_function, challenge_function, solution_function, coach_overview_function, increment_suffix_number_function, set_overview_function, context):
+    functions = [
+        overview_function,
+        set_overview_function,
+        coach_overview_function,
+    ]
+
+    for i in range(0, args.number_of_challenges):
+        functions.append(challenge_function)
+        functions.append(solution_function)
+        functions.append(increment_suffix_number_function)
+
+    result = await kernel.run_async(*functions,
+                                    input_context=context
+                                    )
+    print(result)
 
 async def main(argv):
     parser = init_argparse()
@@ -71,51 +99,31 @@ async def main(argv):
     kernel = setup_kernel(args.openai_model_name, args.openai_endpoint_uri, args.openai_api_key)
     plugins = import_plugins(kernel)
 
-    whatTheHackPlugin = plugins[what_the_hack_plugin_name]
-    overviewFunction = whatTheHackPlugin[overview_function_name]
-    challengeFunction = whatTheHackPlugin[challenge_function_name]
-    solutionFunction = whatTheHackPlugin[solution_function_name]
-    coachOverviewFunction = whatTheHackPlugin[coach_overview_function_name]
+    what_the_hack_plugin = plugins[what_the_hack_plugin_name]
+    overview_function = what_the_hack_plugin[overview_function_name]
+    challenge_function = what_the_hack_plugin[challenge_function_name]
+    solution_function = what_the_hack_plugin[solution_function_name]
+    coach_overview_function = what_the_hack_plugin[coach_overview_function_name]
+    utilities_plugin = plugins[utilities_plugin_name]
+    increment_suffix_number_function = utilities_plugin[increment_suffix_number_function_name]
+    set_overview_function = utilities_plugin[set_overview_function_name]
+    fileio_plugin = plugins[fileio_plugin_name]
+    write_async_function = fileio_plugin[write_async_function_name]
 
     context = setup_context(kernel, args)
-    
+
     print("**Overview**")
-
-    context["input"] = context["description_of_hack"]
-
-    result = await kernel.run_async(overviewFunction,
-                                    input_context=context
-                                    )
-    
-    context["overview"] = result["input"]
-
+    result = await kernel.run_async(overview_function, input_context=context)
     print(result)
 
-    print("**Challenge 1**")
+    context["overview"] = result["input"]
 
-    context2 = kernel.create_new_context()
-    context2["overview"] = context["overview"]
-    context2["suffix_number"] = "1"
+    print("**Challenge 01**")
+    result = await kernel.run_async(challenge_function, input_context=context)
+    print(result)
 
-    result2 = await kernel.run_async(challengeFunction,
-                                    input_context=context2
-                                    )
-    print(result2)
-    
-    print("**Coach Overview**")
+    # await run_chain(args, kernel, overview_function, challenge_function, solution_function, coach_overview_function, increment_suffix_number_function, set_overview_function, context)
 
-    result1 = await kernel.run_async(coachOverviewFunction,
-                                    input_context=context
-                                    )
-
-    print(result1)
-    
-    print("**Solution 1**")
-    result3 = await kernel.run_async(solutionFunction,
-                                    input_context=context
-                                    )
-    print(result3)
-    
     pass
 
 if __name__ == "__main__":
