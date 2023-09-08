@@ -8,26 +8,26 @@
 
 #### 1. Dotnet Version
 
-![Dotnet](Solution-08/8-Install-Dotnet.png)
+![Dotnet](Solutions/Solution-08/8-Install-Dotnet.png)
 
 #### 2. Function Tools
 
-![Function Tools](Solution-08/8-Install-Func.png)
+![Function Tools](Solutions/Solution-08/8-Install-Func.png)
 
 #### 3. VSCode Extensions
 
-![Extensions](Solution-08/8-Install-Extensions.png)
+![Extensions](Solutions/Solution-08/8-Install-Extensions.png)
 
 
 ### Use Local Designer
 
 #### 1. Open Workflow
 
-![Extensions](Solution-08/8-View-Designer.png)
+![Extensions](Solutions/Solution-08/8-View-Designer.png)
 
 #### 2. Edit Workflow
 
-![Extensions](Solution-08/8-View-Designer-Edit.png)
+![Extensions](Solutions/Solution-08/8-View-Designer-Edit.png)
 
 ### Run Locally
 
@@ -77,13 +77,13 @@ NOTE: Exclude this file from source control.
 
 #### 3. Launch Workflow
 
-![Launch](Solution-08/8-Run-Debugger.png)
+![Launch](Solutions/Solution-08/8-Run-Debugger.png)
 
 #### 4. Get HTTP trigger URL via overview 
 
 #### 5. Invoke via rest client
 
-![Invoke HTTP Tigger](Solution-08/8-Run-InvokeHTTP.png)
+![Invoke HTTP Tigger](Solutions/Solution-08/8-Run-InvokeHTTP.png)
 
 ```bash
 az aks get-credentials --admin --name aks-rutzsco-aks-001 --resource-group rutzsco-aks-001
