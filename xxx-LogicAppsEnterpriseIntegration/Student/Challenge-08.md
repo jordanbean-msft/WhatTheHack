@@ -19,13 +19,13 @@ In this challenge, you will use Visual Studio Code to edit the Logic App that yo
 To complete this challenge successfully, you should be able to:
 - Verify that you can download the Logic App from the Azure portal
 - Verify that you can open the Logic App in Visual Studio Code
+- Run, test, and debug locally 
 
 ## Learning Resources
 
 - [Logic Apps in VS Code](https://learn.microsoft.com/en-us/azure/logic-apps/create-single-tenant-workflows-visual-studio-code)
-- [Logic Apps in Azure DevOps](https://learn.microsoft.com/en-us/azure/logic-apps/set-up-devops-deployment-single-tenant-azure-logic-apps?tabs=azure-devops)
 
 ## Tips
 - You may have to open a new VS Code instance and just open the `src/logic` directory for the Logic App extension to work correctly.
 - Select the `Content and Visual Studio project` and `Include app settings in the download`.
-- Note that connectors that use `Managed Identity` may not work correctly in VS Code.
+- Note that connectors that use `Managed Identity` may not work correctly in VS Code. You can [parameterize connection authentication](https://techcommunity.microsoft.com/t5/azure-integration-services-blog/parameterizing-managed-connections-with-logic-apps-standard/ba-p/3660679) to use connection strings locally.
