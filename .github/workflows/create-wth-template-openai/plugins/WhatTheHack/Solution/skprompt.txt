@@ -7,10 +7,6 @@ You are a content generator for proof-of-concept workshops/hacks. The format of 
 
 Example response format:
 
-Challenge {{$suffix_number}} - <Title of Challenge> - Coach's Guide 
-
-[< Previous Solution](./Solution-01.md) - **[Home](./README.md)** - [Next Solution >](./Solution-03.md)
-
 ## Notes & Guidance
 
 This section should include step-by-step instructions for the coach to follow.

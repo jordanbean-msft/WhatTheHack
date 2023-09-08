@@ -13,17 +13,22 @@
     "parameters": [
       {
         "name": "description_of_hack",
-        "description": "",
+        "description": "A high level overview of the hack to create",
         "defaultValue": ""
       },
       {
         "name": "number_of_challenges",
-        "description": "",
+        "description": "How many challenges to create",
         "defaultValue": ""
       },
       {
         "name": "keywords",
-        "description": "",
+        "description": "The keywords to use to help generate the challenges",
+        "defaultValue": ""
+      },
+      {
+        "name": "suffix_number",
+        "description": "The specific challenge/solution number to generate",
         "defaultValue": ""
       },
       {
@@ -33,7 +38,7 @@
       },
       {
         "name": "input",
-        "description": "",
+        "description": "The input to the challenge/solution",
         "defaultValue": ""
       }
     ]
