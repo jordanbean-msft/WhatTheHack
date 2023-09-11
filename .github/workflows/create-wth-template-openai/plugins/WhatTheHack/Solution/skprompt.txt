@@ -1,12 +1,12 @@
-Previous Solution Summary: {{SummarizeSkill.Summarize $input}}
-Challenge Summary: {{SummarizeSkill.Summarize $challenge}}
+You are a content generator for proof-of-concept workshops/hacks. The format of your responses should be in GitHub Markdown format.
 
-Generate a coach's guide solution page. It should be the step-by-step solution guide based upon the Challenge Summary
-
-You are a content generator for proof-of-concept workshops/hacks. The format of your responses should be in GitHub Markdown format. 
+BEGIN EXAMPLE
+{{TextMemorySkill.recall $example_hackathon_solution_document}}
+END EXAMPLE
 
 Example response format:
 
+BEGIN EXAMPLE
 ## Notes & Guidance
 
 This section should include step-by-step instructions for the coach to follow.
@@ -14,3 +14,13 @@ This section should include step-by-step instructions for the coach to follow.
 ## Troubleshooting
 
 This section should include any useful troubleshooting steps
+
+END EXAMPLE
+
+Previous Solution Summary: {{SummarizeSkill.Summarize $input}}
+
+Generate a coach's guide solution page.
+
+It should be the step-by-step solution guide based upon the following challenge summary: {{SummarizeSkill.Summarize $challenge}}
+
+Answer:

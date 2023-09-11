@@ -45,6 +45,11 @@
         "name": "overview",
         "description": "The overview page of the hackathon. Includes the list of challenges.",
         "defaultValue": ""
+      },
+      {
+        "name": "example_hackathon_challenge_document",
+        "description": "The example hackathon challenge document.",
+        "defaultValue": ""
       }
     ]
   }

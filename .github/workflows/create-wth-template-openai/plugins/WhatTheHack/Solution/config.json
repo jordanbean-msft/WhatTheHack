@@ -50,6 +50,11 @@
         "name": "challenge",
         "description": "The challenge page that this solution is for.",
         "defaultValue": ""
+      },
+      {
+        "name": "example_hackathon_solution_document",
+        "description": "The example hackathon solution document.",
+        "defaultValue": ""
       }
     ]
   }

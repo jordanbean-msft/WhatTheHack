@@ -1,0 +1,36 @@
+Here is an example challenge
+                                               
+## Introduction
+
+When setting up an IoT device, it is important to understand how 'thingamajigs' work. Thingamajigs are a key part of every IoT device and ensure they are able to communicate properly with edge servers. Thingamajigs require IP addresses to be assigned to them by a server and thus must have unique MAC addresses. In this challenge, you will get hands on with a thingamajig and learn how one is configured.
+
+## Description
+
+In this challenge, you will properly configure the thingamajig for your IoT device so that it can communicate with the mother ship.
+
+You can find a sample \`thingamajig.config\` file in the \`/ChallengeXX\` folder of the Resources.zip file provided by your coach. This is a good starting reference, but you will need to discover how to set exact settings.
+
+Please configure the thingamajig with the following specifications:
+- Use dynamic IP addresses
+- Only trust the following whitelisted servers: "mothership", "IoTQueenBee" 
+- Deny access to "IoTProxyShip"
+
+You can view an architectural diagram of an IoT thingamajig here: [Thingamajig.PDF](/Student/Resources/Architecture.PDF?raw=true).
+
+## Success Criteria
+
+To complete this challenge successfully, you should be able to:
+- Verify that the IoT device boots properly after its thingamajig is configured.
+- Verify that the thingamajig can connect to the mothership.
+- Demonstrate that the thingamajic will not connect to the IoTProxyShip
+
+## Learning Resources
+
+- [What is a Thingamajig?](https://www.bing.com/search?q=what+is+a+thingamajig)
+- [10 Tips for Never Forgetting Your Thingamajic](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+- [IoT & Thingamajigs: Together Forever](https://www.youtube.com/watch?v=yPYZpwSpKmA)
+
+## Tips
+
+- IoTDevices can fail from a broken heart if they are not together with their thingamajig. Your device will display a broken heart emoji on its screen if this happens.
+- An IoTDevice can have one or more thingamajigs attached which allow them to connect to multiple networks.

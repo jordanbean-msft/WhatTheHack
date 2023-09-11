@@ -1,10 +1,10 @@
 import sys
 import os
-import json
-import requests
 import logging
 import argparse
 import shutil
+import asyncio
+from what_the_hack_openai import *
 
 template_directory_name = "000-HowToHack"
 openai_prompt_directory_name = "openai-prompts"
@@ -20,8 +20,11 @@ def init_argparse() -> argparse.ArgumentParser:
     parser.add_argument("-p", "--path_to_hack", help="Path to hackathon project", type=str)
     parser.add_argument("-d", "--description_of_hack", help="Description of hackathon project", type=str)
     parser.add_argument("-k", "--keywords", help="Keywords for hackathon project", type=str)
+    parser.add_argument("-m", "--openai_model_name", help="OpenAI model name", type=str)
+    parser.add_argument("-b", "--openai_embedding_model_name", help="OpenAI embedding model name", type=str)
     parser.add_argument("-e", "--openai_endpoint_uri", help="OpenAI endpoint URI (should include API version query parameter)", type=str)
     parser.add_argument("-a", "--openai_api_key", help="OpenAI API key", type=str)
+    parser.add_argument("-i", "--application_insights_key", help="Application Insights key", type=str)
     parser.add_argument("-v", "--verbose", help="Verbose logging", action='store_true')
     return parser
 
@@ -44,40 +47,10 @@ def generate_openai_message_array(system_content, user_prompt_content) -> list:
 
     return message_array
 
-def call_openai(message_array) -> str:
-    data = { 
-      "messages": message_array, 
-      "max_tokens": 800, 
-      "temperature": 0.7, 
-      "top_p": 0.95, 
-      "frequency_penalty": 0, 
-      "presence_penalty": 0, 
-      "stop": "Null" 
-    }
+async def call_openai(function, variables):
+    result = await kernel.run_async(function, input_context=context, input_vars=variables)
 
-    json_data = json.dumps(data)
-
-    headers = { "Content-Type": "application/json", "api-key": f"{openai_api_key}" }
-
-    request = requests.Request('POST', 
-                               openai_endpoint_uri, 
-                               headers=headers, 
-                               data=json_data)
-    prepared = request.prepare()
-
-    s = requests.Session()
-    openai_response = s.send(prepared)
-
-    if(openai_response.status_code != 200):
-        logging.error(f"OpenAI API call failed with status code: {openai_response.status_code}")
-        logging.error(f"OpenAI API call failed with response: {openai_response.text}")
-        logging.error(f"OpenAI API call failed with data: {openai_response.request.body}")
-
-    json_data = json.loads(openai_response.text)
-
-    content = json_data['choices'][0]['message']['content']
-
-    return content
+    return result
 
 def create_directory_structure(delete_existing_directory):
     if delete_existing_directory:
@@ -87,7 +60,7 @@ def create_directory_structure(delete_existing_directory):
     logging.info(f"Creating {root_path} directory...")
         
     # create the xxx-YetAnotherWth directory
-    os.mkdir(root_path)
+    os.makedirs(root_path)
 
     logging.info(f"Creating {root_path}/Coach/Solutions directories...")
         
@@ -110,71 +83,80 @@ def create_directory_structure(delete_existing_directory):
     open(f"{root_path}/Student/Resources/.gitkeep", 'w').close()
 
 
-def write_markdown_file(path_to_prompt_file, openai_user_prompt, path_to_markdown_file) -> str:
-    openai_system_prompt = get_openai_prompt_content(f"{path_to_prompt_file}")
-
-    message_array = generate_openai_message_array(f"{openai_system_prompt}", 
-                                                  f"{openai_user_prompt}")
-
-    openai_response = call_openai(message_array)
+async def write_markdown_file(function_name, variables, path_to_markdown_file):
+    what_the_hack_plugin = plugins[what_the_hack_plugin_name]
+    
+    openai_response = await call_openai(what_the_hack_plugin[function_name],
+                                        variables)
 
     with open(path_to_markdown_file, "w") as file_object:
-        file_object.write(openai_response)
+        file_object.write(openai_response.result)
 
     return openai_response
 
-def create_hack_description(number_of_challenges) -> str:
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Overview-Prompt.txt", 
-                                          f"Generate a overview page of the hack based upon the following description: {description_of_hack}. Generate {number_of_challenges} challenges. Use the following keywords to help guide which challenges to generate: {keywords}", 
-                                          f"{root_path}/README.md")
-
-    return openai_response
-
-def create_challenge_markdown_file(full_path, prefix, suffix_number) -> str:
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Challenge-Prompt.txt", 
-                                          f"Generate a student challenge page of the hack based upon challenge {suffix_number} in following description: {openai_hack_description}.", 
-                                          f"{full_path}/{prefix}-{suffix_number:02d}.md")
-
-    return openai_response
-
-def create_solution_markdown_file(full_path, prefix, suffix_number, challenge_response) -> str:
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Solution-Prompt.txt", 
-                                          f"Generate a coach's guide solution page. It should be the step-by-step solution guide based upon the following challenge description: {challenge_response}", 
-                                          f"{full_path}/{prefix}-{suffix_number:02d}.md")
-
-    return openai_response
-
-def create_challenge_and_solution(challenge_number):
-    logging.info(f"Creating {root_path}/Challenge-{challenge_number:02d}.md...")
+async def create_hack_description(variables, number_of_challenges):
+    openai_response = await write_markdown_file(overview_function_name,
+                                                variables,
+                                                f"{root_path}/README.md")
     
-    challenge_response = create_challenge_markdown_file(f"{root_path}/Student", 
-                                                        "Challenge", 
-                                                        challenge_number)
+    variables["overview"] = openai_response["input"]
+    variables["input"] = ""
+
+    return openai_response
+
+async def create_challenge_markdown_file(variables, full_path, prefix, suffix_number):
+    openai_response = await write_markdown_file(challenge_function_name,
+                                                variables,
+                                                f"{full_path}/{prefix}-{suffix_number:02d}.md")
+
+    return openai_response
+
+async def create_solution_markdown_file(variables, full_path, prefix, suffix_number, challenge_response):
+    variables["challenge"] = challenge_response["input"]
+
+    openai_response = await write_markdown_file(solution_function_name,
+                                                variables,
+                                                f"{full_path}/{prefix}-{suffix_number:02d}.md")
+
+    return openai_response
+
+async def create_challenge_and_solution(variables, challenge_number):
+    logging.info(f"Creating {root_path}/Challenge-{challenge_number:02d}.md...")
+
+    variables["suffix_number"] = f"{challenge_number:02d}"
+    
+    challenge_response = await create_challenge_markdown_file(variables,
+                                                              f"{root_path}/Student", 
+                                                              "Challenge", 
+                                                              challenge_number)
 
     logging.info(f"Creating {root_path}/Solution-{challenge_number:02d}.md...")
 
-    create_solution_markdown_file(f"{root_path}/Coach", 
-                                  "Solution", 
-                                  challenge_number, 
-                                  challenge_response)
+    await create_solution_markdown_file(variables,
+                                        f"{root_path}/Coach", 
+                                        "Solution", 
+                                        challenge_number, 
+                                        challenge_response)
 
-def create_coach_guide_markdown_file(full_path, number_of_solutions) -> str:
+async def create_coach_guide_markdown_file(variables, full_path, number_of_solutions):
     logging.info(f"Creating {full_path}/README.md...")
 
-    openai_response = write_markdown_file(f"{path_to_openai_prompt_directory}/WTH-Coach-Overview-Prompt.txt", 
-                                          f"Generate a coach's guide overview page of the hack based upon the following description: {openai_hack_description}", 
-                                          f"{full_path}/README.md")
+    openai_response = await write_markdown_file(coach_overview_function_name,
+                                                variables,
+                                                f"{full_path}/README.md")
 
     return openai_response
 
-def create_challenges_and_solutions(number_of_challenges):
+async def create_challenges_and_solutions(variables, number_of_challenges):
+
     for challenge_number in range(0, number_of_challenges + 1):
-        create_challenge_and_solution(challenge_number)
+        await create_challenge_and_solution(variables, challenge_number)
 
-    create_coach_guide_markdown_file(f"{root_path}/Coach", 
-                                     number_of_challenges)
+    await create_coach_guide_markdown_file(variables, 
+                                           f"{root_path}/Coach", 
+                                           number_of_challenges)
 
-def main(argv):
+async def main(argv):
     parser = init_argparse()
     args = parser.parse_args(argv)
 
@@ -211,10 +193,19 @@ def main(argv):
 
     create_directory_structure(args.remove_existing_directory)
 
-    global openai_hack_description
-    openai_hack_description = create_hack_description(args.number_of_challenges)
+    global kernel
+    kernel = setup_kernel(args.openai_model_name, args.openai_embedding_model_name, args.openai_endpoint_uri, args.openai_api_key, args.application_insights_key)
 
-    create_challenges_and_solutions(args.number_of_challenges)
+    global plugins
+    plugins = import_plugins(kernel)
+
+    global context
+    context, variables = await setup_context(kernel, args)
+    
+    global openai_hack_description
+    openai_hack_description = await create_hack_description(variables, args.number_of_challenges)
+
+    await create_challenges_and_solutions(variables, args.number_of_challenges)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    asyncio.run(main(sys.argv[1:]))
