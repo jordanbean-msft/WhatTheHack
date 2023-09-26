@@ -20,11 +20,11 @@ def init_argparse() -> argparse.ArgumentParser:
     parser.add_argument("-p", "--path_to_hack", help="Path to hackathon project", type=str)
     parser.add_argument("-d", "--description_of_hack", help="Description of hackathon project", type=str)
     parser.add_argument("-k", "--keywords", help="Keywords for hackathon project", type=str)
-    parser.add_argument("-m", "--openai_model_name", help="OpenAI model name", type=str)
+    parser.add_argument("-m", "--openai_gpt_model_name", help="OpenAI GPT model name", type=str)
     parser.add_argument("-b", "--openai_embedding_model_name", help="OpenAI embedding model name", type=str)
     parser.add_argument("-e", "--openai_endpoint_uri", help="OpenAI endpoint URI (should include API version query parameter)", type=str)
     parser.add_argument("-a", "--openai_api_key", help="OpenAI API key", type=str)
-    parser.add_argument("-i", "--application_insights_key", help="Application Insights key", type=str)
+    parser.add_argument("-i", "--application_insights_connection_string", help="Application Insights connection string", type=str)
     parser.add_argument("-v", "--verbose", help="Verbose logging", action='store_true')
     return parser
 
@@ -194,7 +194,7 @@ async def main(argv):
     create_directory_structure(args.remove_existing_directory)
 
     global kernel
-    kernel = setup_kernel(args.openai_model_name, args.openai_embedding_model_name, args.openai_endpoint_uri, args.openai_api_key, args.application_insights_key)
+    kernel = setup_kernel(args.openai_gpt_model_name, args.openai_embedding_model_name, args.openai_endpoint_uri, args.openai_api_key, args.application_insights_connection_string)
 
     global plugins
     plugins = import_plugins(kernel)

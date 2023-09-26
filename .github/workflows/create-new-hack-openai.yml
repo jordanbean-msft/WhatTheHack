@@ -42,7 +42,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r ${{ github.workspace }}/.github/workflows/create-wth-template-openai/requirements.txt
       - name: Generate WhatTheHack template stubs
-        run: python ${{ github.workspace }}/.github/workflows/create-wth-template-openai/create-wth-template-openai.py -p ${{ github.workspace }} -c "${{ github.event.inputs.numberOfChallenges}}" -n "${{ github.event.inputs.hackName }}" -d "${{ github.event.inputs.description }}" -k "${{ github.event.inputs.keywords }}" -e "${{ secrets.OPENAI_ENDPOINT_URI }}" -a "${{ secrets.OPENAI_API_KEY }}" -r -v
+        run: python ${{ github.workspace }}/.github/workflows/create-wth-template-openai/create-wth-template-openai.py --path_to_hack ${{ github.workspace }} --number_of_challenges "${{ github.event.inputs.numberOfChallenges}}" --name_of_hack "${{ github.event.inputs.hackName }}" --description_of_hack "${{ github.event.inputs.description }}" --keywords "${{ github.event.inputs.keywords }}" --openai_endpoint_uri "${{ secrets.OPENAI_ENDPOINT_URI }}" --openai_api_key "${{ secrets.OPENAI_API_KEY }}" --openai_gpt_model_name "${{ vars.OPENAI_GPT_MODEL_NAME }}" --openai_embedding_model_name "${{ vars.OPENAI_EMBEDDING_MODEL_NAME }}" --remove_existing_directory --verbose
       - name: Push branch
         run: |
           git add *

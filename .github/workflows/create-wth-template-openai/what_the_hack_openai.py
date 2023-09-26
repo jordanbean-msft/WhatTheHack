@@ -23,18 +23,18 @@ set_overview_function_name = "SetOverview"
 set_write_context_function_name = "SetWriteContext"
 write_async_function_name = "writeAsync"
 
-def setup_kernel(openai_model_name, openai_embeddings_model_name, openai_endpoint_uri, openai_api_key, application_insights_key):
+def setup_kernel(openai_gpt_model_name, openai_embeddings_model_name, openai_endpoint_uri, openai_api_key, application_insights_connection_string):
     print("Setting up kernel")
 
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     
-    logger.addHandler(AzureLogHandler(connection_string=application_insights_key))
+    logger.addHandler(AzureLogHandler(connection_string=application_insights_connection_string))
 
     kernel = sk.Kernel(log=logger)
     kernel.add_text_completion_service(service_id="OpenAI-Completion",
                                        service=sk_oai.AzureTextCompletion(
-                                         deployment_name=openai_model_name,
+                                         deployment_name=openai_gpt_model_name,
                                          endpoint=openai_endpoint_uri,
                                          api_key=openai_api_key
                                        ))
