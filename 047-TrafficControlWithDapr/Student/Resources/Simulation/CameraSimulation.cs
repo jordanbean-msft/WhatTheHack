@@ -54,18 +54,20 @@ namespace Simulation
               BackgroundColor = GenerateRandomColor()
 
             };
+
             await _trafficControlService.SendVehicleEntryAsync(vehicleRegistered);
+
             Debug.WriteLine($"Simulated ENTRY of vehicle with license-number {vehicleRegistered.LicenseNumber} in lane {vehicleRegistered.Lane}");
             _uiRenderingService.AddCarToBeAnimatedInWindow(0, _camNumber, vehicleRegistered.LicenseNumber, "#FFFFFF", vehicleRegistered.BackgroundColor);
-
-
 
             // simulate exit
             TimeSpan exitDelay = TimeSpan.FromSeconds(_rnd.Next(_minExitDelayInS, _maxExitDelayInS) + _rnd.NextDouble());
             Task.Delay(exitDelay).Wait();
             vehicleRegistered.Timestamp = DateTime.Now;
             vehicleRegistered.Lane = _rnd.Next(1, 4);
+
             await _trafficControlService.SendVehicleExitAsync(vehicleRegistered);
+
             Debug.WriteLine($"Simulated EXIT of vehicle with license-number {vehicleRegistered.LicenseNumber} in lane {vehicleRegistered.Lane}");
             _uiRenderingService.AddCarToBeAnimatedInWindow(1, _camNumber, vehicleRegistered.LicenseNumber, "#FFFFFF", vehicleRegistered.BackgroundColor);
           });
@@ -116,7 +118,6 @@ namespace Simulation
       return kenteken;
     }
 
-
     private string GenerateRandomColor()
     {
       int type = _rnd.Next(1, 9);
@@ -146,7 +147,6 @@ namespace Simulation
 
       return mycolor;
     }
-
 
     private string GenerateRandomCharacters(int aantal)
     {

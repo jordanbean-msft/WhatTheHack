@@ -44,8 +44,6 @@ namespace Simulation
       }
       );
 
-
-
       CameraSimulation[] cameras = new CameraSimulation[lanes];
       for (var i = 0; i < lanes; i++)
       {
