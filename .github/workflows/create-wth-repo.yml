@@ -37,6 +37,6 @@ jobs:
 
           gh auth login --with-token < ~/ORG_ADMIN_TOKEN.txt
 
-          gh repo create ${{ inputs.hackathonName }} --public --source=. --remote=${{ inputs.hackathonName }}
+          gh repo create ${{ inputs.hackathonName }} --public --source=. --push --remote=${{ inputs.hackathonName }}
         env:
           ORG_ADMIN_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
