@@ -33,8 +33,11 @@ jobs:
 
           git init
 
-          gh auth login --with-token < ${{ secrets.ORG_ADMIN_TOKEN }}
+          echo $ORG_ADMIN_TOKEN > ~/ORG_ADMIN_TOKEN.txt
+
+          gh auth login --with-token < ~/ORG_ADMIN_TOKEN.txt
 
           gh repo create ${{ inputs.hackathonName }} --public --source=. --remote=${{ inputs.hackathonName }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORG_ADMIN_TOKEN: ${{ secrets.ORG_ADMIN_TOKEN }}
