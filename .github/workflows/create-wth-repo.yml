@@ -29,7 +29,11 @@ jobs:
 
           cd ${{ inputs.hackathonName }}/${{ inputs.pathToStudentResources }}
 
+          git config --global init.defaultBranch main
+
           git init
+
+          gh auth login --with-token < ${{ secrets.ORG_ADMIN_TOKEN }}
 
           gh repo create ${{ inputs.hackathonName }} --public --source=. --remote=${{ inputs.hackathonName }}
         env:
