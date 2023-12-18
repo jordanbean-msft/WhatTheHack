@@ -28,7 +28,9 @@ jobs:
           git checkout ${{ inputs.branchName }}
 
           cd ${{ inputs.hackathonName }}/${{ inputs.pathToStudentResources }}
-          
+
+          git init
+
           gh repo create ${{ inputs.hackathonName }} --public --source=. --remote=${{ inputs.hackathonName }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
