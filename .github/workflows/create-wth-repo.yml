@@ -33,6 +33,10 @@ jobs:
 
           git init
 
+          git add .
+
+          git commit -m 'Initial commit'
+
           echo $ORG_ADMIN_TOKEN > ~/ORG_ADMIN_TOKEN.txt
 
           gh auth login --with-token < ~/ORG_ADMIN_TOKEN.txt
