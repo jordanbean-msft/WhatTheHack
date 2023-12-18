@@ -1,0 +1,10 @@
+{
+    "name": "047-TrafficControlWithDapr",
+    "image": "mcr.microsoft.com/devcontainers/dotnet:0-7.0",
+    "features": {},
+    "customizations": {},
+    "portsAttributes": {},
+    "forwardPorts": [],
+    "postCreateCommand": "",
+    "remoteUser": ""
+}
